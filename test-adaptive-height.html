@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试自适应高度</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+            margin-top: 60px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .comparison-item {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s ease;
+            width: 100%;
+        }
+        
+        .info-box {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        
+        .dimension-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .dim-item {
+            text-align: center;
+        }
+        
+        .dim-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4caf50;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .comparison-box {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-box h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .visual-guide {
+            position: absolute;
+            border: 2px dashed #ff9800;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .guide-label {
+            position: absolute;
+            background: rgba(255, 152, 0, 0.8);
+            color: white;
+            padding: 2px 5px;
+            font-size: 10px;
+            border-radius: 3px;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>自适应高度测试</h1>
+        
+        <div class="test-section">
+            <h2>1. 修改后的第一个展示框</h2>
+            <p>已移除强制比例，改为根据图片原始比例自适应高度：</p>
+            
+            <div class="comparison-gallery">
+                <!-- 位置 [1]：大图展示 - PS合成篇入門 -->
+                <div class="comparison-item">
+                    <div class="single-image-display outline-display" id="adaptive-container">
+                        <img src="public/showcase/outline-1.jpg" alt="PS合成篇入門" class="full-image" id="adaptive-image">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="status" class="status">
+                正在加载图片...
+            </div>
+            
+            <div class="dimension-display">
+                <div class="dim-item">
+                    <div>容器宽度</div>
+                    <div class="dim-value" id="container-width">测量中...</div>
+                </div>
+                <div class="dim-item">
+                    <div>容器高度</div>
+                    <div class="dim-value" id="container-height">测量中...</div>
+                </div>
+                <div class="dim-item">
+                    <div>图片原始尺寸</div>
+                    <div class="dim-value" id="image-original">测量中...</div>
+                </div>
+                <div class="dim-item">
+                    <div>图片显示尺寸</div>
+                    <div class="dim-value" id="image-display">测量中...</div>
+                </div>
+            </div>
+            
+            <div class="test-controls">
+                <button onclick="showContainerOutline()">显示容器轮廓</button>
+                <button onclick="showImageOutline()">显示图片轮廓</button>
+                <button onclick="toggleBackground()">切换背景显示</button>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. 修改前后对比</h2>
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <h3>之前（强制1:2比例）</h3>
+                    <ul>
+                        <li>❌ <code>aspect-ratio: 1 / 2</code></li>
+                        <li>❌ 固定竖屏比例</li>
+                        <li>❌ 图片可能被裁剪</li>
+                        <li>❌ 文字可能不完整</li>
+                        <li>❌ <code>object-fit: cover</code></li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-box">
+                    <h3>现在（自适应高度）</h3>
+                    <ul>
+                        <li>✅ <code>height: auto</code></li>
+                        <li>✅ 根据图片比例自适应</li>
+                        <li>✅ 图片完整显示</li>
+                        <li>✅ 文字100%可见</li>
+                        <li>✅ <code>object-fit: contain</code></li>
+                        <li>✅ <code>background: rgba(0,0,0,0.3)</code></li>
+                        <li>✅ <code>max-height: 700px</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. CSS代码</h2>
+            <div class="info-box">
+                <pre><code>/* 课程大纲第一个展示框 - PS入门篇（自适应高度） */
+.single-image-display.outline-display {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+    height: auto; /* 根据图片比例自适应高度 */
+    max-height: 700px !important; /* 防止图片过长 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3); /* 半透明黑色背景，防止留白 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 自适应图片样式 - 完整显示图片内容 */
+.single-image-display .full-image {
+    width: 100%;
+    height: auto; /* 根据原始比例自适应 */
+    max-height: 700px; /* 限制最大高度 */
+    object-fit: contain; /* 完整显示图片，不被裁剪 */
+    object-position: center;
+}</code></pre>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>4. 验证要点</h2>
+            <div class="info-box">
+                <ul>
+                    <li>✅ 已移除强制比例 <code>aspect-ratio: 1/2</code></li>
+                    <li>✅ 容器高度自适应 <code>height: auto</code></li>
+                    <li>✅ 宽度保持100% <code>width: 100%</code></li>
+                    <li>✅ 限制最大高度 <code>max-height: 700px</code></li>
+                    <li>✅ 完整显示图片 <code>object-fit: contain</code></li>
+                    <li>✅ 添加半透明背景 <code>background: rgba(0,0,0,0.3)</code></li>
+                    <li>✅ 下方滑块对比区域保持1:2比例不变</li>
+                    <li>✅ 图片文字内容100%可见，不被裁剪</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const container = document.getElementById('adaptive-container');
+        const image = document.getElementById('adaptive-image');
+        const status = document.getElementById('status');
+        
+        function updateDimensions() {
+            // 容器尺寸
+            const containerRect = container.getBoundingClientRect();
+            document.getElementById('container-width').textContent = 
+                `${Math.round(containerRect.width)}px`;
+            document.getElementById('container-height').textContent = 
+                `${Math.round(containerRect.height)}px`;
+            
+            // 图片尺寸
+            if (image.naturalWidth > 0) {
+                document.getElementById('image-original').textContent = 
+                    `${image.naturalWidth}×${image.naturalHeight}`;
+                document.getElementById('image-display').textContent = 
+                    `${Math.round(image.width)}×${Math.round(image.height)}`;
+                
+                // 计算比例
+                const originalRatio = image.naturalWidth / image.naturalHeight;
+                const displayRatio = image.width / image.height;
+                
+                console.log('原始比例:', originalRatio.toFixed(2));
+                console.log('显示比例:', displayRatio.toFixed(2));
+                console.log('比例差异:', Math.abs(originalRatio - displayRatio).toFixed(4));
+            }
+        }
+        
+        function showContainerOutline() {
+            // 移除现有的轮廓
+            document.querySelectorAll('.visual-guide, .guide-label').forEach(el => el.remove());
+            
+            const rect = container.getBoundingClientRect();
+            const guide = document.createElement('div');
+            guide.className = 'visual-guide';
+            guide.style.left = `${rect.left}px`;
+            guide.style.top = `${rect.top}px`;
+            guide.style.width = `${rect.width}px`;
+            guide.style.height = `${rect.height}px`;
+            
+            const label = document.createElement('div');
+            label.className = 'guide-label';
+            label.textContent = `容器: ${Math.round(rect.width)}×${Math.round(rect.height)}`;
+            label.style.left = `${rect.left}px`;
+            label.style.top = `${rect.top - 20}px`;
+            
+            document.body.appendChild(guide);
+            document.body.appendChild(label);
+        }
+        
+        function showImageOutline() {
+            // 移除现有的轮廓
+            document.querySelectorAll('.visual-guide, .guide-label').forEach(el => el.remove());
+            
+            const rect = image.getBoundingClientRect();
+            const guide = document.createElement('div');
+            guide.className = 'visual-guide';
+            guide.style.left = `${rect.left}px`;
+            guide.style.top = `${rect.top}px`;
+            guide.style.width = `${rect.width}px`;
+            guide.style.height = `${rect.height}px`;
+            guide.style.borderColor = '#4caf50';
+            
+            const label = document.createElement('div');
+            label.className = 'guide-label';
+            label.textContent = `图片: ${Math.round(rect.width)}×${Math.round(rect.height)}`;
+            label.style.left = `${rect.left}px`;
+            label.style.top = `${rect.top - 20}px`;
+            label.style.backgroundColor = '#4caf50';
+            
+            document.body.appendChild(guide);
+            document.body.appendChild(label);
+        }
+        
+        function toggleBackground() {
+            const currentBg = getComputedStyle(container).backgroundColor;
+            if (currentBg === 'rgba(0, 0, 0, 0.3)') {
+                container.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
+            } else {
+                container.style.backgroundColor = '';
+            }
+        }
+        
+        image.onload = function() {
+            status.className = 'status success';
+            status.innerHTML = `
+                <h3>✅ 图片加载成功</h3>
+                <p>原始尺寸: ${image.naturalWidth} × ${image.naturalHeight} 像素</p>
+                <p>原始比例: ${(image.naturalWidth/image.naturalHeight).toFixed(2)}:1</p>
+                <p>object-fit: ${getComputedStyle(image).objectFit}</p>
+                <p>✅ 图片根据原始比例自适应高度</p>
+                <p>✅ 文字内容完整显示，不被裁剪</p>
+            `;
+            
+            updateDimensions();
+            
+            // 验证CSS设置
+            const containerStyle = getComputedStyle(container);
+            const imageStyle = getComputedStyle(image);
+            
+            console.log('容器高度:', containerStyle.height);
+            console.log('容器最大高度:', containerStyle.maxHeight);
+            console.log('容器背景:', containerStyle.backgroundColor);
+            console.log('图片object-fit:', imageStyle.objectFit);
+            console.log('图片高度:', imageStyle.height);
+            
+            if (containerStyle.height === 'auto' && 
+                imageStyle.objectFit === 'contain' &&
+                containerStyle.backgroundColor === 'rgba(0, 0, 0, 0.3)') {
+                console.log('✅ 所有CSS设置正确应用');
+            }
+        };
+        
+        image.onerror = function() {
+            status.className = 'status error';
+            status.innerHTML = `
+                <h3>❌ 图片加载失败</h3>
+                <p>请检查图片路径: <code>public/showcase/outline-1.jpg</code></p>
+            `;
+        };
+        
+        // 定期更新尺寸
+        setInterval(updateDimensions, 1000);
+        
+        // 初始更新
+        setTimeout(updateDimensions, 500);
+    </script>
+</body>
+</html>

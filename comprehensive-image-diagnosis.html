@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>综合图片诊断与修复</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .diagnosis-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.2), rgba(76, 175, 80, 0.2));
+            border: 2px solid rgba(33, 150, 243, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4caf50;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-title {
+            margin-top: 0;
+            color: #fff;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .image-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .image-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(165, 243, 252, 0.5);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .image-preview {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .image-info {
+            margin-top: 10px;
+        }
+        
+        .image-name {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+        
+        .image-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+        
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+        
+        .status-warning {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+        }
+        
+        .control-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: rgba(33, 150, 243, 0.3);
+            border-color: rgba(33, 150, 243, 0.5);
+        }
+        
+        .btn-success {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: rgba(76, 175, 80, 0.5);
+        }
+        
+        .btn-warning {
+            background: rgba(255, 152, 0, 0.3);
+            border-color: rgba(255, 152, 0, 0.5);
+        }
+        
+        .diagnostic-log {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .solution-box {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .path-display {
+            font-family: monospace;
+            font-size: 11px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+        
+        .auto-fix-notice {
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid rgba(255, 152, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="diagnosis-container">
+        <div class="summary-card">
+            <h2>📊 综合图片诊断系统</h2>
+            <p>检测项目中所有图片的显示问题并提供智能修复方案</p>
+            
+            <div class="summary-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-images">0</div>
+                    <div class="stat-label">总图片数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="loaded-images">0</div>
+                    <div class="stat-label">已加载</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="failed-images">0</div>
+                    <div class="stat-label">加载失败</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="protocol-type">检测中</div>
+                    <div class="stat-label">访问协议</div>
+                </div>
+            </div>
+            
+            <div id="auto-fix-notice" class="auto-fix-notice" style="display: none;">
+                <p>⚠️ 检测到文件协议访问，正在自动切换到相对路径...</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3 class="section-title">🔍 诊断结果分析</h3>
+            <div id="diagnosis-result">
+                <p>正在分析图片显示问题...</p>
+            </div>
+            
+            <div class="solution-box" id="recommended-solution">
+                <h4>💡 推荐解决方案</h4>
+                <p id="solution-text">正在根据您的访问方式分析最佳方案...</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3 class="section-title">🖼️ 1. 课程大纲图片 (4张)</h3>
+            <div class="image-grid" id="outline-images">
+                <!-- 课程大纲图片将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3 class="section-title">🎨 2. 作品选集图片 (5张横构图)</h3>
+            <div class="image-grid" id="portfolio-images">
+                <!-- 作品选集图片将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3 class="section-title">🔄 3. 滑块对比图片 (4张)</h3>
+            <div class="image-grid" id="slider-images">
+                <!-- 滑块对比图片将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3 class="section-title">📱 4. 联系方式二维码 (2张)</h3>
+            <div class="image-grid" id="qr-images">
+                <!-- 二维码图片将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3 class="section-title">🎯 智能修复控制面板</h3>
+            <div class="control-panel">
+                <button class="control-btn btn-primary" onclick="applyRelativePaths()">
+                    📁 方案1：全部使用相对路径
+                </button>
+                <button class="control-btn btn-primary" onclick="applyAbsolutePaths()">
+                    🌐 方案2：全部使用绝对路径
+                </button>
+                <button class="control-btn btn-success" onclick="applySmartPaths()">
+                    🤖 方案3：智能路径匹配
+                </button>
+                <button class="control-btn" onclick="testAllPaths()">
+                    🔄 重新测试所有路径
+                </button>
+                <button class="control-btn btn-warning" onclick="fixPortfolioOnly()">
+                    🎨 仅修复作品选集
+                </button>
+                <button class="control-btn btn-warning" onclick="fixQROnly()">
+                    📱 仅修复二维码
+                </button>
+                <button class="control-btn" onclick="openMainPage()">
+                    🔍 验证主页面
+                </button>
+                <button class="control-btn" onclick="clearCache()">
+                    🗑️ 清除缓存刷新
+                </button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3 class="section-title">📝 诊断日志</h3>
+            <div class="diagnostic-log" id="diagnostic-log">
+                <!-- 日志将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3 class="section-title">ℹ️ 技术说明</h3>
+            <div class="solution-box">
+                <h4>路径问题根本原因：</h4>
+                <p><strong>绝对路径</strong> <code>/showcase/filename.jpg</code>：</p>
+                <ul>
+                    <li>✅ 适用于HTTP服务器环境（如：http://localhost/）</li>
+                    <li>❌ 在文件协议（file:///）下无法解析</li>
+                </ul>
+                
+                <p><strong>相对路径</strong> <code>public/showcase/filename.jpg</code>：</p>
+                <ul>
+                    <li>✅ 适用于文件协议（file:///）</li>
+                    <li>✅ 适用于HTTP服务器环境</li>
+                    <li>✅ 与项目中其他图片保持一致</li>
+                </ul>
+                
+                <h4>推荐策略：</h4>
+                <ol>
+                    <li>如果通过文件协议访问 → 使用相对路径</li>
+                    <li>如果部署到网站 → 使用绝对路径</li>
+                    <li>保持项目中所有图片路径格式一致</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 项目中所有图片的定义
+        const allImages = {
+            // 课程大纲图片
+            outline: [
+                { id: 'outline-1', name: 'outline-1.jpg', alt: 'PS合成篇入門', section: '课程大纲' },
+                { id: 'outline-2', name: 'course-outline.jpg', alt: '课程大纲', section: '课程大纲' },
+                { id: 'outline-3', name: 'outline-4.jpg', alt: '第4个展示框', section: '课程大纲' }
+            ],
+            
+            // 作品选集图片（5张横构图）
+            portfolio: [
+                { id: 'portfolio-1', name: 'portfolio-1.jpg', alt: '赛博朋克风格合成', section: '作品选集' },
+                { id: 'portfolio-2', name: 'portfolio-2.jpg', alt: '古风人像合成', section: '作品选集' },
+                { id: 'portfolio-3', name: 'portfolio-3.jpg', alt: '科幻场景构建', section: '作品选集' },
+                { id: 'portfolio-4', name: 'portfolio-4.jpg', alt: '奇幻世界合成', section: '作品选集' },
+                { id: 'portfolio-5', name: 'portfolio-5.jpg', alt: '未来主义风格', section: '作品选集' }
+            ],
+            
+            // 滑块对比图片
+            slider: [
+                { id: 'slider-1', name: '2-before.jpg', alt: '修图前原始图', section: '滑块对比' },
+                { id: 'slider-2', name: '2-after.jpg', alt: '修图后效果', section: '滑块对比' },
+                { id: 'slider-3', name: '3-before.jpg', alt: '修图前原始图', section: '滑块对比' },
+                { id: 'slider-4', name: '3-after.jpg', alt: '修图后效果', section: '滑块对比' }
+            ],
+            
+            // 二维码图片
+            qr: [
+                { id: 'qr-1', name: 'wechat-qr.jpg', alt: '微信二维码', section: '联系方式' },
+                { id: 'qr-2', name: 'social-qr.jpg', alt: '社交媒体二维码', section: '联系方式' }
+            ]
+        };
+        
+        // 统计变量
+        let totalImages = 0;
+        let loadedImages = 0;
+        let failedImages = 0;
+        let currentProtocol = window.location.protocol;
+        
+        // DOM元素
+        const diagnosticLog = document.getElementById('diagnostic-log');
+        const diagnosisResult = document.getElementById('diagnosis-result');
+        const solutionText = document.getElementById('solution-text');
+        const autoFixNotice = document.getElementById('auto-fix-notice');
+        
+        // 初始化统计
+        Object.values(allImages).forEach(section => {
+            totalImages += section.length;
+        });
+        
+        document.getElementById('total-images').textContent = totalImages;
+        document.getElementById('protocol-type').textContent = currentProtocol;
+        
+        // 日志函数
+        function logMessage(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            
+            if (type === 'error') entry.style.color = '#f44336';
+            if (type === 'success') entry.style.color = '#4caf50';
+            if (type === 'warning') entry.style.color = '#ff9800';
+            
+            diagnosticLog.appendChild(entry);
+            diagnosticLog.scrollTop = diagnosticLog.scrollHeight;
+        }
+        
+        // 更新统计
+        function updateStats() {
+            document.getElementById('loaded-images').textContent = loadedImages;
+            document.getElementById('failed-images').textContent = failedImages;
+            
+            // 更新诊断结果
+            if (loadedImages === totalImages) {
+                diagnosisResult.innerHTML = `
+                    <p>✅ <strong>所有 ${totalImages} 张图片加载成功！</strong></p>
+                    <p>图片显示正常，无需修复。</p>
+                `;
+                solutionText.textContent = '所有图片加载正常，无需修复操作。';
+            } else if (failedImages > 0) {
+                diagnosisResult.innerHTML = `
+                    <p>⚠️ <strong>${failedImages}/${totalImages} 张图片加载失败</strong></p>
+                    <p>主要问题：路径格式不匹配</p>
+                    <p>当前协议：${currentProtocol}</p>
+                    <p>建议：${currentProtocol === 'file:' ? '使用相对路径' : '检查服务器配置'}</p>
+                `;
+                
+                if (currentProtocol === 'file:') {
+                    solutionText.innerHTML = `
+                        <strong>推荐使用相对路径方案：</strong><br>
+                        <code>public/showcase/filename.jpg</code><br>
+                        <br>
+                        原因：文件协议下绝对路径无法解析，相对路径能正常工作。
+                    `;
+                } else {
+                    solutionText.innerHTML = `
+                        <strong>推荐使用绝对路径方案：</strong><br>
+                        <code>/showcase/filename.jpg</code><br>
+                        <br>
+                        原因：HTTP服务器环境下绝对路径更标准。
+                    `;
+                }
+            }
+        }
+        
+        // 创建图片卡片
+        function createImageCard(image, containerId) {
+            const container = document.getElementById(containerId);
+            const card = document.createElement('div');
+            card.className = 'image-card';
+            card.id = `card-${image.id}`;
+            
+            // 测试两种路径
+            const absolutePath = `/showcase/${image.name}`;
+            const relativePath = `public/showcase/${image.name}`;
+            
+            card.innerHTML = `
+                <div class="image-preview">
+                    <img src="${absolutePath}" alt="${image.alt}" 
+                         onload="imageLoaded('${image.id}', '${image.section}')"
+                         onerror="imageError('${image.id}', '${image.section}', '${absolutePath}')"
+                         id="img-${image.id}">
+                </div>
+                <div class="image-info">
+                    <div class="image-name">${image.name}</div>
+                    <div class="image-status" id="status-${image.id}">测试中...</div>
+                    <div class="path-display" id="path-${image.id}">
+                        绝对路径: ${absolutePath}
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(card);
+        }
+        
+        // 图片加载成功
+        function imageLoaded(imageId, section) {
+            loadedImages++;
+            const imgElement = document.getElementById(`img-${imageId}`);
+            const statusElement = document.getElementById(`status-${imageId}`);
+            const pathElement = document.getElementById(`path-${imageId}`);
+            
+            statusElement.className = 'image-status status-success';
+            statusElement.textContent = `✅ ${imgElement.naturalWidth}×${imgElement.naturalHeight}`;
+            pathElement.textContent = `✅ ${imgElement.src.includes('public/') ? '相对' : '绝对'}路径有效`;
+            
+            logMessage(`${section}: ${imageId} 加载成功`, 'success');
+            updateStats();
+        }
+        
+        // 图片加载失败
+        function imageError(imageId, section, currentPath) {
+            failedImages++;
+            const imgElement = document.getElementById(`img-${imageId}`);
+            const statusElement = document.getElementById(`status-${imageId}`);
+            const pathElement = document.getElementById(`path-${imageId}`);
+            
+            statusElement.className = 'image-status status-error';
+            statusElement.textContent = '❌ 加载失败';
+            pathElement.textContent = `❌ 路径无效: ${currentPath}`;
+            
+            logMessage(`${section}: ${imageId} 加载失败 - ${currentPath}`, 'error');
+            
+            // 如果当前是绝对路径，尝试相对路径
+            if (currentPath.startsWith('/showcase/')) {
+                setTimeout(() => {
+                    const relativePath = `public/showcase/${imageId.split('-').pop()}.jpg`;
+                    imgElement.src = relativePath;
+                    pathElement.textContent = `尝试: ${relativePath}`;
+                    logMessage(`${section}: ${imageId} 尝试相对路径`, 'warning');
+                }, 1000);
+            }
+            
+            updateStats();
+        }
+        
+        // 初始化所有图片
+        function initAllImages() {
+            logMessage('综合图片诊断系统启动', 'info');
+            logMessage(`访问协议: ${currentProtocol}`, 'info');
+            logMessage(`总图片数: ${totalImages}`, 'info');
+            
+            // 创建所有图片卡片
+            Object.entries(allImages).forEach(([section, images]) => {
+                images.forEach(image => {
+                    createImageCard(image, `${section}-images`);
+                });
+            });
+            
+            // 如果是文件协议，显示自动修复通知
+            if (currentProtocol === 'file:') {
+                autoFixNotice.style.display = 'block';
+                
+                // 3秒后自动切换到相对路径
+                setTimeout(() => {
+                    logMessage('自动切换到相对路径方案', 'warning');
+                    applyRelativePaths();
+                }, 3000);
+            }
+        }
+        
+        // 修复方案函数
+        function applyRelativePaths() {
+            logMessage('应用相对路径方案: public/showcase/', 'info');
+            
+            Object.values(allImages).flat().forEach(image => {
+                const imgElement = document.getElementById(`img-${image.id}`);
+                imgElement.src = `public/showcase/${image.name}`;
+                
+                const pathElement = document.getElementById(`path-${image.id}`);
+                pathElement.textContent = `相对路径: public/showcase/${image.name}`;
+            });
+            
+            solutionText.innerHTML = `
+                <strong>已应用相对路径方案</strong><br>
+                所有图片使用: <code>public/showcase/filename.jpg</code><br>
+                <br>
+                适用于：文件协议访问、本地开发环境
+            `;
+        }
+        
+        function applyAbsolutePaths() {
+            logMessage('应用绝对路径方案: /showcase/', 'info');
+            
+            Object.values(allImages).flat().forEach(image => {
+                const imgElement = document.getElementById(`img-${image.id}`);
+                imgElement.src = `/showcase/${image.name}`;
+                
+                const pathElement = document.getElementById(`path-${image.id}`);
+                pathElement.textContent = `绝对路径: /showcase/${image.name}`;
+            });
+            
+            solutionText.innerHTML = `
+                <strong>已应用绝对路径方案</strong><br>
+                所有图片使用: <code>/showcase/filename.jpg</code><br>
+                <br>
+                适用于：HTTP服务器环境、网站部署
+            `;
+        }
+        
+        function applySmartPaths() {
+            logMessage('应用智能路径匹配', 'info');
+            
+            if (currentProtocol === 'file:') {
+                applyRelativePaths();
+            } else {
+                applyAbsolutePaths();
+            }
+        }
+        
+        function testAllPaths() {
+            logMessage('重新测试所有路径', 'info');
+            
+            loadedImages = 0;
+            failedImages = 0;
+            
+            Object.values(allImages).flat().forEach(image => {
+                const statusElement = document.getElementById(`status-${image.id}`);
+                statusElement.className = 'image-status';
+                statusElement.textContent = '重新测试中...';
+            });
+            
+            updateStats();
+        }
+        
+        function fixPortfolioOnly() {
+            logMessage('仅修复作品选集图片', 'info');
+            
+            allImages.portfolio.forEach(image => {
+                const imgElement = document.getElementById(`img-${image.id}`);
+                const newPath = currentProtocol === 'file:' ? 
+                    `public/showcase/${image.name}` : `/showcase/${image.name}`;
+                
+                imgElement.src = newPath;
+                
+                const pathElement = document.getElementById(`path-${image.id}`);
+                pathElement.textContent = `${currentProtocol === 'file:' ? '相对' : '绝对'}路径: ${newPath}`;
+            });
+            
+            solutionText.innerHTML = `
+                <strong>已修复作品选集图片</strong><br>
+                5张横构图作品使用: <code>${currentProtocol === 'file:' ? 'public/showcase/' : '/showcase/'}portfolio-*.jpg</code>
+            `;
+        }
+        
+        function fixQROnly() {
+            logMessage('仅修复二维码图片', 'info');
+            
+            allImages.qr.forEach(image => {
+                const imgElement = document.getElementById(`img-${image.id}`);
+                const newPath = currentProtocol === 'file:' ? 
+                    `public/showcase/${image.name}` : `/showcase/${image.name}`;
+                
+                imgElement.src = newPath;
+                
+                const pathElement = document.getElementById(`path-${image.id}`);
+                pathElement.textContent = `${currentProtocol === 'file:' ? '相对' : '绝对'}路径: ${newPath}`;
+            });
+            
+            solutionText.innerHTML = `
+                <strong>已修复二维码图片</strong><br>
+                2张二维码使用: <code>${currentProtocol === 'file:' ? 'public/showcase/' : '/showcase/'}*.jpg</code>
+            `;
+        }
+        
+        function openMainPage() {
+            logMessage('打开主页面验证', 'info');
+            window.open('index.html', '_blank');
+        }
+        
+        function clearCache() {
+            logMessage('清除浏览器缓存', 'info');
+            if (currentProtocol === 'file:') {
+                location.reload(true);
+            } else {
+                location.href = location.href.split('?')[0] + '?t=' + Date.now();
+            }
+        }
+        
+        // 初始化
+        initAllImages();
+        
+        // 5秒后总结
+        setTimeout(() => {
+            if (failedImages > 0) {
+                logMessage(`诊断完成: ${loadedImages}成功, ${failedImages}失败`, 'warning');
+            } else {
+                logMessage(`诊断完成: 所有${totalImages}张图片加载成功`, 'success');
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

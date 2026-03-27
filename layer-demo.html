@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图层合成演示 - 水煮后期</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        /* 导航栏 */
+        nav {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(40px) saturate(180%);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #a5f3fc;
+            text-shadow: 0 0 10px rgba(165, 243, 252, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #a5f3fc;
+        }
+
+        /* 主内容区 */
+        .layer-demo-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 20px 60px;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff, #a5f3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 3D场景容器 */
+        .scene-wrapper {
+            perspective: 1500px;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .layers-container {
+            position: relative;
+            width: 400px;
+            height: 280px;
+            transform-style: preserve-3d;
+            transform: rotateY(-15deg) rotateX(10deg);
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+        }
+
+        .layers-container:hover {
+            transform: rotateY(-12deg) rotateX(8deg) scale(1.02);
+        }
+
+        .layers-container.exploded {
+            transform: rotateY(-25deg) rotateX(15deg);
+        }
+
+        /* 单个图层 */
+        .layer-panel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 图层内容样式 */
+        .layer-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            position: relative;
+        }
+
+        .layer-number {
+            font-size: 3rem;
+            font-weight: 800;
+            opacity: 0.2;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .layer-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .layer-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .layer-visual {
+            flex: 1;
+            margin-top: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        /* 各图层样式 - 初始状态 */
+        .layer-1 {
+            background: linear-gradient(135deg, rgba(165, 243, 252, 0.9), rgba(102, 136, 255, 0.8));
+            transform: translateZ(0px);
+            z-index: 5;
+        }
+
+        .layer-2 {
+            background: linear-gradient(135deg, rgba(255, 154, 158, 0.9), rgba(250, 208, 196, 0.8));
+            transform: translateZ(-2px);
+            z-index: 4;
+        }
+
+        .layer-3 {
+            background: linear-gradient(135deg, rgba(168, 237, 234, 0.9), rgba(254, 214, 227, 0.8));
+            transform: translateZ(-4px);
+            z-index: 3;
+        }
+
+        .layer-4 {
+            background: linear-gradient(135deg, rgba(255, 236, 210, 0.9), rgba(252, 182, 159, 0.8));
+            transform: translateZ(-6px);
+            z-index: 2;
+        }
+
+        .layer-5 {
+            background: linear-gradient(135deg, rgba(195, 207, 226, 0.9), rgba(216, 226, 220, 0.8));
+            transform: translateZ(-8px);
+            z-index: 1;
+        }
+
+        /* 爆炸状态 - 图层散开 */
+        .layers-container.exploded .layer-1 {
+            transform: translateZ(200px) translateX(0px);
+            opacity: 0.4;
+            border: 1px solid rgba(165, 243, 252, 0.6);
+            box-shadow: 
+                0 0 30px rgba(165, 243, 252, 0.3),
+                0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .layers-container.exploded .layer-2 {
+            transform: translateZ(100px) translateX(-30px);
+            opacity: 0.4;
+            border: 1px solid rgba(255, 154, 158, 0.6);
+            box-shadow: 
+                0 0 30px rgba(255, 154, 158, 0.3),
+                0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .layers-container.exploded .layer-3 {
+            transform: translateZ(0px) translateX(-60px);
+            opacity: 0.4;
+            border: 1px solid rgba(168, 237, 234, 0.6);
+            box-shadow: 
+                0 0 30px rgba(168, 237, 234, 0.3),
+                0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .layers-container.exploded .layer-4 {
+            transform: translateZ(-100px) translateX(-90px);
+            opacity: 0.4;
+            border: 1px solid rgba(255, 236, 210, 0.6);
+            box-shadow: 
+                0 0 30px rgba(255, 236, 210, 0.3),
+                0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .layers-container.exploded .layer-5 {
+            transform: translateZ(-200px) translateX(-120px);
+            opacity: 0.4;
+            border: 1px solid rgba(195, 207, 226, 0.6);
+            box-shadow: 
+                0 0 30px rgba(195, 207, 226, 0.3),
+                0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 提示文字 */
+        .interaction-hint {
+            margin-top: 60px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .interaction-hint .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #a5f3fc;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        /* 图层信息面板 */
+        .layer-info-panel {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            background: rgba(30, 30, 50, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            z-index: 100;
+        }
+
+        .layer-info-panel.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .layer-info-panel h3 {
+            color: #a5f3fc;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .layer-info-panel p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1024px) {
+            .layer-info-panel {
+                position: static;
+                transform: none;
+                width: 100%;
+                max-width: 400px;
+                margin-top: 40px;
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .scene-wrapper {
+                height: 400px;
+            }
+
+            .layers-container {
+                width: 300px;
+                height: 210px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav-links {
+                display: none;
+            }
+
+            .layers-container {
+                width: 260px;
+                height: 182px;
+            }
+
+            .layer-content {
+                padding: 16px;
+            }
+
+            .layer-number {
+                font-size: 2rem;
+            }
+
+            .layer-title {
+                font-size: 1.1rem;
+            }
+
+            .layer-visual {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="container">
+            <div class="logo">水煮后期</div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="index.html#pain-points">痛点</a></li>
+                <li><a href="index.html#curriculum">课程大纲</a></li>
+                <li><a href="layer-demo.html" style="color: #a5f3fc;">图层演示</a></li>
+                <li><a href="index.html#pricing">定价方案</a></li>
+                <li><a href="index.html#features">教学特色</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 图层演示区域 -->
+    <section class="layer-demo-section">
+        <div class="section-header">
+            <h1>图层合成演示</h1>
+            <p>点击下方的合成图层，查看专业后期合成的5层结构如何通过3D空间展开，了解每一层的作用与关系</p>
+        </div>
+
+        <!-- 3D场景 -->
+        <div class="scene-wrapper">
+            <div class="layers-container" id="layersContainer">
+                <!-- 图层5 - 背景层 -->
+                <div class="layer-panel layer-5">
+                    <div class="layer-content">
+                        <span class="layer-number">05</span>
+                        <h3 class="layer-title">背景层</h3>
+                        <p class="layer-desc">场景搭建与环境基础</p>
+                        <div class="layer-visual">🏞️</div>
+                    </div>
+                </div>
+
+                <!-- 图层4 - 光影层 -->
+                <div class="layer-panel layer-4">
+                    <div class="layer-content">
+                        <span class="layer-number">04</span>
+                        <h3 class="layer-title">光影层</h3>
+                        <p class="layer-desc">环境光与氛围渲染</p>
+                        <div class="layer-visual">💡</div>
+                    </div>
+                </div>
+
+                <!-- 图层3 - 主体层 -->
+                <div class="layer-panel layer-3">
+                    <div class="layer-content">
+                        <span class="layer-number">03</span>
+                        <h3 class="layer-title">主体层</h3>
+                        <p class="layer-desc">人物精修与核心元素</p>
+                        <div class="layer-visual">👤</div>
+                    </div>
+                </div>
+
+                <!-- 图层2 - 特效层 -->
+                <div class="layer-panel layer-2">
+                    <div class="layer-content">
+                        <span class="layer-number">02</span>
+                        <h3 class="layer-title">特效层</h3>
+                        <p class="layer-desc">粒子光效与视觉特效</p>
+                        <div class="layer-visual">✨</div>
+                    </div>
+                </div>
+
+                <!-- 图层1 - 调色层 -->
+                <div class="layer-panel layer-1">
+                    <div class="layer-content">
+                        <span class="layer-number">01</span>
+                        <h3 class="layer-title">调色层</h3>
+                        <p class="layer-desc">最终色彩校正输出</p>
+                        <div class="layer-visual">🎨</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 交互提示 -->
+        <div class="interaction-hint">
+            <span class="pulse-dot"></span>
+            <span id="hintText">点击图层展开 3D 分层视图</span>
+        </div>
+
+        <!-- 图层信息面板 -->
+        <div class="layer-info-panel" id="layerInfoPanel">
+            <h3>后期合成五层结构</h3>
+            <p>专业后期合成采用分层处理 workflow，从底层到顶层依次为：背景搭建 → 光影氛围 → 主体精修 → 特效叠加 → 调色输出。每一层都可以独立调整，最终合成出完美的视觉效果。</p>
+        </div>
+    </section>
+
+    <script>
+        // 图层容器交互
+        const layersContainer = document.getElementById('layersContainer');
+        const hintText = document.getElementById('hintText');
+        const layerInfoPanel = document.getElementById('layerInfoPanel');
+        let isExploded = false;
+
+        layersContainer.addEventListener('click', function() {
+            isExploded = !isExploded;
+
+            if (isExploded) {
+                layersContainer.classList.add('exploded');
+                hintText.textContent = '再次点击收起图层';
+                layerInfoPanel.classList.add('visible');
+            } else {
+                layersContainer.classList.remove('exploded');
+                hintText.textContent = '点击图层展开 3D 分层视图';
+                layerInfoPanel.classList.remove('visible');
+            }
+        });
+
+        // 鼠标移动视差效果（仅在未展开时）
+        document.addEventListener('mousemove', function(e) {
+            if (!isExploded) {
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                layersContainer.style.transform = `rotateY(${-15 + x * 0.3}deg) rotateX(${10 + y * 0.3}deg)`;
+            }
+        });
+
+        // 键盘空格键快捷操作
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                layersContainer.click();
+            }
+        });
+    </script>
+</body>
+</html>

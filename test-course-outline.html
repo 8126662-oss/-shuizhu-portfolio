@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试课程大纲图片</title>
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            padding: 40px;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 课程大纲图片容器 */
+        .curriculum-image-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* 课程大纲图片 */
+        .curriculum-image {
+            width: 100%;
+            max-height: 600px;
+            aspect-ratio: 2.07 / 1; /* 基于图片实际比例 6000x2897 ≈ 2.07:1 */
+            object-fit: contain; /* 优先保证文字清晰可见 */
+            border-radius: 12px; /* 与滑块对比框的圆角保持一致 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .curriculum-image:hover {
+            transform: scale(1.01);
+        }
+        
+        .status {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>测试课程大纲图片加载</h1>
+        <p>测试路径: /showcase/course-outline.jpg</p>
+        
+        <div class="curriculum-image-container">
+            <img src="public/showcase/course-outline.jpg" alt="课程大纲" class="curriculum-image" id="test-image">
+        </div>
+        
+        <div id="status-message" class="status">
+            图片加载中...
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const img = document.getElementById('test-image');
+            const status = document.getElementById('status-message');
+            
+            img.onload = function() {
+                status.innerHTML = `
+                    <h3>✅ 图片加载成功！</h3>
+                    <p>图片尺寸: ${img.naturalWidth} × ${img.naturalHeight}</p>
+                    <p>显示尺寸: ${img.width} × ${img.height}</p>
+                    <p>宽高比: ${(img.naturalWidth / img.naturalHeight).toFixed(2)}:1</p>
+                    <p>CSS aspect-ratio: ${img.style.aspectRatio || '2.07 / 1'}</p>
+                    <p>object-fit: ${img.style.objectFit || 'contain'}</p>
+                `;
+            };
+            
+            img.onerror = function() {
+                status.className = 'error';
+                status.innerHTML = `
+                    <h3>❌ 图片加载失败！</h3>
+                    <p>请检查图片路径: /showcase/course-outline.jpg</p>
+                    <p>实际文件路径: C:\\Users\\86152\\Documents\\trae_projects\\box1\\public\\showcase\\course-outline.jpg</p>
+                    <p>请确保文件存在且路径正确。</p>
+                `;
+            };
+        });
+    </script>
+</body>
+</html>

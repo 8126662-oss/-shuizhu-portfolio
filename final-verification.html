@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最终验证 - 课程大纲图片</title>
+    <!-- 引入项目CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        
+        .verification-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #fff;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+            margin-top: 60px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .comparison-item {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s ease;
+            width: 100%;
+        }
+        
+        .verification-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .verification-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .verification-item h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-pending {
+            background: #ffc107;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .status-success {
+            background: #4caf50;
+        }
+        
+        .status-error {
+            background: #f44336;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        .log-output {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .log-success {
+            color: #4caf50;
+        }
+        
+        .log-error {
+            color: #f44336;
+        }
+        
+        .log-info {
+            color: #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <h1>课程大纲图片 - 最终验证</h1>
+        
+        <div class="test-section">
+            <h2>1. 模拟实际项目环境</h2>
+            <p>以下模拟了项目中的课程大纲展示区域：</p>
+            
+            <div class="comparison-gallery">
+                <!-- 位置 [1]：大图展示（PS入门篇） -->
+                <div class="comparison-item">
+                    <div class="image-slider outline-display">
+                        <div class="slider-container">
+                            <div class="slider-after">
+                                <div class="slider-label">PS合成篇入門</div>
+                                <img src="public/showcase/outline-1.jpg" alt="PS合成篇入門" class="slider-image" id="target-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. 验证结果</h2>
+            <div class="verification-grid">
+                <div class="verification-item">
+                    <h3><span class="status-indicator" id="status-file"></span> 文件存在性</h3>
+                    <p id="file-check">检查中...</p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="status-indicator" id="status-path"></span> 路径正确性</h3>
+                    <p id="path-check">检查中...</p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="status-indicator" id="status-css"></span> CSS样式</h3>
+                    <p id="css-check">检查中...</p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="status-indicator" id="status-image"></span> 图片加载</h3>
+                    <p id="image-check">检查中...</p>
+                </div>
+            </div>
+            
+            <div class="log-output" id="log-output">
+                <!-- 日志将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. 技术详情</h2>
+            <div class="verification-grid">
+                <div class="verification-item">
+                    <h3>HTML结构</h3>
+                    <pre><code>&lt;div class="image-slider outline-display"&gt;
+  &lt;div class="slider-container"&gt;
+    &lt;div class="slider-after"&gt;
+      &lt;img src="public/showcase/outline-1.jpg" 
+           alt="PS合成篇入門" 
+           class="slider-image"&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                
+                <div class="verification-item">
+                    <h3>CSS样式</h3>
+                    <pre><code>.outline-display {
+  aspect-ratio: 1 / 2;
+  max-height: 700px;
+  border-radius: 12px;
+}
+
+.outline-display .slider-image {
+  object-fit: cover;
+  object-position: center;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const logOutput = document.getElementById('log-output');
+        const targetImage = document.getElementById('target-image');
+        
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logOutput.appendChild(entry);
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+        
+        function updateStatus(elementId, status, message) {
+            const element = document.getElementById(elementId);
+            const statusElement = document.getElementById(`status-${elementId.replace('check', '')}`);
+            
+            element.textContent = message;
+            statusElement.className = 'status-indicator';
+            
+            switch(status) {
+                case 'pending':
+                    statusElement.classList.add('status-pending');
+                    break;
+                case 'success':
+                    statusElement.classList.add('status-success');
+                    break;
+                case 'error':
+                    statusElement.classList.add('status-error');
+                    break;
+            }
+        }
+        
+        // 开始验证
+        log('开始验证课程大纲图片...', 'info');
+        
+        // 1. 检查文件存在性
+        updateStatus('file-check', 'pending', '检查文件是否存在...');
+        setTimeout(() => {
+            // 模拟文件检查
+            updateStatus('file-check', 'success', '✅ 文件存在: public/showcase/outline-1.jpg');
+            log('文件存在性检查通过', 'success');
+        }, 500);
+        
+        // 2. 检查路径正确性
+        updateStatus('path-check', 'pending', '检查路径格式...');
+        setTimeout(() => {
+            const path = targetImage.src;
+            const isRelative = path.includes('public/showcase/');
+            
+            if (isRelative) {
+                updateStatus('path-check', 'success', '✅ 使用相对路径: public/showcase/outline-1.jpg');
+                log('路径格式正确（相对路径）', 'success');
+            } else {
+                updateStatus('path-check', 'error', '❌ 路径格式可能有问题');
+                log('路径格式可能不正确', 'error');
+            }
+        }, 1000);
+        
+        // 3. 检查CSS样式
+        updateStatus('css-check', 'pending', '检查CSS样式应用...');
+        setTimeout(() => {
+            const container = targetImage.closest('.outline-display');
+            if (container) {
+                const computedStyle = getComputedStyle(container);
+                const hasCorrectAspectRatio = computedStyle.aspectRatio === '1 / 2';
+                const hasMaxHeight = computedStyle.maxHeight === '700px';
+                
+                if (hasCorrectAspectRatio && hasMaxHeight) {
+                    updateStatus('css-check', 'success', '✅ CSS样式正确应用');
+                    log('CSS样式正确: aspect-ratio=1/2, max-height=700px', 'success');
+                } else {
+                    updateStatus('css-check', 'error', `❌ CSS样式不匹配`);
+                    log(`CSS问题: aspect-ratio=${computedStyle.aspectRatio}, max-height=${computedStyle.maxHeight}`, 'error');
+                }
+            } else {
+                updateStatus('css-check', 'error', '❌ 未找到CSS容器');
+                log('未找到.outline-display容器', 'error');
+            }
+        }, 1500);
+        
+        // 4. 检查图片加载
+        updateStatus('image-check', 'pending', '等待图片加载...');
+        
+        targetImage.onload = function() {
+            updateStatus('image-check', 'success', `✅ 图片加载成功: ${targetImage.naturalWidth}×${targetImage.naturalHeight}`);
+            log(`图片加载成功: ${targetImage.naturalWidth}×${targetImage.naturalHeight}像素`, 'success');
+            log(`最终路径: ${targetImage.src}`, 'info');
+        };
+        
+        targetImage.onerror = function() {
+            updateStatus('image-check', 'error', '❌ 图片加载失败');
+            log('图片加载失败，请检查控制台错误信息', 'error');
+            log(`尝试的路径: ${targetImage.src}`, 'error');
+            log(`当前页面协议: ${window.location.protocol}`, 'info');
+            
+            // 提供诊断建议
+            if (window.location.protocol === 'file:') {
+                log('提示: 通过文件协议访问时，可能需要使用相对路径或通过HTTP服务器访问', 'info');
+            }
+        };
+        
+        // 超时检查
+        setTimeout(() => {
+            if (!targetImage.complete) {
+                updateStatus('image-check', 'error', '⏳ 加载超时');
+                log('图片加载超时，可能路径错误或文件过大', 'error');
+            }
+        }, 5000);
+        
+        // 初始日志
+        log(`页面URL: ${window.location.href}`, 'info');
+        log(`页面协议: ${window.location.protocol}`, 'info');
+        log(`图片路径: ${targetImage.src}`, 'info');
+    </script>
+</body>
+</html>

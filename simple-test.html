@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简单测试 - outline-1.jpg</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        .test-box {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+        }
+        img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .loading {
+            background: rgba(255,193,7,0.2);
+            border: 1px solid rgba(255,193,7,0.5);
+        }
+        .success {
+            background: rgba(76,175,80,0.2);
+            border: 1px solid rgba(76,175,80,0.5);
+        }
+        .error {
+            background: rgba(244,67,54,0.2);
+            border: 1px solid rgba(244,67,54,0.5);
+        }
+        .info {
+            background: rgba(33,150,243,0.2);
+            border: 1px solid rgba(33,150,243,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-box">
+        <h1>简单图片加载测试</h1>
+        
+        <div class="status info">
+            <h3>测试信息</h3>
+            <p>图片路径: <code>public/showcase/outline-1.jpg</code></p>
+            <p>相对于: <code>C:\Users\86152\Documents\trae_projects\box1\simple-test.html</code></p>
+        </div>
+        
+        <div class="status loading" id="status">
+            正在加载图片...
+        </div>
+        
+        <img src="public/showcase/outline-1.jpg" alt="PS合成篇入門" id="test-img">
+        
+        <div class="status info">
+            <h3>如果图片不显示，请尝试：</h3>
+            <ol>
+                <li>按 F12 打开开发者工具</li>
+                <li>查看 Console（控制台）标签页的错误信息</li>
+                <li>查看 Network（网络）标签页的请求状态</li>
+                <li>检查图片文件是否存在且可读</li>
+                <li>尝试通过 HTTP 服务器访问（而不是直接打开文件）</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        const img = document.getElementById('test-img');
+        const status = document.getElementById('status');
+        
+        img.onload = function() {
+            status.className = 'status success';
+            status.innerHTML = `
+                <h3>✅ 图片加载成功！</h3>
+                <p>尺寸: ${img.naturalWidth} × ${img.naturalHeight} 像素</p>
+                <p>路径: ${img.src}</p>
+                <p>✅ 相对路径有效！</p>
+            `;
+        };
+        
+        img.onerror = function() {
+            status.className = 'status error';
+            status.innerHTML = `
+                <h3>❌ 图片加载失败</h3>
+                <p>可能的原因：</p>
+                <ol>
+                    <li>文件不存在于指定路径</li>
+                    <li>文件权限问题</li>
+                    <li>需要通过 HTTP 服务器访问</li>
+                    <li>浏览器安全限制（CORS）</li>
+                </ol>
+                <p>请检查控制台获取详细错误信息。</p>
+            `;
+            
+            // 尝试诊断问题
+            console.error('图片加载失败，路径:', img.src);
+            console.error('当前页面URL:', window.location.href);
+            console.error('页面协议:', window.location.protocol);
+        };
+        
+        // 超时检查
+        setTimeout(() => {
+            if (!img.complete) {
+                status.className = 'status error';
+                status.innerHTML = '<h3>⏳ 加载超时</h3><p>图片加载时间过长，请检查网络或文件路径。</p>';
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

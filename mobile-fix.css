@@ -1,0 +1,118 @@
+/* 手机端响应式修复补丁 */
+/* 添加到现有style.css的末尾 */
+
+/* 1. 确保所有图片在移动端不溢出 */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 2. 修复横向容器在移动端的布局 */
+@media (max-width: 768px) {
+    /* 修复导航栏 */
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    /* 修复作品展示区 */
+    .portfolio-gallery {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* 修复课程大纲展示 */
+    .comparison-gallery {
+        flex-direction: column;
+    }
+    
+    /* 修复价格卡片 */
+    .pricing-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    /* 修复功能展示 */
+    .features-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* 修复FAQ区域 */
+    .faq-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* 修复客户评价 */
+    .testimonial-track {
+        animation-duration: 40s !important; /* 减慢移动端动画速度 */
+    }
+    
+    /* 修复二维码区域 */
+    .qr-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .qr-code {
+        margin-bottom: 20px;
+    }
+}
+
+/* 3. 修复小屏幕设备 */
+@media (max-width: 480px) {
+    /* 进一步调整字体大小 */
+    h1 {
+        font-size: clamp(1.8rem, 8vw, 2.5rem) !important;
+    }
+    
+    h2 {
+        font-size: clamp(1.5rem, 6vw, 2rem) !important;
+    }
+    
+    /* 修复按钮大小 */
+    .btn-primary, .btn-secondary {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+    
+    /* 修复间距 */
+    .section-padding {
+        padding: 60px 0 !important;
+    }
+    
+    /* 修复图片容器 */
+    .image-container {
+        margin: 10px 0;
+    }
+}
+
+/* 4. 防止横向滚动 */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* 5. 修复触摸设备交互 */
+@media (hover: none) and (pointer: coarse) {
+    /* 增加触摸目标大小 */
+    button, .btn-primary, .btn-secondary, .nav-link {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* 修复滑动交互 */
+    .testimonial-track {
+        animation-play-state: running !important;
+    }
+    
+    /* 禁用悬停效果 */
+    .portfolio-item:hover, .pricing-card:hover {
+        transform: none !important;
+    }
+}
+
+/* 6. 修复iOS Safari特定问题 */
+@supports (-webkit-touch-callout: none) {
+    .hero {
+        height: -webkit-fill-available;
+    }
+}

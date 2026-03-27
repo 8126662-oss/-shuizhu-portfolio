@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图层合成展示 - 水煮后期</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            perspective: 1200px;
+        }
+        
+        /* 背景粒子效果 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(165, 243, 252, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+        
+        /* 主容器 */
+        .showcase-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        
+        /* 标题样式 */
+        .page-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(165, 243, 252, 0.3);
+            letter-spacing: -0.02em;
+        }
+        
+        .page-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 600px;
+        }
+        
+        /* 3D场景容器 */
+        .scene-container {
+            position: relative;
+            width: 400px;
+            height: 500px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        @media (max-width: 640px) {
+            .scene-container {
+                width: 300px;
+                height: 375px;
+            }
+        }
+        
+        /* 爆炸状态 */
+        .scene-container.exploded {
+            transform: rotateX(25deg) rotateY(-15deg) rotateZ(5deg);
+        }
+        
+        /* 图层基础样式 */
+        .layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-style: preserve-3d;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 图层内容 */
+        .layer-content {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .layer-number {
+            font-size: 4rem;
+            font-weight: 800;
+            opacity: 0.3;
+            margin-bottom: 10px;
+        }
+        
+        .layer-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .layer-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* 各图层颜色 */
+        .layer-1 {
+            background: linear-gradient(135deg, rgba(165, 243, 252, 0.4), rgba(102, 136, 255, 0.3));
+            z-index: 5;
+            transform: translateZ(0px);
+        }
+        
+        .layer-2 {
+            background: linear-gradient(135deg, rgba(255, 154, 158, 0.4), rgba(250, 208, 196, 0.3));
+            z-index: 4;
+            transform: translateZ(0px);
+        }
+        
+        .layer-3 {
+            background: linear-gradient(135deg, rgba(168, 237, 234, 0.4), rgba(254, 214, 227, 0.3));
+            z-index: 3;
+            transform: translateZ(0px);
+        }
+        
+        .layer-4 {
+            background: linear-gradient(135deg, rgba(255, 236, 210, 0.4), rgba(252, 182, 159, 0.3));
+            z-index: 2;
+            transform: translateZ(0px);
+        }
+        
+        .layer-5 {
+            background: linear-gradient(135deg, rgba(195, 207, 226, 0.4), rgba(216, 226, 220, 0.3));
+            z-index: 1;
+            transform: translateZ(0px);
+        }
+        
+        /* 爆炸状态 - 各图层分离 */
+        .scene-container.exploded .layer-1 {
+            transform: translateZ(200px) translateY(-80px);
+        }
+        
+        .scene-container.exploded .layer-2 {
+            transform: translateZ(150px) translateY(-40px);
+        }
+        
+        .scene-container.exploded .layer-3 {
+            transform: translateZ(100px) translateY(0px);
+        }
+        
+        .scene-container.exploded .layer-4 {
+            transform: translateZ(50px) translateY(40px);
+        }
+        
+        .scene-container.exploded .layer-5 {
+            transform: translateZ(0px) translateY(80px);
+        }
+        
+        /* 连接线 */
+        .connection-line {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(165, 243, 252, 0.5), transparent);
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .scene-container.exploded .connection-line {
+            opacity: 1;
+        }
+        
+        /* 提示文字 */
+        .hint-text {
+            position: absolute;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            text-align: center;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        
+        .scene-container:hover .hint-text {
+            color: rgba(165, 243, 252, 0.8);
+        }
+        
+        /* 图层信息面板 */
+        .layer-info {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(30, 30, 50, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 30px;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            width: 280px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .layer-info.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .layer-info h3 {
+            color: #a5f3fc;
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
+        
+        .layer-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .layer-info-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .layer-info-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            padding: 12px 24px;
+            background: rgba(30, 30, 50, 0.6);
+            backdrop-filter: blur(20px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .back-btn:hover {
+            background: rgba(165, 243, 252, 0.2);
+            border-color: rgba(165, 243, 252, 0.3);
+            transform: translateX(-5px);
+        }
+        
+        /* 状态指示器 */
+        .status-indicator {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(30, 30, 50, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #a5f3fc;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        .status-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景粒子 -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- 返回按钮 -->
+    <a href="index.html" class="back-btn">← 返回首页</a>
+    
+    <!-- 状态指示器 -->
+    <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span class="status-text" id="statusText">点击图层查看分层结构</span>
+    </div>
+    
+    <!-- 主展示区域 -->
+    <div class="showcase-container">
+        <h1 class="page-title">图层合成展示</h1>
+        <p class="page-subtitle">点击下方的合成图层，查看 3D 爆炸拆解效果，了解专业后期合成的分层结构</p>
+        
+        <!-- 3D场景 -->
+        <div class="scene-container" id="sceneContainer">
+            <!-- 图层 5 - 背景层 -->
+            <div class="layer layer-5">
+                <div class="layer-content">
+                    <div class="layer-number">05</div>
+                    <div class="layer-title">背景层</div>
+                    <div class="layer-desc">基础环境搭建</div>
+                </div>
+            </div>
+            
+            <!-- 图层 4 - 光影层 -->
+            <div class="layer layer-4">
+                <div class="layer-content">
+                    <div class="layer-number">04</div>
+                    <div class="layer-title">光影层</div>
+                    <div class="layer-desc">氛围与光影渲染</div>
+                </div>
+            </div>
+            
+            <!-- 图层 3 - 主体层 -->
+            <div class="layer layer-3">
+                <div class="layer-content">
+                    <div class="layer-number">03</div>
+                    <div class="layer-title">主体层</div>
+                    <div class="layer-desc">人物与核心元素</div>
+                </div>
+            </div>
+            
+            <!-- 图层 2 - 特效层 -->
+            <div class="layer layer-2">
+                <div class="layer-content">
+                    <div class="layer-number">02</div>
+                    <div class="layer-title">特效层</div>
+                    <div class="layer-desc">粒子与光效叠加</div>
+                </div>
+            </div>
+            
+            <!-- 图层 1 - 调色层 -->
+            <div class="layer layer-1">
+                <div class="layer-content">
+                    <div class="layer-number">01</div>
+                    <div class="layer-title">调色层</div>
+                    <div class="layer-desc">最终色彩校正</div>
+                </div>
+            </div>
+            
+            <!-- 提示文字 -->
+            <div class="hint-text">点击展开 / 收起</div>
+        </div>
+    </div>
+    
+    <!-- 图层信息面板 -->
+    <div class="layer-info" id="layerInfo">
+        <div class="layer-info-item">
+            <h3>调色层</h3>
+            <p>最终色彩校正与风格化处理，统一整体色调，增强视觉冲击力。</p>
+        </div>
+        <div class="layer-info-item">
+            <h3>特效层</h3>
+            <p>添加粒子效果、光晕、发光等视觉特效，提升画面质感。</p>
+        </div>
+        <div class="layer-info-item">
+            <h3>主体层</h3>
+            <p>人物精修、抠图、姿态调整，确保主体完美呈现。</p>
+        </div>
+        <div class="layer-info-item">
+            <h3>光影层</h3>
+            <p>环境光、主光源、补光的设置，营造立体感和氛围。</p>
+        </div>
+        <div class="layer-info-item">
+            <h3>背景层</h3>
+            <p>场景搭建、背景合成、透视校正，构建完整的空间感。</p>
+        </div>
+    </div>
+
+    <script>
+        // 创建背景粒子
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        
+        // 初始化
+        createParticles();
+        
+        // 场景交互
+        const sceneContainer = document.getElementById('sceneContainer');
+        const statusText = document.getElementById('statusText');
+        const layerInfo = document.getElementById('layerInfo');
+        let isExploded = false;
+        
+        sceneContainer.addEventListener('click', function() {
+            isExploded = !isExploded;
+            
+            if (isExploded) {
+                sceneContainer.classList.add('exploded');
+                statusText.textContent = '分层结构展示中';
+                layerInfo.classList.add('visible');
+            } else {
+                sceneContainer.classList.remove('exploded');
+                statusText.textContent = '点击图层查看分层结构';
+                layerInfo.classList.remove('visible');
+            }
+        });
+        
+        // 鼠标移动视差效果
+        document.addEventListener('mousemove', function(e) {
+            if (!isExploded) {
+                const x = (e.clientX / window.innerWidth - 0.5) * 10;
+                const y = (e.clientY / window.innerHeight - 0.5) * 10;
+                sceneContainer.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+            }
+        });
+        
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                sceneContainer.click();
+            }
+        });
+    </script>
+</body>
+</html>

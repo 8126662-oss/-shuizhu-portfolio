@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户评价文案修改验证</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .verify-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .success-banner {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(33, 150, 243, 0.2));
+            border: 2px solid rgba(76, 175, 80, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .testimonials-preview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .testimonial-group {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .group-title {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .testimonial-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .user-tag {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-left: 10px;
+        }
+        
+        .testimonial-text {
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .verification-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .verification-card {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .requirements-list {
+            margin: 20px 0;
+        }
+        
+        .requirement-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            border-left: 3px solid #4caf50;
+        }
+        
+        .checkmark {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4caf50;
+            text-align: center;
+            line-height: 20px;
+            margin-right: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .action-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #388e3c;
+            transform: translateY(-2px);
+        }
+        
+        .summary-box {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="verify-container">
+        <div class="success-banner">
+            <h2>✅ 客户评价文案修改完成！</h2>
+            <p>已按照要求重写6条评价，去AI化，模拟真实用户口吻</p>
+        </div>
+        
+        <div class="testimonials-preview">
+            <div class="testimonial-group">
+                <h3 class="group-title">📸 修图服务组（3条好评）</h3>
+                
+                <div class="testimonial-item">
+                    <div class="user-info">
+                        <div class="user-avatar">是</div>
+                        <div>
+                            <span class="user-name">是一只*酱</span>
+                            <span class="user-tag">约稿客户</span>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">水煮老师真的是神仙后期！修图没那种假面感，皮肤纹理留得特别好，特效合成更是氛围感拉满了，返图快得离谱，下次出片还要约！</p>
+                </div>
+                
+                <div class="testimonial-item">
+                    <div class="user-info">
+                        <div class="user-avatar">咕</div>
+                        <div>
+                            <span class="user-name">咕咕*子</span>
+                            <span class="user-tag">约稿客户</span>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">终于找到能听懂人话的后期了...之前找过几个都修得像伪人，水煮老师把我那个简陋的背景直接修成了大片，太神了。</p>
+                </div>
+                
+                <div class="testimonial-item">
+                    <div class="user-info">
+                        <div class="user-avatar">橙</div>
+                        <div>
+                            <span class="user-name">橙*橙</span>
+                            <span class="user-tag">约稿客户</span>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">本来是废片，结果老师直接救活了，这种高级感真的值这个价，姐妹们冲就完了！</p>
+                </div>
+            </div>
+            
+            <div class="testimonial-group">
+                <h3 class="group-title">🎓 课程教学组（3条好评）</h3>
+                
+                <div class="testimonial-item">
+                    <div class="user-info">
+                        <div class="user-avatar">磕</div>
+                        <div>
+                            <span class="user-name">磕盐*选手</span>
+                            <span class="user-tag">课程学员</span>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">之前在网上看教程云里雾里的，水煮老师的课全是干货，不画饼。特别是那个 AI 焚诀篇，直接打开了新世界大门。</p>
+                </div>
+                
+                <div class="testimonial-item">
+                    <div class="user-info">
+                        <div class="user-avatar">喵</div>
+                        <div>
+                            <span class="user-name">喵*呜呜</span>
+                            <span class="user-tag">课程学员</span>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">报了老师的入门篇，从零基础开始带。老师讲课很细，作业点评也特别扎实，现在已经能自己修简单的合成图了！</p>
+                </div>
+                
+                <div class="testimonial-item">
+                    <div class="user-info">
+                        <div class="user-avatar">极</div>
+                        <div>
+                            <span class="user-name">极地*光</span>
+                            <span class="user-tag">课程学员</span>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">市面上很多后期课都太老了，水煮老师的真的领先版本。老师很有耐心，不是那种收钱就不管人的类型，超级推荐。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="verification-grid">
+            <div class="verification-card">
+                <h3>✅ 要求验证</h3>
+                <div class="requirements-list">
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 去AI化，模拟真实用户口吻
+                    </div>
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 简洁、口语化
+                    </div>
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 包含Cos圈内表达
+                    </div>
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 3条修图服务好评
+                    </div>
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 3条课程教学好评
+                    </div>
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 网名格式：中文网名+*
+                    </div>
+                </div>
+            </div>
+            
+            <div class="verification-card">
+                <h3>✅ 风格验证</h3>
+                <div class="requirements-list">
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 神仙后期（Cos圈表达）
+                    </div>
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 氛围感拉满
+                    </div>
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 修得像伪人（网络用语）
+                    </div>
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 姐妹们冲就完了（口语化）
+                    </div>
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> AI 焚诀篇（专业术语）
+                    </div>
+                    <div class="requirement-item">
+                        <span class="checkmark">✓</span> 领先版本（游戏化表达）
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary-box">
+            <h3>📋 修改总结</h3>
+            <p><strong>已完成的修改：</strong></p>
+            <ul>
+                <li>✅ 6条评价全部重写，去AI化</li>
+                <li>✅ 使用"中文网名+*"格式：磕盐*选手、喵*呜呜、极地*光、是一只*酱、咕咕*子、橙*橙</li>
+                <li>✅ 包含Cos圈内表达：神仙后期、氛围感、伪人、冲就完了</li>
+                <li>✅ 3条修图服务好评 + 3条课程教学好评</li>
+                <li>✅ 保持原有布局、头像样式、星星评分不变</li>
+                <li>✅ 文案简洁、口语化，模拟真实用户口吻</li>
+            </ul>
+            
+            <p><strong>技术实现：</strong></p>
+            <ul>
+                <li>✅ 仅修改文字内容，HTML结构和CSS样式保持不变</li>
+                <li>✅ 保持拟态玻璃卡片布局</li>
+                <li>✅ 保持头像首字母显示</li>
+                <li>✅ 保持5星评分显示</li>
+                <li>✅ 保持无缝循环效果</li>
+            </ul>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="action-btn btn-primary" onclick="openMainPage()">
+                打开主页面验证
+            </button>
+            <button class="action-btn btn-success" onclick="viewInBrowser()">
+                在浏览器中查看效果
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        function openMainPage() {
+            window.open('index.html', '_blank');
+        }
+        
+        function viewInBrowser() {
+            // 显示当前评价在页面中的实际位置
+            alert('请打开主页面 index.html，滚动到"客户评价"部分查看实际效果。\n\n评价位于作品选集部分之后，联系方式部分之前。');
+        }
+        
+        // 显示修改时间
+        console.log('客户评价文案修改验证页面');
+        console.log('修改时间：' + new Date().toLocaleString());
+        console.log('包含6条重写的评价：');
+        console.log('1. 磕盐*选手 - 课程学员');
+        console.log('2. 喵*呜呜 - 课程学员');
+        console.log('3. 极地*光 - 课程学员');
+        console.log('4. 是一只*酱 - 约稿客户');
+        console.log('5. 咕咕*子 - 约稿客户');
+        console.log('6. 橙*橙 - 约稿客户');
+    </script>
+</body>
+</html>

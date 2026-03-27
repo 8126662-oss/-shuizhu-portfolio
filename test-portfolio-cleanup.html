@@ -1,0 +1,405 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>娴嬭瘯浣滃搧閫夐泦娓呯悊涓庤嚜閫傚簲</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-box {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .verification-list {
+            margin: 20px 0;
+        }
+        
+        .verification-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            border-left: 3px solid #2196f3;
+        }
+        
+        .checkmark {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            margin-right: 10px;
+        }
+        
+        .check-ok {
+            background: #4caf50;
+        }
+        
+        .check-error {
+            background: #f44336;
+        }
+        
+        .code-display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .comparison-box {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-box h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .image-measurement {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .measure-item {
+            text-align: center;
+        }
+        
+        .measure-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>浣滃搧閫夐泦娓呯悊涓庤嚜閫傚簲娴嬭瘯</h1>
+        
+        <div class="test-section">
+            <h2>1. 娓呯悊鍚庣殑浣滃搧閫夐泦</h2>
+            <p>宸茬Щ闄ゆ枃瀛楁爣绛撅紝瀹炵幇姣斾緥鑷€傚簲锛?/p>
+            
+            <!-- 浣滃搧閫夐泦閮ㄥ垎 -->
+            <section id="portfolio" class="portfolio-section">
+                <div class="container">
+                    <h2 class="portfolio-title">鍚堟垚浣滃搧閫夐泦</h2>
+                    <p class="section-subtitle">瑙佽瘉鐪熷疄鐨勫寲瀛︽晥搴?span class="highlight-text">娆㈣繋鍓嶆潵瀛︿範</span>銆?/p>
+                    <div class="isometric-gallery">
+                        <div class="gallery-track">
+                            <!-- 浣滃搧1 -->
+                            <div class="gallery-item">
+                                <div class="gallery-image">
+                                    <img src="public/showcase/portfolio-1.jpg" alt="璧涘崥鏈嬪厠椋庢牸鍚堟垚" class="portfolio-image" id="img1">
+                                </div>
+                            </div>
+                            <!-- 浣滃搧2 -->
+                            <div class="gallery-item">
+                                <div class="gallery-image">
+                                    <img src="public/showcase/portfolio-2.jpg" alt="鍙ら浜哄儚鍚堟垚" class="portfolio-image" id="img2">
+                                </div>
+                            </div>
+                            <!-- 浣滃搧3 -->
+                            <div class="gallery-item">
+                                <div class="gallery-image">
+                                    <img src="public/showcase/portfolio-3.jpg" alt="绉戝够鍦烘櫙鏋勫缓" class="portfolio-image" id="img3">
+                                </div>
+                            </div>
+                            <!-- 浣滃搧4 -->
+                            <div class="gallery-item">
+                                <div class="gallery-image">
+                                    <img src="public/showcase/portfolio-4.jpg" alt="濂囧够涓栫晫鍚堟垚" class="portfolio-image" id="img4">
+                                </div>
+                            </div>
+                            <!-- 浣滃搧5 -->
+                            <div class="gallery-item">
+                                <div class="gallery-image">
+                                    <img src="public/showcase/portfolio-5.jpg" alt="鏈潵涓讳箟椋庢牸" class="portfolio-image" id="img5">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="image-measurement" id="measurement">
+                <div class="measure-item">
+                    <div>瀹瑰櫒瀹藉害</div>
+                    <div class="measure-value" id="container-width">娴嬮噺涓?..</div>
+                </div>
+                <div class="measure-item">
+                    <div>鍥剧墖楂樺害</div>
+                    <div class="measure-value" id="image-height">娴嬮噺涓?..</div>
+                </div>
+                <div class="measure-item">
+                    <div>鍔犺浇鐘舵€?/div>
+                    <div class="measure-value" id="load-status">妫€鏌ヤ腑...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. 淇敼楠岃瘉</h2>
+            <div class="verification-list">
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 绉婚櫎鏂囧瓧鏍囩</h3>
+                    <p>宸插交搴曞垹闄?涓綔鍝佺粍浠朵笅鏂圭殑鎵€鏈夋枃瀛楁爣棰樸€佹弿杩版垨鏍囩</p>
+                    <div class="code-display">
+                        <pre><code>宸插垹闄? &lt;div class="image-title"&gt;璧涘崥鏈嬪厠椋庢牸鍚堟垚&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 鍒犻櫎鍥哄畾楂樺害</h3>
+                    <p>宸茬Щ闄ゅ鍣ㄤ笂浠讳綍纭€х殑 height: 100% 鎴?aspect-ratio: 1/2</p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 鍥剧墖涓诲姣斾緥</h3>
+                    <p>瀹瑰櫒楂樺害璁句负 <code>height: auto</code></p>
+                    <p>鍥剧墖浣跨敤鍘熷姣斾緥鍐欐硶锛?code>width: 100%; height: auto;</code></p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 鍙栨秷瑁佸壀</h3>
+                    <p><code>object-fit: contain</code> - 100%瀹屾暣鏄剧ず妯浘杈圭紭锛屼笉琚垏鎺変竴涓佺偣</p>
+                    <p>锛堜篃鍙牴鎹渶瑕佹敼涓?<code>cover</code> 鍗犳弧鐢绘锛?/p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 瑙嗚瀵归綈</h3>
+                    <p>鉁?淇濇寔鍦嗚锛?0px</p>
+                    <p>鉁?淇濇寔闂磋窛锛歡ap: 32px</p>
+                    <p>鉁?5寮犲浘鐗囨í鍚戞帓鍒楋紝楂樺害闅忓悇鑷瘮渚嬭嚜鍔ㄨ皟鏁?/p>
+                    <p>鉁?褰㈡垚绫讳技鐎戝竷娴佹垨鏁撮綈鐨勯暱鏉＄姸</p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 璺緞澶嶆牳</h3>
+                    <p>鍥剧墖src鎸囧悜锛?/p>
+                    <div class="code-display">
+                        <pre><code>/showcase/portfolio-1.jpg
+/showcase/portfolio-2.jpg
+/showcase/portfolio-3.jpg
+/showcase/portfolio-4.jpg
+/showcase/portfolio-5.jpg</code></pre>
+                    </div>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 浠ｇ爜闅旂</h3>
+                    <p>鉁?浠呬慨鏀瑰簳閮ㄤ綔鍝侀€夐泦</p>
+                    <p>鉁?缃戦〉涓笂鏂圭殑璇剧▼澶х翰鍜屽姣旀粦鍧楀畬鍏ㄦ湭鍙楀奖鍝?/p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. 淇敼鍓嶅悗瀵规瘮</h2>
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <h3>涔嬪墠锛堟湁鏂囧瓧鏍囩锛屽浐瀹氭瘮渚嬶級</h3>
+                    <ul>
+                        <li>鉂?鏈夋枃瀛楁爣棰橀伄鎸?/li>
+                        <li>鉂?鍙兘浣跨敤鍥哄畾楂樺害</li>
+                        <li>鉂?鍥剧墖鍙兘琚鍓?/li>
+                        <li>鉂?姣斾緥涓嶈嚜鐒?/li>
+                        <li>鉂?瑙嗚鏉備贡</li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-box">
+                    <h3>鐜板湪锛堟棤鏂囧瓧鏍囩锛岃嚜閫傚簲姣斾緥锛?/h3>
+                    <ul>
+                        <li>鉁?绾浘鐗囧睍绀猴紝鏃犳枃瀛楀共鎵?/li>
+                        <li>鉁?瀹瑰櫒楂樺害鑷€傚簲</li>
+                        <li>鉁?鍥剧墖瀹屾暣鏄剧ず锛屼笉琚鍓?/li>
+                        <li>鉁?鏍规嵁鍘熷姣斾緥鑷劧灞曞紑</li>
+                        <li>鉁?瑙嗚绠€娲侊紝鑱氱劍浣滃搧</li>
+                        <li>鉁?妯悜鎺掑垪锛岄珮搴﹁嚜鍔ㄨ皟鏁?/li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>4. CSS鏍峰紡浠ｇ爜</h2>
+            <div class="info-box">
+                <pre><code>/* 浣滃搧閫夐泦瀹瑰櫒 */
+.gallery-image {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px; /* 淇濇寔鍦嗚涓嶅彉 */
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: auto; /* 瀹瑰櫒鑷€傚簲楂樺害 */
+}
+
+/* 浣滃搧鍥剧墖 - 姣斾緥鑷€傚簲 */
+.portfolio-image {
+    width: 100%;          /* 瀹藉害100% */
+    height: auto;         /* 楂樺害鏍规嵁鍘熷姣斾緥鑷姩璋冩暣 */
+    object-fit: contain;  /* 100%瀹屾暣鏄剧ず锛屼笉琚鍓?*/
+    display: block;
+}
+
+/* 甯冨眬瀹瑰櫒 */
+.gallery-track {
+    display: flex;
+    gap: 32px; /* 淇濇寔闂磋窛涓嶅彉 */
+    animation: scroll 30s linear infinite;
+}
+
+.gallery-item {
+    flex: 0 0 300px; /* 鍥哄畾瀹藉害锛岄珮搴﹁嚜閫傚簲 */
+    transition: all 0.3s ease;
+}</code></pre>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>5. 娉ㄦ剰浜嬮」</h2>
+            <div class="info-box">
+                <ul>
+                    <li>鉁?5寮犱綔鍝佸浘鐗囧凡娓呯悊鏂囧瓧鏍囩</li>
+                    <li>鉁?瀹炵幇瀹屽叏鐨勬瘮渚嬭嚜閫傚簲</li>
+                    <li>鉁?浣跨敤缁濆璺緞 <code>/showcase/portfolio-*.jpg</code></li>
+                    <li>鉁?鍥剧墖瀹屾暣鏄剧ず锛岃竟缂樹笉琚鍓?/li>
+                    <li>鉁?妯悜鎺掑垪锛岄珮搴﹁嚜鍔ㄨ皟鏁村舰鎴愮€戝竷娴佹晥鏋?/li>
+                    <li>鉁?涓婃柟璇剧▼澶х翰鍜屽姣旀粦鍧楀畬鍏ㄦ湭鍙楀奖鍝?/li>
+                    <li>鈿狅笍 濡傛灉鍥剧墖涓嶆樉绀猴紝璇锋鏌ヨ矾寰勬槸鍚︽纭?/li>
+                    <li>鈿狅笍 濡傛灉閫氳繃鏂囦欢鍗忚璁块棶锛屽彲鑳介渶瑕佷娇鐢ㄧ浉瀵硅矾寰?/li>
+                    <li>馃攧 濡傞渶鏀逛负鍗犳弧鐢绘鏁堟灉锛屽彲灏?<code>object-fit: contain</code> 鏀逛负 <code>cover</code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const images = [
+            { id: 'img1', path: '/showcase/portfolio-1.jpg', alt: '璧涘崥鏈嬪厠椋庢牸鍚堟垚' },
+            { id: 'img2', path: '/showcase/portfolio-2.jpg', alt: '鍙ら浜哄儚鍚堟垚' },
+            { id: 'img3', path: '/showcase/portfolio-3.jpg', alt: '绉戝够鍦烘櫙鏋勫缓' },
+            { id: 'img4', path: '/showcase/portfolio-4.jpg', alt: '濂囧够涓栫晫鍚堟垚' },
+            { id: 'img5', path: '/showcase/portfolio-5.jpg', alt: '鏈潵涓讳箟椋庢牸' }
+        ];
+        
+        let loadedCount = 0;
+        const totalImages = images.length;
+        
+        function updateMeasurement() {
+            // 娴嬮噺绗竴涓浘鐗囧鍣?            const firstImage = document.getElementById('img1');
+            const container = firstImage ? firstImage.parentElement.parentElement : null;
+            
+            if (firstImage && firstImage.naturalWidth > 0 && container) {
+                const containerRect = container.getBoundingClientRect();
+                document.getElementById('container-width').textContent = 
+                    `${Math.round(containerRect.width)}px`;
+                document.getElementById('image-height').textContent = 
+                    `${Math.round(firstImage.height)}px`;
+            }
+            
+            document.getElementById('load-status').textContent = 
+                `${loadedCount}/${totalImages} 宸插姞杞絗;
+            
+            // 楠岃瘉CSS璁剧疆
+            if (firstImage) {
+                const style = getComputedStyle(firstImage);
+                console.log('CSS楠岃瘉:');
+                console.log('  width:', style.width);
+                console.log('  height:', style.height);
+                console.log('  object-fit:', style.objectFit);
+                console.log('  max-height:', style.maxHeight || '鏃犻檺鍒?);
+                
+                if (style.height === 'auto' && style.objectFit === 'contain') {
+                    console.log('鉁?CSS璁剧疆姝ｇ‘');
+                }
+            }
+        }
+        
+        // 鐩戝惉鍥剧墖鍔犺浇
+        images.forEach(img => {
+            const imageElement = document.getElementById(img.id);
+            
+            imageElement.onload = function() {
+                loadedCount++;
+                console.log(`鉁?${img.alt} 鍔犺浇鎴愬姛: ${imageElement.naturalWidth}脳${imageElement.naturalHeight}`);
+                updateMeasurement();
+                
+                // 濡傛灉鎵€鏈夊浘鐗囧姞杞藉畬鎴?                if (loadedCount === totalImages) {
+                    console.log('鉁?鎵€鏈?寮犱綔鍝佸浘鐗囧姞杞芥垚鍔?);
+                }
+            };
+            
+            imageElement.onerror = function() {
+                console.error(`鉂?${img.alt} 鍔犺浇澶辫触:`, imageElement.src);
+                
+                // 灏濊瘯浣跨敤鐩稿璺緞
+                setTimeout(() => {
+                    console.log(`灏濊瘯鐩稿璺緞: public/showcase/${img.path.split('/').pop()}`);
+                    imageElement.src = `public/showcase/${img.path.split('/').pop()}`;
+                }, 1000);
+            };
+        });
+        
+        // 鍒濆楠岃瘉
+        console.log('浣滃搧閫夐泦娓呯悊娴嬭瘯鍚姩');
+        console.log('椤甸潰鍗忚:', window.location.protocol);
+        console.log('浣跨敤缁濆璺緞:', images.map(img => img.path));
+        
+        // 瀹氭湡鏇存柊娴嬮噺
+        setInterval(updateMeasurement, 1000);
+        
+        // 鍒濆鏇存柊
+        setTimeout(updateMeasurement, 500);
+    </script>
+</body>
+</html>

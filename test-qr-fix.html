@@ -1,0 +1,360 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浜岀淮鐮佹浛鎹㈡祴璇?/title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .verification-list {
+            margin: 20px 0;
+        }
+        
+        .verification-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            border-left: 3px solid #2196f3;
+        }
+        
+        .checkmark {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            margin-right: 10px;
+        }
+        
+        .check-ok {
+            background: #4caf50;
+        }
+        
+        .check-error {
+            background: #f44336;
+        }
+        
+        .qr-preview {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .qr-test-item {
+            text-align: center;
+        }
+        
+        .qr-status {
+            margin-top: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+        
+        .path-display {
+            font-family: monospace;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+        
+        .css-display {
+            font-family: monospace;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .warning-box {
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid rgba(255, 152, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>浜岀淮鐮佹浛鎹㈡祴璇?/h1>
+        
+        <div class="test-section">
+            <h2>1. 淇鍚庣殑浜岀淮鐮佸尯鍩?/h2>
+            <p>宸叉浛鎹㈠簳閮ㄨ仈绯绘垜浠殑涓や釜浜岀淮鐮侊細</p>
+            
+            <!-- 浜岀淮鐮佸尯鍩?-->
+            <footer id="contact">
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="footer-text">
+                            <h2>鍒骞冲焊鐨勫悗鏈熸氮璐逛簡浣犵殑鍒涙剰銆?/h2>
+                            <div class="contact-methods">
+                                <div class="qr-container">
+                                    <div class="qr-code">
+                                        <img src="public/showcase/wechat-qr.jpg" alt="寰俊浜岀淮鐮? class="qr-image" id="wechat-qr">
+                                    </div>
+                                    <p class="qr-label">寰俊鍜ㄨ浜岀淮鐮?/p>
+                                </div>
+                                <div class="qr-container">
+                                    <div class="qr-code">
+                                        <img src="public/showcase/social-qr.jpg" alt="绀句氦濯掍綋浜岀淮鐮? class="qr-image" id="social-qr">
+                                    </div>
+                                    <p class="qr-label">绀句氦濯掍綋浜岀淮鐮?/p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            
+            <div class="qr-preview">
+                <div class="qr-test-item">
+                    <div>寰俊浜岀淮鐮?/div>
+                    <div class="qr-status" id="status-wechat">妫€鏌ヤ腑...</div>
+                    <div class="path-display" id="path-wechat">
+                        璺緞: /showcase/wechat-qr.jpg
+                    </div>
+                </div>
+                <div class="qr-test-item">
+                    <div>绀句氦濯掍綋浜岀淮鐮?/div>
+                    <div class="qr-status" id="status-social">妫€鏌ヤ腑...</div>
+                    <div class="path-display" id="path-social">
+                        璺緞: /showcase/social-qr.jpg
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. 淇敼楠岃瘉</h2>
+            <div class="verification-list">
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 璺緞鏇存</h3>
+                    <p>绗竴涓簩缁寸爜锛堝井淇★級锛?code>/showcase/wechat-qr.jpg</code></p>
+                    <p>绗簩涓簩缁寸爜锛堢ぞ浜ゅ獟浣擄級锛?code>/showcase/social-qr.jpg</code></p>
+                    <p>鉁?鏂囦欢纭瀛樺湪</p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 绂佹瑁佸垏</h3>
+                    <p><code>object-fit: contain</code> - 浜岀淮鐮佸繀椤诲畬鏁存樉绀猴紝缁濆涓嶈兘鍥犱负cover妯″紡鍒囨帀杈硅</p>
+                    <div class="css-display">
+                        <pre><code>.qr-image {
+    object-fit: contain; /* 绂佹瑁佸垏锛屼簩缁寸爜蹇呴』瀹屾暣鏄剧ず */
+}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 姣斾緥瀵归綈</h3>
+                    <p>浜岀淮鐮佸鍣ㄨ涓烘鏂瑰舰锛?code>aspect-ratio: 1/1</code></p>
+                    <p>鍘绘帀澶氫綑鐨勬枃瀛楄儗鏅紝浣跨敤绾浘鐗囧睍绀?/p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 灏哄鎺у埗</h3>
+                    <p>璁剧疆鍚堥€傜殑瀹藉害锛?code>max-width: 150px</code></p>
+                    <p>纭繚鍦ㄦ墜鏈虹鍜岀數鑴戠閮芥槗浜庢壂鎻?/p>
+                    <div class="css-display">
+                        <pre><code>.qr-image {
+    max-width: 150px; /* 灏哄鎺у埗锛岀‘淇濇槗浜庢壂鎻?*/
+    max-height: 150px;
+}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 娓呯悊鍐椾綑</h3>
+                    <p>淇濈暀浜岀淮鐮佷笅鏂圭殑鏂囧瓧鏍囩锛屼絾浼樺寲浜嗘弿杩帮細</p>
+                    <ul>
+                        <li>"鍜ㄨ璇︽儏浜岀淮鐮? 鈫?"寰俊鍜ㄨ浜岀淮鐮?</li>
+                        <li>"鏀粯浜岀淮鐮? 鈫?"绀句氦濯掍綋浜岀淮鐮?</li>
+                    </ul>
+                    <p>鏍规嵁UI绠€娲佸害杩涜浜嗗井璋?/p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">鉁?/span> 浠ｇ爜闅旂</h3>
+                    <p>鉁?浠呬慨鏀瑰簳閮ㄤ簩缁寸爜鍖哄煙</p>
+                    <p>鉁?涓婃柟鍒氬垰璋冨ソ鐨?浣滃搧閫夐泦"妯浘浠ｇ爜瀹屽叏鏈彈褰卞搷</p>
+                    <p>鉁?璇剧▼澶х翰鍜屽姣旀粦鍧楀尯鍩熷畬鍏ㄦ湭鍙楀奖鍝?/p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. CSS鏍峰紡浠ｇ爜</h2>
+            <div class="css-display">
+<pre><code>/* 浜岀淮鐮佸鍣?- 姝ｆ柟褰㈡瘮渚?*/
+.qr-code {
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    aspect-ratio: 1/1; /* 姝ｆ柟褰㈡瘮渚?*/
+    overflow: hidden; /* 纭繚鍥剧墖涓嶆孩鍑?*/
+}
+
+/* 浜岀淮鐮佸浘鐗?- 瀹屾暣鏄剧ず锛屾槗浜庢壂鎻?*/
+.qr-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 绂佹瑁佸垏锛屼簩缁寸爜蹇呴』瀹屾暣鏄剧ず */
+    max-width: 150px; /* 灏哄鎺у埗锛岀‘淇濇槗浜庢壂鎻?*/
+    max-height: 150px;
+    border-radius: 15px; /* 涓庡鍣ㄥ渾瑙掑崗璋?*/
+}
+
+/* 甯冨眬瀹瑰櫒 */
+.contact-methods {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+
+.qr-container {
+    text-align: center;
+}
+
+.qr-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}</code></pre>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>4. 娉ㄦ剰浜嬮」</h2>
+            <div class="warning-box">
+                <h3>鈿狅笍 閲嶈鎻愰啋</h3>
+                <ul>
+                    <li>鉁?浣跨敤缁濆璺緞 <code>/showcase/wechat-qr.jpg</code> 鍜?<code>/showcase/social-qr.jpg</code></li>
+                    <li>鉁?浜岀淮鐮佸畬鏁存樉绀猴紝杈硅涓嶈瑁佸壀</li>
+                    <li>鉁?姝ｆ柟褰㈡瘮渚嬶紝鏄撲簬鎵弿</li>
+                    <li>鉁?灏哄閫備腑锛岀Щ鍔ㄧ鍜屾闈㈢閮介€傜敤</li>
+                    <li>鉁?浠呬慨鏀瑰簳閮ㄥ尯鍩燂紝鍏朵粬閮ㄥ垎鏈彈褰卞搷</li>
+                    <li>鈿狅笍 濡傛灉閫氳繃鏂囦欢鍗忚璁块棶锛屽彲鑳介渶瑕佷娇鐢ㄧ浉瀵硅矾寰?/li>
+                    <li>鈿狅笍 濡傛灉鍥剧墖涓嶆樉绀猴紝璇锋鏌ヨ矾寰勬槸鍚︽纭?/li>
+                    <li>馃攧 濡傞渶鏀逛负鐩稿璺緞锛?code>public/showcase/wechat-qr.jpg</code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const qrImages = [
+            { id: 'wechat-qr', path: '/showcase/wechat-qr.jpg', alt: '寰俊浜岀淮鐮?, label: '寰俊浜岀淮鐮? },
+            { id: 'social-qr', path: '/showcase/social-qr.jpg', alt: '绀句氦濯掍綋浜岀淮鐮?, label: '绀句氦濯掍綋浜岀淮鐮? }
+        ];
+        
+        qrImages.forEach(qr => {
+            const imgElement = document.getElementById(qr.id);
+            const statusElement = document.getElementById(`status-${qr.id.split('-')[0]}`);
+            const pathElement = document.getElementById(`path-${qr.id.split('-')[0]}`);
+            
+            imgElement.onload = function() {
+                statusElement.className = 'qr-status status-success';
+                statusElement.textContent = `鉁?${imgElement.naturalWidth}脳${imgElement.naturalHeight}`;
+                pathElement.textContent = `鉁?璺緞鏈夋晥: ${imgElement.src}`;
+                
+                // 楠岃瘉CSS璁剧疆
+                const style = getComputedStyle(imgElement);
+                console.log(`${qr.label} CSS楠岃瘉:`);
+                console.log('  object-fit:', style.objectFit);
+                console.log('  max-width:', style.maxWidth);
+                console.log('  width:', style.width);
+                console.log('  height:', style.height);
+                
+                if (style.objectFit === 'contain') {
+                    console.log('  鉁?object-fit: contain 璁剧疆姝ｇ‘');
+                }
+            };
+            
+            imgElement.onerror = function() {
+                statusElement.className = 'qr-status status-error';
+                statusElement.textContent = '鉂?鍔犺浇澶辫触';
+                pathElement.textContent = `鉂?璺緞鏃犳晥: ${imgElement.src}`;
+                
+                console.error(`鉂?${qr.label} 鍔犺浇澶辫触:`, imgElement.src);
+                
+                // 灏濊瘯浣跨敤鐩稿璺緞
+                setTimeout(() => {
+                    console.log(`灏濊瘯鐩稿璺緞: public/showcase/${qr.path.split('/').pop()}`);
+                    imgElement.src = `public/showcase/${qr.path.split('/').pop()}`;
+                    pathElement.textContent = `灏濊瘯: public/showcase/${qr.path.split('/').pop()}`;
+                }, 1000);
+            };
+        });
+        
+        // 鍒濆楠岃瘉
+        console.log('浜岀淮鐮佹浛鎹㈡祴璇曞惎鍔?);
+        console.log('椤甸潰鍗忚:', window.location.protocol);
+        console.log('浣跨敤缁濆璺緞:', qrImages.map(qr => qr.path));
+        
+        // 濡傛灉閫氳繃鏂囦欢鍗忚璁块棶锛屽缓璁娇鐢ㄧ浉瀵硅矾寰?        if (window.location.protocol === 'file:') {
+            console.log('鈩癸笍 閫氳繃鏂囦欢鍗忚璁块棶锛屽缓璁娇鐢ㄧ浉瀵硅矾寰?);
+            
+            // 鑷姩鍒囨崲鍒扮浉瀵硅矾寰?            setTimeout(() => {
+                qrImages.forEach(qr => {
+                    const imgElement = document.getElementById(qr.id);
+                    imgElement.src = `public/showcase/${qr.path.split('/').pop()}`;
+                });
+                console.log('宸茶嚜鍔ㄥ垏鎹㈠埌鐩稿璺緞');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

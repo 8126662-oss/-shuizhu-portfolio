@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试单一图片展示组件</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+            margin-top: 60px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .comparison-item {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s ease;
+            width: 100%;
+        }
+        
+        .info-box {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        
+        .dimension-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .dim-item {
+            text-align: center;
+        }
+        
+        .dim-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4caf50;
+        }
+        
+        .code-display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        
+        .verification-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .verification-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .checkmark {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            margin-right: 10px;
+        }
+        
+        .check-ok {
+            background: #4caf50;
+        }
+        
+        .check-error {
+            background: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>单一图片展示组件测试</h1>
+        
+        <div class="test-section">
+            <h2>1. 重构后的第一个展示框</h2>
+            <p>已移除滑块逻辑，改为简单的单一图片组件：</p>
+            
+            <div class="comparison-gallery">
+                <!-- 位置 [1]：大图展示 - PS合成篇入門 -->
+                <div class="comparison-item">
+                    <div class="single-image-display outline-display">
+                        <img src="public/showcase/outline-1.jpg" alt="PS合成篇入門" class="full-image" id="test-image">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="status" class="status">
+                正在加载图片...
+            </div>
+            
+            <div class="dimension-display">
+                <div class="dim-item">
+                    <div>容器比例</div>
+                    <div class="dim-value" id="aspect-ratio">1:2</div>
+                </div>
+                <div class="dim-item">
+                    <div>最大高度</div>
+                    <div class="dim-value" id="max-height">700px</div>
+                </div>
+                <div class="dim-item">
+                    <div>object-fit</div>
+                    <div class="dim-value" id="object-fit">cover</div>
+                </div>
+                <div class="dim-item">
+                    <div>图片路径</div>
+                    <div class="dim-value" id="image-path">/showcase/outline-1.jpg</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. 修改验证</h2>
+            <div class="verification-grid">
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 移除滑块逻辑</h3>
+                    <p>已移除：<code>.image-slider</code>, <code>.slider-container</code>, <code>.slider-after</code></p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 单一图片组件</h3>
+                    <p>使用：<code>.single-image-display</code> 和 <code>.full-image</code></p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 绝对路径</h3>
+                    <p>图片路径：<code>/showcase/outline-1.jpg</code></p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 样式设置</h3>
+                    <p><code>object-fit: cover</code>, 1:2比例，max-height: 700px</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. HTML代码对比</h2>
+            <div class="code-display">
+                <h4>之前（错误 - 使用滑块逻辑）：</h4>
+                <pre><code>&lt;div class="image-slider outline-display"&gt;
+    &lt;div class="slider-container"&gt;
+        &lt;div class="slider-after"&gt;
+            &lt;div class="slider-label"&gt;展示图&lt;/div&gt;
+            &lt;img src="public/showcase/outline-1.jpg" class="slider-image"&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                
+                <h4>现在（正确 - 单一图片组件）：</h4>
+                <pre><code>&lt;div class="single-image-display outline-display"&gt;
+    &lt;img src="/showcase/outline-1.jpg" alt="PS合成篇入門" class="full-image"&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>4. CSS样式代码</h2>
+            <div class="code-display">
+                <pre><code>/* 课程大纲第一个展示框 - PS入门篇（单一图片展示） */
+.single-image-display.outline-display {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 1 / 2 !important; /* 竖屏比例 1:2 */
+    max-height: 700px !important;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 全图模式图片样式 */
+.single-image-display .full-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 覆盖整个容器，可能裁剪图片 */
+    object-position: center;
+}</code></pre>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h3>注意事项</h3>
+            <ul>
+                <li>✅ 第一个展示框已完全重构，不再使用滑块逻辑</li>
+                <li>✅ 使用绝对路径 <code>/showcase/outline-1.jpg</code></li>
+                <li>✅ 保持1:2竖屏比例和700px最大高度</li>
+                <li>✅ 使用 <code>object-fit: cover</code> 覆盖整个容器</li>
+                <li>✅ 下方滑块对比区域代码完全未受影响</li>
+                <li>⚠️ 如果图片不显示，请检查图片路径是否正确</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        const image = document.getElementById('test-image');
+        const status = document.getElementById('status');
+        
+        image.onload = function() {
+            status.className = 'status success';
+            status.innerHTML = `
+                <h3>✅ 图片加载成功</h3>
+                <p>原始尺寸: ${image.naturalWidth} × ${image.naturalHeight} 像素</p>
+                <p>显示尺寸: ${Math.round(image.width)} × ${Math.round(image.height)} 像素</p>
+                <p>图片路径: ${image.src}</p>
+                <p>✅ 单一图片组件工作正常</p>
+            `;
+            
+            // 更新显示信息
+            const container = image.parentElement;
+            const computedStyle = getComputedStyle(container);
+            
+            document.getElementById('aspect-ratio').textContent = computedStyle.aspectRatio;
+            document.getElementById('max-height').textContent = computedStyle.maxHeight;
+            document.getElementById('object-fit').textContent = getComputedStyle(image).objectFit;
+            document.getElementById('image-path').textContent = image.src.split('/').slice(-3).join('/');
+            
+            // 验证CSS是否应用
+            console.log('容器比例:', computedStyle.aspectRatio);
+            console.log('最大高度:', computedStyle.maxHeight);
+            console.log('object-fit:', getComputedStyle(image).objectFit);
+            console.log('图片路径:', image.src);
+            
+            if (computedStyle.aspectRatio === '1 / 2' && 
+                computedStyle.maxHeight === '700px' && 
+                getComputedStyle(image).objectFit === 'cover') {
+                console.log('✅ 所有CSS设置正确应用');
+            }
+        };
+        
+        image.onerror = function() {
+            status.className = 'status error';
+            status.innerHTML = `
+                <h3>❌ 图片加载失败</h3>
+                <p>请检查图片路径: <code>/showcase/outline-1.jpg</code></p>
+                <p>当前路径: ${image.src}</p>
+                <p>提示: 如果通过文件协议访问，可能需要使用相对路径</p>
+            `;
+        };
+        
+        // 初始检查
+        setTimeout(() => {
+            if (!image.complete) {
+                status.innerHTML = '<h3>⏳ 图片仍在加载...</h3>';
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

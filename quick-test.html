@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速测试 - 课程大纲图片</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-area {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .image-container {
+            margin: 20px 0;
+            border: 2px dashed #ccc;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-area">
+        <h1>课程大纲图片快速测试</h1>
+        
+        <div class="status info">
+            <h3>测试信息</h3>
+            <p>图片路径: <code>public/showcase/course-outline.jpg</code></p>
+            <p>实际文件: <code>C:\Users\86152\Documents\trae_projects\box1\public\showcase\course-outline.jpg</code></p>
+        </div>
+        
+        <div class="image-container">
+            <h3>图片预览:</h3>
+            <img id="test-img" src="public/showcase/course-outline.jpg" alt="课程大纲测试">
+        </div>
+        
+        <div id="result" class="status">
+            正在加载图片...
+        </div>
+        
+        <div class="status info">
+            <h3>CSS样式预览:</h3>
+            <pre>
+.curriculum-image {
+    width: 100%;
+    max-height: 600px;
+    aspect-ratio: 2.07 / 1;
+    object-fit: contain;
+    border-radius: 12px;
+}</pre>
+        </div>
+    </div>
+    
+    <script>
+        const img = document.getElementById('test-img');
+        const result = document.getElementById('result');
+        
+        img.onload = function() {
+            result.className = 'status success';
+            result.innerHTML = `
+                <h3>✅ 图片加载成功！</h3>
+                <p>原始尺寸: ${img.naturalWidth} × ${img.naturalHeight} 像素</p>
+                <p>显示尺寸: ${img.width} × ${img.height} 像素</p>
+                <p>宽高比: ${(img.naturalWidth / img.naturalHeight).toFixed(2)}:1</p>
+                <p>文件大小: ${(img.naturalWidth * img.naturalHeight / 1000000).toFixed(1)} 百万像素</p>
+            `;
+        };
+        
+        img.onerror = function() {
+            result.className = 'status error';
+            result.innerHTML = `
+                <h3>❌ 图片加载失败</h3>
+                <p>可能的原因:</p>
+                <ol>
+                    <li>文件路径不正确</li>
+                    <li>文件不存在</li>
+                    <li>文件权限问题</li>
+                    <li>文件格式不支持</li>
+                </ol>
+                <p>请检查控制台(按F12)查看详细错误信息。</p>
+            `;
+        };
+        
+        // 添加CSS样式测试
+        setTimeout(() => {
+            const styleTest = document.createElement('div');
+            styleTest.className = 'status info';
+            styleTest.innerHTML = `
+                <h3>CSS计算样式:</h3>
+                <p>aspect-ratio: ${getComputedStyle(img).aspectRatio}</p>
+                <p>object-fit: ${getComputedStyle(img).objectFit}</p>
+                <p>border-radius: ${getComputedStyle(img).borderRadius}</p>
+            `;
+            document.querySelector('.test-area').appendChild(styleTest);
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速检查 - 作品选集图片</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .check-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .image-check {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .image-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .image-info {
+            flex: 1;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+        
+        .path-display {
+            font-family: monospace;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+        
+        .summary {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .log {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="check-container">
+        <h1>作品选集图片快速检查</h1>
+        
+        <div id="image-checks">
+            <!-- 图片检查项将在这里动态生成 -->
+        </div>
+        
+        <div class="summary" id="summary">
+            <h3>检查结果</h3>
+            <p>正在检查5张作品图片...</p>
+        </div>
+        
+        <div class="test-buttons">
+            <button onclick="testAllImages()">测试所有图片</button>
+            <button onclick="useAbsolutePaths()">使用绝对路径</button>
+            <button onclick="useRelativePaths()">使用相对路径</button>
+            <button onclick="clearCache()">清除缓存并刷新</button>
+        </div>
+        
+        <div class="log" id="log">
+            <!-- 日志将在这里显示 -->
+        </div>
+        
+        <div class="summary">
+            <h3>如果图片不显示：</h3>
+            <ol>
+                <li>按 <strong>F12</strong> 打开开发者工具</li>
+                <li>查看 <strong>Console</strong> 标签页的错误信息</li>
+                <li>查看 <strong>Network</strong> 标签页的图片请求状态</li>
+                <li>尝试点击上面的"使用相对路径"按钮</li>
+                <li>按 <strong>Ctrl+F5</strong> 强制刷新页面</li>
+                <li>确认图片文件确实存在：<code>public/showcase/portfolio-*.jpg</code></li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        const images = [
+            { id: 1, name: 'portfolio-1.jpg', alt: '赛博朋克风格合成' },
+            { id: 2, name: 'portfolio-2.jpg', alt: '古风人像合成' },
+            { id: 3, name: 'portfolio-3.jpg', alt: '科幻场景构建' },
+            { id: 4, name: 'portfolio-4.jpg', alt: '奇幻世界合成' },
+            { id: 5, name: 'portfolio-5.jpg', alt: '未来主义风格' }
+        ];
+        
+        const imageChecks = document.getElementById('image-checks');
+        const summary = document.getElementById('summary');
+        const log = document.getElementById('log');
+        
+        let loadedCount = 0;
+        let errorCount = 0;
+        
+        function logMessage(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            if (type === 'error') entry.style.color = '#f44336';
+            if (type === 'success') entry.style.color = '#4caf50';
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function updateSummary() {
+            summary.innerHTML = `
+                <h3>检查结果</h3>
+                <p>✅ 成功加载: ${loadedCount} / 5</p>
+                <p>❌ 加载失败: ${errorCount} / 5</p>
+                <p>页面协议: ${window.location.protocol}</p>
+                <p>建议使用: ${window.location.protocol === 'file:' ? '相对路径' : '根据服务器配置选择'}</p>
+            `;
+        }
+        
+        // 创建图片检查项
+        images.forEach(img => {
+            const checkDiv = document.createElement('div');
+            checkDiv.className = 'image-check';
+            checkDiv.id = `check-${img.id}`;
+            checkDiv.innerHTML = `
+                <div class="image-row">
+                    <div class="image-preview">
+                        <img src="public/showcase/${img.name}" alt="${img.alt}" 
+                             onload="imageLoaded(${img.id})" 
+                             onerror="imageError(${img.id})">
+                    </div>
+                    <div class="image-info">
+                        <strong>${img.alt}</strong>
+                        <span class="status" id="status-${img.id}">检查中...</span>
+                        <div class="path-display" id="path-${img.id}">
+                            路径: public/showcase/${img.name}
+                        </div>
+                    </div>
+                </div>
+            `;
+            imageChecks.appendChild(checkDiv);
+        });
+        
+        function imageLoaded(id) {
+            loadedCount++;
+            const img = document.querySelector(`#check-${id} img`);
+            const status = document.getElementById(`status-${id}`);
+            const path = document.getElementById(`path-${id}`);
+            
+            status.className = 'status status-success';
+            status.textContent = `✅ ${img.naturalWidth}×${img.naturalHeight}`;
+            path.textContent = `✅ 路径有效: ${img.src}`;
+            
+            logMessage(`图片 ${id} 加载成功: ${img.naturalWidth}×${img.naturalHeight}`, 'success');
+            updateSummary();
+        }
+        
+        function imageError(id) {
+            errorCount++;
+            const img = document.querySelector(`#check-${id} img`);
+            const status = document.getElementById(`status-${id}`);
+            const path = document.getElementById(`path-${id}`);
+            
+            status.className = 'status status-error';
+            status.textContent = '❌ 加载失败';
+            path.textContent = `❌ 路径无效: ${img.src}`;
+            
+            logMessage(`图片 ${id} 加载失败: ${img.src}`, 'error');
+            updateSummary();
+        }
+        
+        function testAllImages() {
+            logMessage('开始测试所有图片...', 'info');
+            loadedCount = 0;
+            errorCount = 0;
+            
+            images.forEach(img => {
+                const status = document.getElementById(`status-${img.id}`);
+                status.className = 'status';
+                status.textContent = '重新测试中...';
+            });
+            
+            updateSummary();
+        }
+        
+        function useAbsolutePaths() {
+            logMessage('切换到绝对路径...', 'info');
+            images.forEach(img => {
+                const imgElement = document.querySelector(`#check-${img.id} img`);
+                imgElement.src = `/showcase/${img.name}`;
+                document.getElementById(`path-${img.id}`).textContent = 
+                    `路径: /showcase/${img.name}`;
+            });
+        }
+        
+        function useRelativePaths() {
+            logMessage('切换到相对路径...', 'info');
+            images.forEach(img => {
+                const imgElement = document.querySelector(`#check-${img.id} img`);
+                imgElement.src = `public/showcase/${img.name}`;
+                document.getElementById(`path-${img.id}`).textContent = 
+                    `路径: public/showcase/${img.name}`;
+            });
+        }
+        
+        function clearCache() {
+            logMessage('清除缓存并刷新页面...', 'info');
+            if (window.location.protocol === 'file:') {
+                // 对于文件协议，直接重新加载
+                window.location.reload(true);
+            } else {
+                // 对于HTTP协议，添加时间戳避免缓存
+                window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now();
+            }
+        }
+        
+        // 初始日志
+        logMessage('图片检查页面启动', 'info');
+        logMessage(`页面协议: ${window.location.protocol}`, 'info');
+        logMessage(`当前时间: ${new Date().toLocaleString()}`, 'info');
+        
+        // 初始更新
+        setTimeout(updateSummary, 1000);
+    </script>
+</body>
+</html>

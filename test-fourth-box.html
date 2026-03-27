@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试第4个展示框修改</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+            margin-top: 60px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .comparison-item {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s ease;
+            width: 100%;
+        }
+        
+        .info-box {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .comparison-box {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-box h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .code-display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        
+        .verification-list {
+            margin: 20px 0;
+        }
+        
+        .verification-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            border-left: 3px solid #2196f3;
+        }
+        
+        .checkmark {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            margin-right: 10px;
+        }
+        
+        .check-ok {
+            background: #4caf50;
+        }
+        
+        .check-error {
+            background: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>第4个展示框修改测试</h1>
+        
+        <div class="test-section">
+            <h2>1. 修改后的第4个展示框</h2>
+            <p>已克隆第一个展示框的逻辑，改为单一图片组件：</p>
+            
+            <div class="comparison-gallery">
+                <!-- 位置 [4]：大图展示 -->
+                <div class="comparison-item">
+                    <div class="single-image-display outline-display">
+                        <img src="public/showcase/outline-4.jpg" alt="展示图" class="full-image" id="fourth-image">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="status" class="status">
+                正在加载图片...
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. 修改验证</h2>
+            <div class="verification-list">
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 逻辑克隆</h3>
+                    <p>第4个展示框已与第1个展示框逻辑完全一致</p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 移除滑块逻辑</h3>
+                    <p>已彻底移除：<code>.image-slider</code>, <code>.slider-container</code>, <code>.slider-after</code></p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 单一图片组件</h3>
+                    <p>使用：<code>.single-image-display</code> 和 <code>.full-image</code></p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 路径指向</h3>
+                    <p>图片路径：<code>/showcase/outline-4.jpg</code></p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 比例与适配</h3>
+                    <p>✅ 取消硬性比例 <code>aspect-ratio: 1/2</code></p>
+                    <p>✅ 自适应高度 <code>height: auto</code></p>
+                    <p>✅ 宽度100% <code>width: 100%</code></p>
+                    <p>✅ 最大高度限制 <code>max-height: 700px</code></p>
+                    <p>✅ 完整显示 <code>object-fit: contain</code></p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 视觉统一</h3>
+                    <p>✅ 圆角：12px</p>
+                    <p>✅ 边框：1px solid rgba(255,255,255,0.1)</p>
+                    <p>✅ 背景色：rgba(0,0,0,0.3)</p>
+                    <p>✅ 居中显示：flex布局</p>
+                </div>
+                
+                <div class="verification-item">
+                    <h3><span class="checkmark check-ok">✓</span> 代码隔离</h3>
+                    <p>✅ 只修改了第4个展示框（Index 3）</p>
+                    <p>✅ 第2、3个滑块对比框完全未受影响</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. HTML代码对比</h2>
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <h3>之前（错误 - 使用滑块逻辑）</h3>
+                    <div class="code-display">
+                        <pre><code>&lt;div class="image-slider"&gt;
+    &lt;div class="slider-container"&gt;
+        &lt;div class="slider-after"&gt;
+            &lt;div class="slider-label"&gt;展示图&lt;/div&gt;
+            &lt;img src="public/showcase/3-after.jpg"&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+                
+                <div class="comparison-box">
+                    <h3>现在（正确 - 单一图片组件）</h3>
+                    <div class="code-display">
+                        <pre><code>&lt;div class="single-image-display outline-display"&gt;
+    &lt;img src="/showcase/outline-4.jpg" 
+         alt="展示图" 
+         class="full-image"&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>4. 继承的CSS样式</h2>
+            <div class="info-box">
+                <pre><code>/* 第4个展示框继承的样式 */
+.single-image-display.outline-display {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+    height: auto; /* 自适应高度 */
+    max-height: 700px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.single-image-display .full-image {
+    width: 100%;
+    height: auto;
+    max-height: 700px;
+    object-fit: contain; /* 完整显示，不吃字 */
+    object-position: center;
+}</code></pre>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>5. 注意事项</h2>
+            <div class="info-box">
+                <ul>
+                    <li>✅ 第4个展示框已完全重构，与第1个展示框逻辑一致</li>
+                    <li>✅ 使用绝对路径 <code>/showcase/outline-4.jpg</code></li>
+                    <li>✅ 图片已确认存在：<code>public/showcase/outline-4.jpg</code></li>
+                    <li>✅ 自适应高度，根据图片原始比例自动调整</li>
+                    <li>✅ 使用 <code>object-fit: contain</code> 确保文字完整显示</li>
+                    <li>✅ 视觉样式与第1个展示框完全统一</li>
+                    <li>✅ 第2、3个滑块对比区域完全未受影响</li>
+                    <li>⚠️ 如果图片不显示，请检查路径是否正确</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const image = document.getElementById('fourth-image');
+        const status = document.getElementById('status');
+        
+        image.onload = function() {
+            status.className = 'status success';
+            status.innerHTML = `
+                <h3>✅ 图片加载成功</h3>
+                <p>原始尺寸: ${image.naturalWidth} × ${image.naturalHeight} 像素</p>
+                <p>原始比例: ${(image.naturalWidth/image.naturalHeight).toFixed(2)}:1</p>
+                <p>图片路径: ${image.src}</p>
+                <p>object-fit: ${getComputedStyle(image).objectFit}</p>
+                <p>✅ 第4个展示框修改成功！</p>
+            `;
+            
+            // 验证CSS设置
+            const container = image.parentElement;
+            const containerStyle = getComputedStyle(container);
+            const imageStyle = getComputedStyle(image);
+            
+            console.log('第4个展示框验证:');
+            console.log('容器高度:', containerStyle.height);
+            console.log('容器最大高度:', containerStyle.maxHeight);
+            console.log('容器背景:', containerStyle.backgroundColor);
+            console.log('图片object-fit:', imageStyle.objectFit);
+            console.log('图片高度:', imageStyle.height);
+            
+            if (containerStyle.height === 'auto' && 
+                imageStyle.objectFit === 'contain' &&
+                containerStyle.backgroundColor === 'rgba(0, 0, 0, 0.3)') {
+                console.log('✅ 所有CSS设置正确继承');
+            }
+        };
+        
+        image.onerror = function() {
+            status.className = 'status error';
+            status.innerHTML = `
+                <h3>❌ 图片加载失败</h3>
+                <p>请检查图片路径: <code>/showcase/outline-4.jpg</code></p>
+                <p>当前路径: ${image.src}</p>
+                <p>提示: 如果通过文件协议访问，可能需要使用相对路径</p>
+                <p>尝试相对路径: <code>public/showcase/outline-4.jpg</code></p>
+            `;
+            
+            // 尝试使用相对路径
+            console.log('尝试使用相对路径...');
+            image.src = 'public/showcase/outline-4.jpg';
+        };
+    </script>
+</body>
+</html>

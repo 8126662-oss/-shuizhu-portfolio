@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水煮｜后期合成全体系课程</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 音频元素 -->
+    <audio id="background-music" src="public/music.mp3" loop preload="auto">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- 音乐控制按钮 -->
+    <div id="music-control" class="music-control">
+        <div class="music-icon">
+            <div class="pause-icon">
+                <span></span>
+                <span></span>
+            </div>
+            <div class="play-icon">
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // FAQ 交互功能
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    item.classList.toggle('active');
+                });
+            });
+
+            // 课程展示区滚动动画
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            const comparisonItems = document.querySelectorAll('.comparison-item');
+            comparisonItems.forEach(item => {
+                observer.observe(item);
+            });
+
+            // 音乐控制功能
+            const audio = document.getElementById('background-music');
+            const musicControl = document.getElementById('music-control');
+            const playIcon = musicControl.querySelector('.play-icon');
+            const pauseIcon = musicControl.querySelector('.pause-icon');
+            let isPlaying = false;
+
+            // 初始音量
+            audio.volume = 0.5;
+
+            // 更新图标状态
+            function updateMusicIcon(playing) {
+                if (playing) {
+                    playIcon.style.display = 'flex';
+                    pauseIcon.style.display = 'none';
+                } else {
+                    playIcon.style.display = 'none';
+                    pauseIcon.style.display = 'flex';
+                }
+            }
+
+            // 尝试自动播放
+            async function tryAutoplay() {
+                try {
+                    await audio.play();
+                    isPlaying = true;
+                    updateMusicIcon(true);
+                    console.log('音乐自动播放成功');
+                } catch (err) {
+                    // 自动播放被阻止，等待用户交互
+                    isPlaying = false;
+                    updateMusicIcon(false);
+                    console.log('自动播放被阻止，等待用户交互');
+                    
+                    // 添加一次性交互监听器来启动播放
+                    const startOnInteraction = async () => {
+                        if (!isPlaying) {
+                            try {
+                                await audio.play();
+                                isPlaying = true;
+                                updateMusicIcon(true);
+                                // 移除交互监听器
+                                document.removeEventListener('click', startOnInteraction);
+                                document.removeEventListener('scroll', startOnInteraction);
+                                document.removeEventListener('keydown', startOnInteraction);
+                            } catch (e) {
+                                console.log('播放失败:', e);
+                            }
+                        }
+                    };
+                    
+                    document.addEventListener('click', startOnInteraction, { once: true });
+                    document.addEventListener('scroll', startOnInteraction, { once: true });
+                    document.addEventListener('keydown', startOnInteraction, { once: true });
+                }
+            }
+
+            // 页面加载完成后尝试自动播放
+            if (document.readyState === 'complete') {
+                tryAutoplay();
+            } else {
+                window.addEventListener('load', tryAutoplay);
+            }
+
+            // 监听音频实际播放状态
+            audio.addEventListener('play', () => {
+                isPlaying = true;
+                updateMusicIcon(true);
+            });
+
+            audio.addEventListener('pause', () => {
+                isPlaying = false;
+                updateMusicIcon(false);
+            });
+
+            // 手动切换播放/暂停按钮
+            musicControl.addEventListener('click', async function(e) {
+                e.stopPropagation(); // 防止触发页面交互监听器
+                
+                if (!isPlaying) {
+                    try {
+                        await audio.play();
+                    } catch (err) {
+                        console.log('播放失败:', err);
+                    }
+                } else {
+                    audio.pause();
+                }
+            });
+
+            // 交互对比滑块功能
+            const sliders = document.querySelectorAll('.image-slider');
+            sliders.forEach(slider => {
+                const container = slider.querySelector('.slider-container');
+                const after = slider.querySelector('.slider-after');
+                const handle = slider.querySelector('.slider-handle');
+                let isDragging = false;
+
+                function updateSlider(e) {
+                    const rect = container.getBoundingClientRect();
+                    let x = e.clientX - rect.left;
+                    x = Math.max(0, Math.min(x, rect.width));
+                    const percentage = (x / rect.width) * 100;
+                    after.style.width = `${percentage}%`;
+                    handle.style.left = `${percentage}%`;
+                }
+
+                // 专业竖向分割线滑块 - 丝滑跟手逻辑
+                window.updateWinkSlider = function(sliderInput, sliderId) {
+                    const percentage = sliderInput.value;
+                    updateClipPath(percentage, sliderId);
+                    updateSliderPosition(sliderInput, sliderId);
+                };
+
+                // 更新clip-path（零延迟）
+                function updateClipPath(percentage, sliderId) {
+                    const slider = document.getElementById(sliderId);
+                    if (slider) {
+                        const after = slider.querySelector('.slider-after');
+                        if (after) {
+                            // 实时更新clip-path，无transition延迟
+                            // inset(top right bottom left)
+                            // (100 - percentage)% 表示从右侧裁剪多少
+                            after.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+                        }
+                    }
+                }
+
+                // 更新滑块位置（实时跟手）
+                function updateSliderPosition(sliderInput, sliderId) {
+                    const percentage = sliderInput.value;
+                    const slider = document.getElementById(sliderId);
+                    if (slider) {
+                        const divider = slider.querySelector('.slider-divider');
+                        const knob = slider.querySelector('.slider-knob');
+                        if (divider && knob) {
+                            // 实时更新分割线和圆钮位置
+                            const leftPosition = `${percentage}%`;
+                            divider.style.left = leftPosition;
+                            knob.style.left = leftPosition;
+                        }
+                    }
+                }
+
+                // 初始化滑块位置和视觉元素
+                document.addEventListener('DOMContentLoaded', function() {
+                    // 初始化第一个滑块
+                    const slider1 = document.getElementById('slider1');
+                    if (slider1) {
+                        const after1 = slider1.querySelector('.slider-after');
+                        const divider1 = slider1.querySelector('.slider-divider');
+                        const knob1 = slider1.querySelector('.slider-knob');
+                        const range1 = slider1.querySelector('.slider-range');
+                        
+                        if (after1) after1.style.clipPath = 'inset(0 50% 0 0)';
+                        if (divider1) divider1.style.left = '50%';
+                        if (knob1) knob1.style.left = '50%';
+                        if (range1) range1.value = '50';
+                    }
+                    
+                    // 初始化第二个滑块
+                    const slider2 = document.getElementById('slider2');
+                    if (slider2) {
+                        const after2 = slider2.querySelector('.slider-after');
+                        const divider2 = slider2.querySelector('.slider-divider');
+                        const knob2 = slider2.querySelector('.slider-knob');
+                        const range2 = slider2.querySelector('.slider-range');
+                        
+                        if (after2) after2.style.clipPath = 'inset(0 50% 0 0)';
+                        if (divider2) divider2.style.left = '50%';
+                        if (knob2) knob2.style.left = '50%';
+                        if (range2) range2.value = '50';
+                    }
+                });
+
+                handle.addEventListener('mousedown', () => {
+                    isDragging = true;
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        updateSlider(e);
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+
+                container.addEventListener('click', (e) => {
+                    updateSlider(e);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="container">
+            <div class="logo">水煮后期</div>
+            <ul class="nav-links">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#pain-points">痛点</a></li>
+                <li><a href="#curriculum">课程大纲</a></li>
+                <li><a href="layer-demo.html">图层演示</a></li>
+                <li><a href="#pricing">定价方案</a></li>
+                <li><a href="#features">教学特色</a></li>
+                <li><a href="#contact">联系我</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>水煮｜后期合成全体系课程</h1>
+                <p>从 PS 像素级打磨到 AI + 3D 全能合成，突破后期瓶颈，开启商业接单之路。</p>
+                <div class="hero-features">
+                    <div class="feature-item">
+                        <span class="feature-dot">●</span>
+                        <span class="feature-text">PS 高阶合成</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-dot">●</span>
+                        <span class="feature-text">AI 创意流整合</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-dot">●</span>
+                        <span class="feature-text">3D 场景空间搭建</span>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                    <a href="#pricing" class="btn primary-btn">立即开启进阶计划</a>
+                    <a href="#contact" class="btn secondary-btn">咨询详情</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 痛点共鸣 -->
+    <section id="pain-points" class="pain-points">
+        <div class="container">
+            <h2>你是否也在面对这些后期难题？</h2>
+            <div class="pain-grid">
+                <div class="pain-card">
+                    <h3>后期无思路</h3>
+                    <p>面对素材无从下手，画面缺乏故事感。</p>
+                </div>
+                <div class="pain-card">
+                    <h3>技术遇瓶颈</h3>
+                    <p>只会基础液化磨皮，无法驾驭大场景合成。</p>
+                </div>
+                <div class="pain-card">
+                    <h3>效率低下</h3>
+                    <p>重复操作多，不懂如何利用 AI 工具提速。</p>
+                </div>
+                <div class="pain-card">
+                    <h3>变现困难</h3>
+                    <p>想要开启副业接单，却不懂市场行情与报价技巧。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 课程表预留页 -->
+    <section id="curriculum" class="curriculum">
+        <div class="container">
+            <h2>系统化教学大纲，每一步都清晰可见</h2>
+            <p class="section-subtitle">以下为课程详细安排，助你构建完整的合成知识体系。</p>
+            <div class="curriculum-placeholder">
+                <div class="placeholder-content">
+                    <p>课程大纲表格占位符</p>
+                </div>
+            </div>
+            <div class="comparison-gallery">
+                <!-- 位置 [1]：大图展示 -->
+                <div class="comparison-item">
+                    <div class="image-slider">
+                        <div class="slider-container">
+                            <div class="slider-after">
+                                <div class="slider-label">展示图</div>
+                                <img src="public/showcase/2-before.jpg" alt="展示图" class="slider-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 位置 [2]：交互对比滑块 - Wink同款原地擦除效果 -->
+                <div class="comparison-item">
+                    <div class="image-slider" id="slider1">
+                        <div class="slider-container">
+                            <!-- 底层：Before 图片（原始图）作为背景 -->
+                            <div class="slider-before">
+                                <div class="slider-label">Before</div>
+                                <img src="public/showcase/2-before.jpg" alt="原始图" class="slider-image">
+                            </div>
+                            <!-- 顶层：After 图片（精修后）- 使用clip-path显示 -->
+                            <div class="slider-after">
+                                <div class="slider-label">After</div>
+                                <img src="public/showcase/2-after.jpg" alt="精修后效果" class="slider-image">
+                            </div>
+                            <!-- 专业竖向分割线滑块 -->
+                            <div class="slider-control">
+                                <input type="range" min="0" max="100" value="50" class="slider-range" 
+                                       oninput="updateWinkSlider(this, 'slider1')"
+                                       onmousemove="updateSliderPosition(this, 'slider1')">
+                                <!-- 竖向分割线 -->
+                                <div class="slider-divider" id="divider1"></div>
+                                <!-- 圆钮 -->
+                                <div class="slider-knob" id="knob1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 位置 [3]：交互对比滑块 - Wink同款原地擦除效果 -->
+                <div class="comparison-item">
+                    <div class="image-slider" id="slider2">
+                        <div class="slider-container">
+                            <!-- 底层：After 图片（精修后） -->
+                            <div class="slider-after">
+                                <div class="slider-label">After</div>
+                                <img src="public/showcase/3-after.jpg" alt="精修后效果" class="slider-image">
+                            </div>
+                            <!-- 顶层：Before 图片（原始图）- 使用clip-path擦除 -->
+                            <div class="slider-before">
+                                <div class="slider-label">Before</div>
+                                <img src="public/showcase/3-before.jpg" alt="原始图" class="slider-image">
+                            </div>
+                            <!-- 专业竖向分割线滑块 -->
+                            <div class="slider-control">
+                                <input type="range" min="0" max="100" value="50" class="slider-range" 
+                                       oninput="updateWinkSlider(this, 'slider2')"
+                                       onmousemove="updateSliderPosition(this, 'slider2')">
+                                <!-- 竖向分割线 -->
+                                <div class="slider-divider" id="divider2"></div>
+                                <!-- 圆钮 -->
+                                <div class="slider-knob" id="knob2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 位置 [4]：大图展示 -->
+                <div class="comparison-item">
+                    <div class="image-slider">
+                        <div class="slider-container">
+                            <div class="slider-after">
+                                <div class="slider-label">展示图</div>
+                                <img src="public/showcase/3-after.jpg" alt="展示图" class="slider-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 位置 [5-7]：横向并排三图 -->
+                <div class="comparison-item horizontal-row">
+                    <div class="horizontal-gallery">
+                        <div class="horizontal-item">
+                            <img src="public/showcase/2-before.jpg" alt="建模/选材" class="horizontal-image">
+                            <div class="horizontal-label">建模/选材</div>
+                        </div>
+                        <div class="horizontal-item">
+                            <img src="public/showcase/2-after.jpg" alt="中期合成" class="horizontal-image">
+                            <div class="horizontal-label">中期合成</div>
+                        </div>
+                        <div class="horizontal-item">
+                            <img src="public/showcase/3-before.jpg" alt="最终调色" class="horizontal-image">
+                            <div class="horizontal-label">最终调色</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 图层合成演示 -->
+    <section id="layer-showcase" class="layer-showcase">
+        <div class="container">
+            <h2>图层合成原理演示</h2>
+            <p class="section-subtitle">专业后期合成的五层结构，通过3D空间展开展示每一层的作用与关系</p>
+            
+            <div class="layer-showcase-wrapper">
+                <div class="layer-stack-container" id="layerStackContainer">
+                    <!-- 图层5 - 背景层 (最底层) -->
+                    <div class="layer-image layer-image-5">
+                        <img src="public/showcase/01.jpg" alt="背景层" class="layer-img">
+                        <div class="layer-label">背景层</div>
+                    </div>
+
+                    <!-- 图层4 - 光影层 -->
+                    <div class="layer-image layer-image-4">
+                        <img src="public/showcase/02.jpg" alt="光影层" class="layer-img">
+                        <div class="layer-label">光影层</div>
+                    </div>
+
+                    <!-- 图层3 - 主体层 -->
+                    <div class="layer-image layer-image-3">
+                        <img src="public/showcase/03.jpg" alt="主体层" class="layer-img">
+                        <div class="layer-label">主体层</div>
+                    </div>
+
+                    <!-- 图层2 - 特效层 -->
+                    <div class="layer-image layer-image-2">
+                        <img src="public/showcase/04.jpg" alt="特效层" class="layer-img">
+                        <div class="layer-label">特效层</div>
+                    </div>
+
+                    <!-- 图层1 - 调色层 (最顶层) -->
+                    <div class="layer-image layer-image-1">
+                        <img src="public/showcase/05.jpg" alt="调色层" class="layer-img">
+                        <div class="layer-label">调色层</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer-legend">
+                <div class="legend-item">
+                    <span class="legend-color" style="background: linear-gradient(135deg, #a5f3fc, #6688ff);"></span>
+                    <span>调色输出</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: linear-gradient(135deg, #ff9a9e, #fad0c4);"></span>
+                    <span>特效叠加</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: linear-gradient(135deg, #a8edea, #fed6e3);"></span>
+                    <span>主体精修</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: linear-gradient(135deg, #ffecd2, #fcb69f);"></span>
+                    <span>光影氛围</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: linear-gradient(135deg, #c3cfe2, #d8e2dc);"></span>
+                    <span>背景搭建</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 定价方案 -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2>选择适合你的学习方案</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>方案 A｜进阶月学计划</h3>
+                    <p class="plan-description">适合：有基础、想系统提升修图思路的同学</p>
+                    <ul class="features">
+                        <li>每月更新 3 节深度录播课 (20min+/节)</li>
+                        <li>配套课程全案资料</li>
+                        <li>常用修图素材大礼包</li>
+                        <li>学员专属群实时答疑</li>
+                    </ul>
+                    <div class="price">
+                        <span class="original-price">原价：¥299</span>
+                        <div class="current-price">¥199 <span class="price-unit">/ 首月</span></div>
+                        <span class="renewal-price">(续费 ¥159/月)</span>
+                    </div>
+                    <a href="#contact" class="btn primary-btn">立即报名</a>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="badge">热门推荐</div>
+                    <h3>方案 B｜系统合成课</h3>
+                    <p class="plan-description">适合：零基础或新手，想掌握 AI 辅助合成流的同学</p>
+                    <ul class="features">
+                        <li>20+ 节 PS+AI 系统深度课</li>
+                        <li>全套案例实战素材包</li>
+                        <li>课程永久权限，支持长期回看</li>
+                        <li>赠送 2 次 1对1 作业点评</li>
+                        <li>阶段性实战练习作业</li>
+                    </ul>
+                    <div class="price">
+                        <span class="original-price">原价：¥999</span>
+                        <div class="current-price">¥499 <span class="price-unit">/ 限时</span></div>
+                    </div>
+                    <a href="#contact" class="btn primary-btn">立即报名</a>
+                </div>
+                <div class="pricing-card premium">
+                    <div class="badge">全能旗舰</div>
+                    <h3>方案 C｜全能系统课</h3>
+                    <p class="plan-description">适合：追求极致画质、准备职业接单或建立个人 IP 的同学</p>
+                    <ul class="features">
+                        <li>30+ 节 PS+AI+3D 全能深度课</li>
+                        <li>独家：接单思路、报价经验与职业发展分享</li>
+                        <li>进阶：尖端 AI 工具流与 3D 场景经验</li>
+                        <li>后续所有更新课程免费观看</li>
+                        <li>超值赠送：5 次 1对1 作业点评 (New!)</li>
+                    </ul>
+                    <div class="price">
+                        <span class="original-price">原价：¥1599</span>
+                        <div class="current-price">¥699 <span class="price-unit">/ 限时</span></div>
+                    </div>
+                    <a href="#contact" class="btn primary-btn">立即报名</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 教学特色 -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2>为什么选择我们</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>实战导向</h3>
+                    <p>不讲废话，只教能落地、能接单的真技术。</p>
+                </div>
+                <div class="feature-card">
+                    <h3>审美驱动</h3>
+                    <p>拒绝流水线修图，强调个性化与艺术感。</p>
+                </div>
+                <div class="feature-card">
+                    <h3>持续陪伴</h3>
+                    <p>学员群不仅是答疑，更是资源共享的圈子。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 常见问题 -->
+    <section id="faq" class="faq-section">
+        <div class="container">
+            <h2>常见问题答疑</h2>
+            <p class="section-subtitle">这里涵盖了课程购买与学习相关的常见问题，如有其他疑问，请随时联系我进行咨询。</p>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>购买课程后如何加入班级群？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>购买课程后截图联系老师微信，老师将会邀请您加入课程专属班级群。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>在学习过程中遇到问题怎么办？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>我们鼓励学员在班级群中踊跃提问，并希望学员可以自发回答其他同学的问题，这能帮你快速认识同好，加深技术认知。同时，老师在白天看到信息会及时回复，并于每天晚上 10:00 - 11:00 固定集中答疑。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>课程涉及的资产和素材会提供吗？如何获得？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>课程涉及的所有资产与素材会全部提供。我们将打包于网盘链接，连同课程一起发放给每位学员，方便大家同步实操。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>老师课程问题的答疑有效期是多久？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>答疑服务自购课之日起算，涉及课程内容的专业解答有效期为 1 年。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 后期作品选集 -->
+    <section id="portfolio" class="portfolio-section">
+        <div class="container">
+            <h2 class="portfolio-title">后期合成作品选集</h2>
+            <p class="section-subtitle">见证像素间的化学反应，<span class="highlight-text">欢迎加入学习</span>。</p>
+            <div class="isometric-gallery">
+                <div class="gallery-track">
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 1</p>
+                            </div>
+                            <div class="image-title">赛博朋克风格合成</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 2</p>
+                            </div>
+                            <div class="image-title">古风人像合成</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 3</p>
+                            </div>
+                            <div class="image-title">科幻场景构建</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 4</p>
+                            </div>
+                            <div class="image-title">奇幻世界合成</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 5</p>
+                            </div>
+                            <div class="image-title">未来主义风格</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 6</p>
+                            </div>
+                            <div class="image-title">概念艺术合成</div>
+                        </div>
+                    </div>
+                    <!-- 复制一份子元素以实现无缝循环 -->
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 1</p>
+                            </div>
+                            <div class="image-title">赛博朋克风格合成</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 2</p>
+                            </div>
+                            <div class="image-title">古风人像合成</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 3</p>
+                            </div>
+                            <div class="image-title">科幻场景构建</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 4</p>
+                            </div>
+                            <div class="image-title">奇幻世界合成</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 5</p>
+                            </div>
+                            <div class="image-title">未来主义风格</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <div class="image-placeholder">
+                                <p>作品 6</p>
+                            </div>
+                            <div class="image-title">概念艺术合成</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 客户评价 -->
+    <section id="testimonials" class="testimonials-section">
+        <div class="container">
+            <h2>客户评价</h2>
+            <p class="section-subtitle">来自学员和客户的真实反馈，见证我们的专业实力。</p>
+            <div class="testimonials-masonry">
+                <div class="testimonial-row">
+                    <div class="testimonial-track">
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>V</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">虚空终端选手</h4>
+                                    <p class="testimonial-tag">课程学员</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">水煮老师的 AI+3D 合成思路真的绝了！以前做合成总觉得假，看完课程才发现光影逻辑才是灵魂。B套餐太值了。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>L</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">Lxi*</h4>
+                                    <p class="testimonial-tag">课程学员</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">干货满满，基本在最短时间内接触并应用到了行业大部分软件。不愧是行业天花板，学费值这个价，非常赞。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>努</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">努力修图的小白</h4>
+                                    <p class="testimonial-tag">课程学员</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">老师的直播答疑简直是救命稻草，每晚十点的固定答疑帮我解决了很多接单时的技术难题，推荐给想转副业的同学。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>某</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">某知名Cos社团长</h4>
+                                    <p class="testimonial-tag">约稿客户</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">找水煮后期很多年了，审美非常在线。这次的3D场景搭建直接让作品上了一个档次，交付速度也快，靠谱。</p>
+                        </div>
+                        <!-- 复制一份子元素以实现无缝循环 -->
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>V</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">虚空终端选手</h4>
+                                    <p class="testimonial-tag">课程学员</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">水煮老师的 AI+3D 合成思路真的绝了！以前做合成总觉得假，看完课程才发现光影逻辑才是灵魂。B套餐太值了。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>L</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">Lxi*</h4>
+                                    <p class="testimonial-tag">课程学员</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">干货满满，基本在最短时间内接触并应用到了行业大部分软件。不愧是行业天花板，学费值这个价，非常赞。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>努</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">努力修图的小白</h4>
+                                    <p class="testimonial-tag">课程学员</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">老师的直播答疑简直是救命稻草，每晚十点的固定答疑帮我解决了很多接单时的技术难题，推荐给想转副业的同学。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>某</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">某知名Cos社团长</h4>
+                                    <p class="testimonial-tag">约稿客户</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">找水煮后期很多年了，审美非常在线。这次的3D场景搭建直接让作品上了一个档次，交付速度也快，靠谱。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-row">
+                    <div class="testimonial-track">
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>孤</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">孤*快</h4>
+                                    <p class="testimonial-tag">约稿客户</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">很有想法的后期师，能精准捕捉到 Coser 想要的氛围感。AI 的运用自然不突兀，合作非常愉快。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>某</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">某出片狂魔</h4>
+                                    <p class="testimonial-tag">约稿客户</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">不管是 PS 重绘还是大场景合成，水煮的审美永远可以信任，这种光影质感真的很难在其他地方看到。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>V</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">虚空终端选手</h4>
+                                    <p class="testimonial-tag">课程学员</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">水煮老师的 AI+3D 合成思路真的绝了！以前做合成总觉得假，看完课程才发现光影逻辑才是灵魂。B套餐太值了。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>L</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">Lxi*</h4>
+                                    <p class="testimonial-tag">课程学员</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">干货满满，基本在最短时间内接触并应用到了行业大部分软件。不愧是行业天花板，学费值这个价，非常赞。</p>
+                        </div>
+                        <!-- 复制一份子元素以实现无缝循环 -->
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>孤</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">孤*快</h4>
+                                    <p class="testimonial-tag">约稿客户</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">很有想法的后期师，能精准捕捉到 Coser 想要的氛围感。AI 的运用自然不突兀，合作非常愉快。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>某</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">某出片狂魔</h4>
+                                    <p class="testimonial-tag">约稿客户</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">不管是 PS 重绘还是大场景合成，水煮的审美永远可以信任，这种光影质感真的很难在其他地方看到。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>V</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">虚空终端选手</h4>
+                                    <p class="testimonial-tag">课程学员</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">水煮老师的 AI+3D 合成思路真的绝了！以前做合成总觉得假，看完课程才发现光影逻辑才是灵魂。B套餐太值了。</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="testimonial-avatar">
+                                    <span>L</span>
+                                </div>
+                                <div class="testimonial-info">
+                                    <h4 class="testimonial-author">Lxi*</h4>
+                                    <p class="testimonial-tag">课程学员</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-content">干货满满，基本在最短时间内接触并应用到了行业大部分软件。不愧是行业天花板，学费值这个价，非常赞。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚/转化 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <h2>别让平庸的后期浪费了你的创意。</h2>
+                    <div class="contact-methods">
+                        <div class="qr-container">
+                            <div class="qr-code">
+                                <div class="qr-placeholder">
+                                    <p>扫码加入课程群</p>
+                                </div>
+                            </div>
+                            <p class="qr-label">咨询详情二维码</p>
+                        </div>
+                        <div class="qr-container">
+                            <div class="qr-code">
+                                <div class="qr-placeholder">
+                                    <p>立即报名 扫码支付</p>
+                                </div>
+                            </div>
+                            <p class="qr-label">支付二维码</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 水煮后期. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

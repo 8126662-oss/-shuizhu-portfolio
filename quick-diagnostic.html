@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速诊断 - 图片显示问题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .diagnostic-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .test-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .loading {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        
+        .info {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.5);
+        }
+        
+        img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .path-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .suggestions {
+            margin-top: 20px;
+        }
+        
+        .suggestion-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            border-left: 3px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="diagnostic-container">
+        <h1>图片显示问题快速诊断</h1>
+        
+        <div class="test-box">
+            <h2>测试图片加载</h2>
+            <div class="path-info">
+                <p><strong>测试路径:</strong> <code>public/showcase/outline-1.jpg</code></p>
+                <p><strong>相对于:</strong> <code>C:\Users\86152\Documents\trae_projects\box1\quick-diagnostic.html</code></p>
+            </div>
+            
+            <div class="status loading" id="status">
+                正在尝试加载图片...
+            </div>
+            
+            <img src="public/showcase/outline-1.jpg" alt="测试图片" id="test-img">
+            
+            <div class="path-info" id="path-details">
+                等待图片加载...
+            </div>
+        </div>
+        
+        <div class="test-box info">
+            <h2>诊断信息</h2>
+            <div id="diagnostic-info">
+                收集信息中...
+            </div>
+        </div>
+        
+        <div class="test-box">
+            <h2>如果图片不显示，请尝试：</h2>
+            <div class="suggestions">
+                <div class="suggestion-item">
+                    <strong>1. 检查文件是否存在</strong>
+                    <p>确认文件位于：<code>C:\Users\86152\Documents\trae_projects\box1\public\showcase\outline-1.jpg</code></p>
+                </div>
+                
+                <div class="suggestion-item">
+                    <strong>2. 检查文件权限</strong>
+                    <p>确保图片文件可读，没有权限限制</p>
+                </div>
+                
+                <div class="suggestion-item">
+                    <strong>3. 检查访问方式</strong>
+                    <p>当前访问协议：<span id="protocol-info">检测中...</span></p>
+                    <p>如果通过 <code>file:///</code> 访问，相对路径最可靠</p>
+                </div>
+                
+                <div class="suggestion-item">
+                    <strong>4. 检查控制台错误</strong>
+                    <p>按 F12 → Console 标签页，查看具体错误信息</p>
+                </div>
+                
+                <div class="suggestion-item">
+                    <strong>5. 尝试其他路径格式</strong>
+                    <p>如果相对路径不行，尝试：</p>
+                    <ul>
+                        <li><code>./public/showcase/outline-1.jpg</code></li>
+                        <li><code>/public/showcase/outline-1.jpg</code></li>
+                        <li>完整文件路径（不推荐）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const img = document.getElementById('test-img');
+        const status = document.getElementById('status');
+        const pathDetails = document.getElementById('path-details');
+        const diagnosticInfo = document.getElementById('diagnostic-info');
+        const protocolInfo = document.getElementById('protocol-info');
+        
+        // 显示当前协议
+        protocolInfo.textContent = window.location.protocol;
+        
+        img.onload = function() {
+            status.className = 'status success';
+            status.innerHTML = '<h3>✅ 图片加载成功！</h3>';
+            
+            pathDetails.innerHTML = `
+                <p><strong>✅ 路径有效！</strong></p>
+                <p>原始尺寸: ${img.naturalWidth} × ${img.naturalHeight} 像素</p>
+                <p>显示尺寸: ${Math.round(img.width)} × ${Math.round(img.height)} 像素</p>
+                <p>实际路径: ${img.src}</p>
+            `;
+            
+            diagnosticInfo.innerHTML = `
+                <p>✅ 相对路径 <code>public/showcase/outline-1.jpg</code> 有效</p>
+                <p>✅ 图片文件完整可读</p>
+                <p>✅ 建议在项目中使用此相对路径</p>
+                <p>访问协议: ${window.location.protocol}</p>
+            `;
+            
+            console.log('✅ 图片加载成功:', img.src);
+            console.log('✅ 原始尺寸:', img.naturalWidth, '×', img.naturalHeight);
+            console.log('✅ 当前协议:', window.location.protocol);
+        };
+        
+        img.onerror = function() {
+            status.className = 'status error';
+            status.innerHTML = '<h3>❌ 图片加载失败</h3>';
+            
+            pathDetails.innerHTML = `
+                <p><strong>❌ 路径无效或文件不存在</strong></p>
+                <p>尝试的路径: ${img.src}</p>
+                <p>当前页面: ${window.location.href}</p>
+            `;
+            
+            diagnosticInfo.innerHTML = `
+                <p>❌ 相对路径 <code>public/showcase/outline-1.jpg</code> 无效</p>
+                <p>可能原因：</p>
+                <ol>
+                    <li>文件不存在于指定位置</li>
+                    <li>文件权限问题</li>
+                    <li>需要通过HTTP服务器访问</li>
+                    <li>路径相对于错误的位置</li>
+                </ol>
+                <p>请检查控制台获取详细错误信息。</p>
+            `;
+            
+            console.error('❌ 图片加载失败，路径:', img.src);
+            console.error('❌ 当前页面URL:', window.location.href);
+            console.error('❌ 页面协议:', window.location.protocol);
+            
+            // 尝试诊断具体问题
+            if (window.location.protocol === 'file:') {
+                console.info('ℹ️ 通过文件协议访问，相对路径应该能工作');
+                console.info('ℹ️ 检查文件是否存在: C:\\Users\\86152\\Documents\\trae_projects\\box1\\public\\showcase\\outline-1.jpg');
+            }
+        };
+        
+        // 超时检查
+        setTimeout(() => {
+            if (!img.complete) {
+                status.className = 'status error';
+                status.innerHTML = '<h3>⏳ 加载超时</h3><p>图片加载时间过长</p>';
+            }
+        }, 5000);
+        
+        // 初始日志
+        console.log('诊断页面启动');
+        console.log('页面URL:', window.location.href);
+        console.log('页面协议:', window.location.protocol);
+        console.log('测试图片路径:', img.src);
+    </script>
+</body>
+</html>

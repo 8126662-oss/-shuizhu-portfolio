@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>路径测试 - outline-1.jpg</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-case {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        img {
+            max-width: 300px;
+            max-height: 200px;
+            border: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .path-info {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>图片路径测试 - outline-1.jpg</h1>
+        
+        <div class="path-info">
+            <p><strong>文件实际位置:</strong> C:\Users\86152\Documents\trae_projects\box1\public\showcase\outline-1.jpg</p>
+            <p><strong>测试页面位置:</strong> C:\Users\86152\Documents\trae_projects\box1\path-test.html</p>
+        </div>
+        
+        <!-- 测试用例1：绝对路径（用户要求的格式） -->
+        <div class="test-case" id="test1">
+            <h3>测试1: 绝对路径 <code>/showcase/outline-1.jpg</code></h3>
+            <img src="/showcase/outline-1.jpg" alt="测试1" onload="markSuccess('test1')" onerror="markError('test1')">
+            <div id="result1">等待加载...</div>
+        </div>
+        
+        <!-- 测试用例2：相对路径（从根目录） -->
+        <div class="test-case" id="test2">
+            <h3>测试2: 相对路径 <code>public/showcase/outline-1.jpg</code></h3>
+            <img src="public/showcase/outline-1.jpg" alt="测试2" onload="markSuccess('test2')" onerror="markError('test2')">
+            <div id="result2">等待加载...</div>
+        </div>
+        
+        <!-- 测试用例3：相对路径（当前目录） -->
+        <div class="test-case" id="test3">
+            <h3>测试3: 相对路径 <code>./public/showcase/outline-1.jpg</code></h3>
+            <img src="./public/showcase/outline-1.jpg" alt="测试3" onload="markSuccess('test3')" onerror="markError('test3')">
+            <div id="result3">等待加载...</div>
+        </div>
+        
+        <!-- 测试用例4：完整文件路径 -->
+        <div class="test-case" id="test4">
+            <h3>测试4: 文件URL <code>file:///</code> 路径</h3>
+            <img src="" alt="测试4" id="img4" onload="markSuccess('test4')" onerror="markError('test4')">
+            <div id="result4">等待测试...</div>
+            <button onclick="testFileProtocol()">测试文件协议</button>
+        </div>
+        
+        <!-- 测试用例5：检查其他图片是否正常 -->
+        <div class="test-case" id="test5">
+            <h3>测试5: 检查现有图片 <code>public/showcase/2-before.jpg</code></h3>
+            <img src="public/showcase/2-before.jpg" alt="测试5" onload="markSuccess('test5')" onerror="markError('test5')">
+            <div id="result5">等待加载...</div>
+        </div>
+        
+        <div class="path-info">
+            <h3>诊断信息：</h3>
+            <p id="diagnostic">正在收集信息...</p>
+        </div>
+    </div>
+    
+    <script>
+        function markSuccess(testId) {
+            const result = document.getElementById('result' + testId.slice(-1));
+            result.innerHTML = '<span class="success">✅ 加载成功</span>';
+            updateDiagnostic();
+        }
+        
+        function markError(testId) {
+            const result = document.getElementById('result' + testId.slice(-1));
+            result.innerHTML = '<span class="error">❌ 加载失败</span>';
+            updateDiagnostic();
+        }
+        
+        function testFileProtocol() {
+            const img = document.getElementById('img4');
+            const result = document.getElementById('result4');
+            
+            // 构建文件URL
+            const filePath = 'C:/Users/86152/Documents/trae_projects/box1/public/showcase/outline-1.jpg';
+            const fileUrl = 'file:///' + filePath.replace(/\\/g, '/');
+            
+            result.innerHTML = `测试路径: <code>${fileUrl}</code>`;
+            img.src = fileUrl;
+        }
+        
+        function updateDiagnostic() {
+            const diagnostic = document.getElementById('diagnostic');
+            let successCount = 0;
+            let totalTests = 5;
+            
+            for (let i = 1; i <= totalTests; i++) {
+                const result = document.getElementById('result' + i);
+                if (result.innerHTML.includes('✅')) successCount++;
+            }
+            
+            diagnostic.innerHTML = `
+                测试结果: ${successCount}/${totalTests} 成功<br>
+                建议:
+                ${successCount === 0 ? '❌ 所有路径都失败，可能是文件权限或格式问题' : ''}
+                ${document.getElementById('result5').innerHTML.includes('✅') ? '✅ 现有图片能加载，说明项目结构正常' : '❌ 现有图片也失败，可能是项目路径问题'}
+                ${document.getElementById('result2').innerHTML.includes('✅') ? '✅ 相对路径有效，建议使用相对路径' : ''}
+                ${document.getElementById('result1').innerHTML.includes('✅') ? '✅ 绝对路径有效' : '❌ 绝对路径无效，可能需要服务器环境'}
+            `;
+        }
+        
+        // 自动更新诊断
+        setTimeout(updateDiagnostic, 2000);
+        setTimeout(updateDiagnostic, 5000);
+    </script>
+</body>
+</html>

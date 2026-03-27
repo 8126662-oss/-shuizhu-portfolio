@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最终测试 - 课程大纲图片</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        
+        .test-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #fff;
+        }
+        
+        /* 复制实际项目中的样式 */
+        .curriculum-image-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .curriculum-image {
+            width: 100%;
+            max-height: 600px;
+            aspect-ratio: 2.07 / 1;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .curriculum-image:hover {
+            transform: scale(1.01);
+        }
+        
+        .debug-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            font-family: monospace;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        
+        .path-info {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid rgba(33, 150, 243, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            word-break: break-all;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-wrapper">
+        <h1>课程大纲图片 - 最终测试</h1>
+        
+        <div class="path-info">
+            <h3>路径信息:</h3>
+            <p><strong>HTML中使用的路径:</strong> <code>public/showcase/course-outline.jpg</code></p>
+            <p><strong>实际文件路径:</strong> <code>C:\Users\86152\Documents\trae_projects\box1\public\showcase\course-outline.jpg</code></p>
+        </div>
+        
+        <div class="test-buttons">
+            <button onclick="testImage()">测试图片加载</button>
+            <button onclick="checkFile()">检查文件是否存在</button>
+            <button onclick="openInBrowser()">在浏览器中打开</button>
+        </div>
+        
+        <!-- 实际项目中的代码结构 -->
+        <div class="curriculum-image-container">
+            <img src="public/showcase/course-outline.jpg" alt="课程大纲" class="curriculum-image" id="course-img">
+        </div>
+        
+        <div id="status" class="status">
+            等待测试...
+        </div>
+        
+        <div class="debug-info">
+            <h3>调试信息:</h3>
+            <div id="debug-output"></div>
+        </div>
+    </div>
+    
+    <script>
+        const img = document.getElementById('course-img');
+        const status = document.getElementById('status');
+        const debug = document.getElementById('debug-output');
+        
+        function log(message) {
+            debug.innerHTML += `<p>${new Date().toLocaleTimeString()}: ${message}</p>`;
+            debug.scrollTop = debug.scrollHeight;
+        }
+        
+        function testImage() {
+            status.className = 'status';
+            status.innerHTML = '正在测试图片加载...';
+            debug.innerHTML = '';
+            
+            log('开始测试图片加载...');
+            log(`图片路径: ${img.src}`);
+            log(`完整URL: ${img.src}`);
+            
+            // 强制重新加载图片
+            const originalSrc = img.src;
+            img.src = '';
+            setTimeout(() => {
+                img.src = originalSrc;
+            }, 100);
+            
+            img.onload = function() {
+                status.className = 'status success';
+                status.innerHTML = `
+                    <h3>✅ 图片加载成功！</h3>
+                    <p>原始尺寸: ${img.naturalWidth} × ${img.naturalHeight}</p>
+                    <p>显示尺寸: ${img.width} × ${img.height}</p>
+                    <p>CSS aspect-ratio: ${getComputedStyle(img).aspectRatio}</p>
+                    <p>object-fit: ${getComputedStyle(img).objectFit}</p>
+                `;
+                log(`图片加载成功: ${img.naturalWidth}×${img.naturalHeight}`);
+                log(`CSS aspect-ratio: ${getComputedStyle(img).aspectRatio}`);
+                log(`object-fit: ${getComputedStyle(img).objectFit}`);
+            };
+            
+            img.onerror = function() {
+                status.className = 'status error';
+                status.innerHTML = `
+                    <h3>❌ 图片加载失败</h3>
+                    <p>请检查:</p>
+                    <ol>
+                        <li>文件路径是否正确</li>
+                        <li>文件是否存在</li>
+                        <li>是否有权限访问</li>
+                    </ol>
+                `;
+                log('图片加载失败');
+            };
+        }
+        
+        function checkFile() {
+            log('检查文件是否存在...');
+            // 模拟文件检查
+            setTimeout(() => {
+                log('文件检查完成');
+                log('提示: 在浏览器中按F12打开开发者工具，查看Network标签页');
+            }, 500);
+        }
+        
+        function openInBrowser() {
+            // 尝试在当前页面打开index.html
+            window.open('index.html', '_blank');
+        }
+        
+        // 自动开始测试
+        setTimeout(testImage, 1000);
+    </script>
+</body>
+</html>
