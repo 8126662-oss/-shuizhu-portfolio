@@ -1,0 +1,38 @@
+/* 修复懒加载图片的绿框问题 - 添加这个CSS到你的网站 */
+
+/* 方法1：移除所有懒加载图片的边框 */
+img[loading="lazy"] {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* 方法2：针对特定图片的修复 */
+.hero-bg[loading="lazy"],
+.portfolio-img[loading="lazy"],
+.showcase-img[loading="lazy"],
+.comparison-img[loading="lazy"] {
+    border: 0 !important;
+    outline: 0 !important;
+}
+
+/* 方法3：全局图片样式修复 */
+img {
+    border: none;
+    outline: none;
+}
+
+/* 方法4：如果绿框是focus状态导致的 */
+img:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* 方法5：确保没有浏览器默认样式 */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 添加到你的HTML中：
+<link rel="stylesheet" href="fix-lazy-loading.css">
+*/
