@@ -184,6 +184,9 @@
             const src = img.src;
             
             // 如果是大图，尝试使用移动端优化版本
+            // 注意：暂时注释掉srcset优化，因为移动端优化版本图片可能不存在
+            // 这会导致图片加载失败
+            /*
             if (src.includes('portfolio-') || src.includes('showcase/')) {
                 // 添加srcset属性
                 const fileName = src.split('/').pop();
@@ -199,7 +202,15 @@
                 
                 console.log(`📐 图片尺寸优化: ${fileName}`);
             }
+            */
+            
+            // 确保图片在移动端正确显示
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+            img.style.display = 'block';
         });
+        
+        console.log(`✅ ${images.length} 张图片已确保正确显示`);
     }
     
     function reduceJavaScriptExecution() {

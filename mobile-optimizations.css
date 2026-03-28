@@ -233,7 +233,9 @@ a:active,
     }
 }
 
-/* 9. 连接速度优化 */
+/* 9. 连接速度优化 - 已调整为可选优化 */
+/* 注释掉自动隐藏图片，改为用户可选功能 */
+/*
 @media (prefers-reduced-data: reduce) and (max-width: 768px) {
     .portfolio-image,
     .gallery-image img {
@@ -244,6 +246,7 @@ a:active,
         display: block !important;
     }
 }
+*/
 
 /* 10. 打印优化 */
 @media print {

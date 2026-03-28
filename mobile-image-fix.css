@@ -1,0 +1,290 @@
+/* 
+ * 手机端图片显示紧急修复
+ * 解决移动端图片不显示问题
+ */
+
+/* ===== 紧急修复：确保所有图片显示 ===== */
+
+/* 1. 覆盖所有可能隐藏图片的规则 */
+img,
+.portfolio-image,
+.gallery-image img,
+.lazy-image,
+.portfolio-image img,
+.gallery-image > img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* 2. 修复懒加载图片 */
+.lazy-image:not(.loaded) {
+    opacity: 0 !important;
+    transition: opacity 0.5s ease !important;
+}
+
+.lazy-image.loaded {
+    opacity: 1 !important;
+}
+
+/* 3. 修复图片容器 */
+.gallery-image,
+.portfolio-image {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.gallery-image img,
+.portfolio-image img {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+/* 4. 修复移动端特定问题 */
+@media (max-width: 768px) {
+    /* 确保所有图片在移动端显示 */
+    img {
+        display: block !important;
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    /* 修复图片容器尺寸 */
+    .gallery-image,
+    .portfolio-image {
+        aspect-ratio: auto !important;
+        min-height: 200px !important;
+    }
+    
+    /* 修复懒加载占位符 */
+    .image-placeholder {
+        display: none !important;
+    }
+    
+    /* 确保图片不被任何规则隐藏 */
+    *[style*="display: none"] img,
+    *[style*="visibility: hidden"] img,
+    *[class*="hide"] img,
+    *[class*="hidden"] img {
+        display: block !important;
+        visibility: visible !important;
+    }
+}
+
+/* 5. 修复超小屏幕 */
+@media (max-width: 480px) {
+    .gallery-image,
+    .portfolio-image {
+        min-height: 150px !important;
+    }
+    
+    img {
+        max-width: 100vw !important;
+    }
+}
+
+/* 6. 修复黑暗模式下的图片显示 */
+@media (prefers-color-scheme: dark) {
+    img {
+        filter: brightness(1.05) !important;
+    }
+}
+
+/* 7. 修复数据节省模式 */
+@media (prefers-reduced-data: reduce) {
+    /* 不隐藏图片，只降低质量 */
+    img {
+        filter: blur(0.5px) !important;
+        image-rendering: -webkit-optimize-contrast !important;
+    }
+}
+
+/* 8. 修复打印模式 */
+@media print {
+    img {
+        display: block !important;
+        max-width: 100% !important;
+        page-break-inside: avoid !important;
+    }
+}
+
+/* 9. 修复iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    img {
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
+    }
+}
+
+/* 10. 修复Android Chrome */
+@supports (-webkit-overflow-scrolling: touch) {
+    img {
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
+    }
+}
+
+/* 11. 紧急修复：强制显示所有图片类元素 */
+[class*="image"],
+[class*="img"],
+[class*="photo"],
+[class*="picture"] {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* 12. 修复图片加载错误 */
+img:not([src]),
+img[src=""],
+img[src="#"],
+img[src="undefined"],
+img[src="null"] {
+    display: none !important;
+}
+
+img[src]:not([src=""]) {
+    display: block !important;
+}
+
+/* 13. 修复背景图片 */
+[style*="background-image"],
+[class*="bg-"] {
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
+/* 14. 调试模式：添加边框帮助识别 */
+.debug-images img {
+    border: 2px solid #00ff00 !important;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5) !important;
+}
+
+.debug-images .gallery-image,
+.debug-images .portfolio-image {
+    border: 2px solid #ff0000 !important;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
+}
+
+/* 15. 性能优化：确保图片不会阻塞渲染 */
+img {
+    content-visibility: auto !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
+}
+
+/* 16. 触摸优化 */
+img {
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
+}
+
+/* 17. 修复滚动性能 */
+.gallery-track img,
+.testimonial-track img {
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+}
+
+/* 18. 修复动画性能 */
+img {
+    backface-visibility: hidden !important;
+    perspective: 1000px !important;
+}
+
+/* 19. 修复字体图标显示 */
+[class*="icon-"],
+[class*="fa-"] {
+    display: inline-block !important;
+    font-family: inherit !important;
+}
+
+/* 20. 最终保障：使用!important覆盖所有可能规则 */
+img {
+    /* 显示相关 */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    
+    /* 尺寸相关 */
+    max-width: 100% !important;
+    height: auto !important;
+    
+    /* 布局相关 */
+    position: relative !important;
+    z-index: 1 !important;
+    
+    /* 性能相关 */
+    content-visibility: auto !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    
+    /* 交互相关 */
+    pointer-events: auto !important;
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
+}
+
+/* 21. 修复特定选择器冲突 */
+body img,
+html img,
+#app img,
+.container img,
+main img,
+section img,
+article img,
+div img,
+span img,
+a img,
+button img {
+    display: block !important;
+}
+
+/* 22. 修复动态加载的图片 */
+img[data-src],
+img[data-srcset],
+img.loading,
+img.lazy {
+    display: block !important;
+    min-height: 50px !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 23. 修复响应式图片 */
+img[srcset],
+picture img,
+source + img {
+    display: block !important;
+    width: 100% !important;
+}
+
+/* 24. 修复画廊和作品集图片 */
+.gallery-item img,
+.portfolio-item img,
+.showcase-item img,
+.work-item img,
+.project-item img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+/* 25. 添加控制台提示 */
+body::after {
+    content: "📱 手机端图片显示修复已应用" !important;
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    body::before {
+        content: "📱 移动端模式：图片显示已优化" !important;
+        display: none !important;
+    }
+}
