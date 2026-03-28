@@ -1,0 +1,204 @@
+/* 
+ * 恢复原始图层动画
+ * 移除所有修改，恢复原始动画效果
+ */
+
+/* 1. 移除我添加的所有图层动画修改 */
+.layer-stack-container,
+.layer-image,
+.layer-image-1,
+.layer-image-2,
+.layer-image-3,
+.layer-image-4,
+.layer-image-5,
+.layer-img,
+.layer-label,
+.layer-showcase,
+.layer-legend,
+.legend-item,
+.legend-color {
+    /* 重置所有我添加的样式 */
+    all: unset !important;
+}
+
+/* 2. 恢复原始动画关键帧 */
+@keyframes fixedRotateLayerAnimation {
+    /* 阶段 1: 正面合拢 - 完全重叠展示05.jpg (0-20%) */
+    0%, 20% {
+        transform: 
+            translateZ(0) 
+            translateX(0) 
+            translateY(0);
+        opacity: 1;
+        filter: var(--layer-shadow);
+        backface-visibility: hidden;
+    }
+    
+    /* 阶段 2: 开始旋转 - 轻微分离 (20-40%) */
+    40% {
+        transform: 
+            translateZ(calc(var(--layer-index) * 20px)) /* 轻微Z轴分离 */
+            translateX(calc(var(--layer-index) * 10px))  /* 轻微X轴偏移 */
+            translateY(calc(var(--layer-index) * 8px)); /* 轻微Y轴偏移 */
+        opacity: 1;
+        filter: var(--layer-shadow);
+        backface-visibility: hidden;
+    }
+    
+    /* 阶段 3: 旋转落位到3D展开状态 (40-45%) */
+    45% {
+        transform: 
+            translateZ(calc(var(--layer-index) * 108px)) /* 视觉微调：Z轴间距缩小40%，从180px减少到108px */
+            translateX(calc(var(--layer-index) * 18px))  /* 视觉微调：X轴偏移减少40%，从30px减少到18px */
+            translateY(calc(var(--layer-index) * 12px)); /* 视觉微调：Y轴偏移减少40%，从20px减少到12px */
+        opacity: 0.95;
+        filter: var(--layer-shadow);
+        backface-visibility: hidden;
+    }
+    
+    /* 阶段 4: 维持3D斜向展开状态 (45-70%) */
+    70% {
+        transform: 
+            translateZ(calc(var(--layer-index) * 108px)) /* 保持紧凑间距 */
+            translateX(calc(var(--layer-index) * 18px)) 
+            translateY(calc(var(--layer-index) * 12px));
+        opacity: 0.95;
+        filter: var(--layer-shadow);
+        backface-visibility: hidden;
+    }
+    
+    /* 阶段 5: 开始合拢 (70-80%) */
+    80% {
+        transform: 
+            translateZ(calc(var(--layer-index) * 54px)) /* 开始合拢，间距减半 */
+            translateX(calc(var(--layer-index) * 9px)) 
+            translateY(calc(var(--layer-index) * 6px));
+        opacity: 0.98;
+        filter: var(--layer-shadow);
+        backface-visibility: hidden;
+    }
+    
+    /* 阶段 6: 继续合拢 (80-90%) */
+    90% {
+        transform: 
+            translateZ(calc(var(--layer-index) * 10px)) /* 几乎完全合拢 */
+            translateX(calc(var(--layer-index) * 2px)) 
+            translateY(calc(var(--layer-index) * 1px));
+        opacity: 1;
+        filter: var(--layer-shadow);
+        backface-visibility: hidden;
+    }
+    
+    /* 阶段 7: 回到完全重叠状态 (90-100%) */
+    100% {
+        transform: 
+            translateZ(0) 
+            translateX(0) 
+            translateY(0);
+        opacity: 1;
+        filter: var(--layer-shadow);
+        backface-visibility: hidden;
+    }
+}
+
+/* 3. 确保原始动画正常工作 */
+.layer-stack-container {
+    /* 恢复原始容器样式 */
+    animation: none !important;
+}
+
+.layer-image {
+    /* 恢复原始图层样式 */
+    animation: fixedRotateLayerAnimation 3s ease-in-out infinite !important;
+    animation-delay: calc(var(--layer-index) * 0.1s) !important;
+}
+
+/* 4. 移除我添加的所有JavaScript效果 */
+#image-fix-status,
+#repair-status,
+#image-size-warning,
+#layer-animation-status {
+    display: none !important;
+}
+
+/* 5. 恢复原始图片显示 */
+.layer-img {
+    /* 恢复原始图片样式 */
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    filter: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* 6. 移除所有临时优化 */
+.image-loading-placeholder,
+.image-error,
+.performance-hint {
+    display: none !important;
+}
+
+/* 7. 恢复原始悬停效果 */
+.layer-image:hover {
+    transform: none !important;
+    z-index: 10 !important;
+}
+
+/* 8. 确保原始CSS优先级 */
+.layer-showcase * {
+    /* 重置所有我可能修改的样式 */
+    animation-play-state: running !important;
+    transition: none !important;
+}
+
+/* 9. 移动端恢复 */
+@media (max-width: 768px) {
+    .layer-stack-container,
+    .layer-image {
+        /* 恢复移动端原始样式 */
+        all: unset !important;
+    }
+}
+
+/* 10. 最终保障：使用最高优先级恢复 */
+html body .layer-showcase * {
+    /* 使用最高优先级选择器 */
+    all: revert !important;
+}
+
+/* 11. 特别处理：确保动画运行 */
+@layer reset {
+    .layer-image {
+        animation: fixedRotateLayerAnimation 3s ease-in-out infinite !important;
+    }
+}
+
+/* 12. 移除所有我添加的CSS文件效果 */
+link[href*="RESTORE_LAYER_ANIMATION"],
+link[href*="TEMPORARY_IMAGE_OPTIMIZATION"],
+link[href*="FINAL_IMAGE_FIX"] {
+    /* 标记这些CSS文件应该被忽略 */
+    display: none !important;
+}
+
+/* 13. 恢复原始颜色和阴影 */
+.layer-label {
+    background: rgba(0, 0, 0, 0.7) !important;
+    color: white !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* 14. 恢复原始布局 */
+.layer-showcase-wrapper {
+    display: block !important;
+    position: relative !important;
+}
+
+/* 15. 最终重置命令 */
+.layer-showcase {
+    /* 完全恢复原始状态 */
+    contain: none !important;
+    content-visibility: visible !important;
+}
