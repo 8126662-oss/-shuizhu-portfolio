@@ -1953,7 +1953,12 @@ footer {
     #layerStackContainer .layer-image-5 {
         animation: none !important;
         opacity: 1 !important;
-        transition: transform 0.35s ease;
+        /* !important：覆盖移动端全局 prefers-reduced-motion 对 transition-duration 的压缩 */
+        transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+    }
+
+    #layerStackContainer.layer-user-expanded .layer-label {
+        opacity: 1;
     }
 
     #layerStackContainer:not(.layer-user-expanded) .layer-image-1,

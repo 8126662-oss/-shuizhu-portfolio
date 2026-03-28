@@ -90,7 +90,7 @@
                 max-width: 100vw;
             }
             
-            img, video {
+            img:not(.slider-image):not(.layer-img), video {
                 max-width: 100%;
                 height: auto;
             }
@@ -188,6 +188,9 @@
             const src = img.src;
 
             if (img.classList.contains('layer-img') || img.closest('#layerStackContainer')) {
+                return;
+            }
+            if (img.classList.contains('slider-image') || img.closest('.image-slider')) {
                 return;
             }
             

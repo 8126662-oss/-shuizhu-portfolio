@@ -29,11 +29,13 @@
             img.style.opacity = '1';
 
             var inLayerStack = img.classList.contains('layer-img') || img.closest('#layerStackContainer');
-            if (inLayerStack) {
+            var inImageSlider = img.classList.contains('slider-image') || img.closest('.image-slider');
+            if (inLayerStack || inImageSlider) {
                 img.style.removeProperty('max-width');
                 img.style.removeProperty('height');
                 img.style.width = '100%';
                 img.style.height = '100%';
+                img.style.maxWidth = 'none';
                 img.style.objectFit = 'cover';
                 img.style.position = 'absolute';
                 img.style.inset = '0';
@@ -72,6 +74,8 @@
         // 2. 修复图片容器
         const imageContainers = document.querySelectorAll('.gallery-image, .portfolio-image, .image-container, [class*="image"]');
         imageContainers.forEach(container => {
+            if (container.tagName === 'IMG') return;
+            if (container.closest('#layerStackContainer') || container.closest('.image-slider')) return;
             container.style.display = 'block';
             container.style.visibility = 'visible';
             container.style.overflow = 'hidden';

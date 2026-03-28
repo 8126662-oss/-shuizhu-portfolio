@@ -50,8 +50,8 @@
         padding: 8px !important;
     }
     
-    /* 5. 图片优化 */
-    img {
+    /* 5. 图片优化（排除对比滑块与图层栈内图片） */
+    img:not(.slider-image):not(.layer-img) {
         max-width: 100% !important;
         height: auto !important;
     }

@@ -6,7 +6,7 @@
 /* ===== 紧急修复：确保所有图片显示 ===== */
 
 /* 1. 覆盖所有可能隐藏图片的规则 */
-img,
+img:not(.slider-image):not(.layer-img),
 .portfolio-image,
 .gallery-image img,
 .lazy-image,
@@ -17,6 +17,17 @@ img,
     opacity: 1 !important;
     max-width: 100% !important;
     height: auto !important;
+}
+
+/* 对比滑块 / 图层：必须铺满固定比例容器，禁止被全局 height:auto 压扁 */
+img.slider-image,
+img.layer-img {
+    max-width: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    position: absolute !important;
+    inset: 0 !important;
 }
 
 /* 2. 修复懒加载图片 */
@@ -49,7 +60,7 @@ img,
 /* 4. 修复移动端特定问题 */
 @media (max-width: 768px) {
     /* 确保所有图片在移动端显示 */
-    img {
+    img:not(.slider-image):not(.layer-img) {
         display: block !important;
         max-width: 100% !important;
         height: auto !important;
@@ -84,7 +95,7 @@ img,
         min-height: 150px !important;
     }
     
-    img {
+    img:not(.slider-image):not(.layer-img) {
         max-width: 100vw !important;
     }
 }
