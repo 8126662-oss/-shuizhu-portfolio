@@ -1,13 +1,13 @@
 const isProd = process.env.NODE_ENV === 'production';
-const basePath = isProd ? '/-shuizhu-portfolio' : '';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath,
-  assetPrefix: basePath || undefined,
+  basePath: isProd ? '/-shuizhu-portfolio' : '',
+  assetPrefix: isProd ? '/-shuizhu-portfolio/' : '',
   output: 'export',
-  images: {
-    unoptimized: true,
+  images: { unoptimized: true },
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isProd ? '/-shuizhu-portfolio' : '',
   },
 };
 
