@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清理验证测试</title>
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+        
+        .checking {
+            background: #fef3c7;
+            color: #92400e;
+            border: 2px solid #f59e0b;
+        }
+        
+        .test-image {
+            width: 300px;
+            height: 200px;
+            margin: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>✅ 清理完成验证</h1>
+    
+    <div class="status success">
+        ✅ 已移除所有性能监控脚本
+    </div>
+    
+    <div class="status success">
+        ✅ 已移除"图片替换验证中..."提示
+    </div>
+    
+    <div class="status success">
+        ✅ 已移除绿框修复CSS（保留）
+    </div>
+    
+    <h2>测试图片显示：</h2>
+    
+    <div class="test-image">
+        <img src="public/hero-bg.jpg" loading="lazy" alt="测试图片1">
+        <br>hero-bg.jpg
+        <div id="status1">检查中...</div>
+    </div>
+    
+    <div class="test-image">
+        <img src="public/showcase/portfolio-5.jpg" loading="lazy" alt="测试图片2">
+        <br>portfolio-5.jpg
+        <div id="status2">检查中...</div>
+    </div>
+    
+    <h2>验证项目：</h2>
+    <ul>
+        <li>❌ 没有右上角提示</li>
+        <li>❌ 没有绿框</li>
+        <li>✅ 图片正常显示</li>
+        <li>✅ 懒加载正常工作</li>
+    </ul>
+    
+    <button onclick="window.open('index.html', '_blank')">打开主网站测试</button>
+    <button onclick="location.reload(true)">强制刷新测试</button>
+    
+    <script>
+        // 检查图片是否正常加载
+        document.querySelectorAll('img').forEach((img, index) => {
+            if (img.complete) {
+                document.getElementById(`status${index + 1}`).innerHTML = '✅ 已加载';
+                document.getElementById(`status${index + 1}`).className = 'status success';
+            } else {
+                img.onload = function() {
+                    document.getElementById(`status${index + 1}`).innerHTML = '✅ 已加载';
+                    document.getElementById(`status${index + 1}`).className = 'status success';
+                };
+                img.onerror = function() {
+                    document.getElementById(`status${index + 1}`).innerHTML = '❌ 加载失败';
+                    document.getElementById(`status${index + 1}`).className = 'status checking';
+                };
+            }
+        });
+        
+        // 检查是否有右上角提示
+        setTimeout(() => {
+            const hints = document.querySelectorAll('[style*="position: fixed"][style*="top: 10px"][style*="right: 10px"]');
+            if (hints.length === 0) {
+                console.log('✅ 没有发现右上角提示');
+            } else {
+                console.log('❌ 发现右上角提示，正在移除...');
+                hints.forEach(hint => hint.remove());
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

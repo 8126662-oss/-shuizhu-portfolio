@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -173,6 +173,12 @@
             comparisonItems.forEach(item => {
                 observer.observe(item);
             });
+            
+            // 观察后期作品展示区域的项目
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            galleryItems.forEach(item => {
+                observer.observe(item);
+            });
 
             // 音乐控制功能
             const audio = document.getElementById('background-music');
@@ -307,7 +313,8 @@
             sliders.forEach(slider => {
                 const container = slider.querySelector('.slider-container');
                 const after = slider.querySelector('.slider-after');
-                const handle = slider.querySelector('.slider-handle');
+                const knob = slider.querySelector('.slider-knob');
+                const range = slider.querySelector('.slider-range');
                 let isDragging = false;
 
                 function updateSlider(e) {
@@ -315,8 +322,11 @@
                     let x = e.clientX - rect.left;
                     x = Math.max(0, Math.min(x, rect.width));
                     const percentage = (x / rect.width) * 100;
-                    after.style.width = `${percentage}%`;
-                    handle.style.left = `${percentage}%`;
+                    updateClipPath(percentage, slider.id);
+                    updateSliderPosition({ value: percentage }, slider.id);
+                    if (range) {
+                        range.value = percentage;
+                    }
                 }
 
                 // 专业竖向分割线滑块 - 丝滑跟手逻辑
@@ -387,9 +397,11 @@
                     }
                 });
 
-                handle.addEventListener('mousedown', () => {
-                    isDragging = true;
-                });
+                if (knob) {
+                    knob.addEventListener('mousedown', () => {
+                        isDragging = true;
+                    });
+                }
 
                 document.addEventListener('mousemove', (e) => {
                     if (isDragging) {
@@ -489,13 +501,13 @@
             <h2>系统化教学大纲，每一步都清晰可见</h2>
             <p class="section-subtitle w-full">以下为课程详细安排，助你构建完整的合成知识体系。</p>
             <div class="curriculum-image-container w-full">
-                <img src="public/showcase/course-outline.jpg" alt="课程大纲" class="curriculum-image w-full">
+                <img src="public/showcase/course-outline.jpg" alt="课程大纲" class="curriculum-image w-full" loading="lazy">
             </div>
             <div class="comparison-gallery w-full">
                 <!-- 位置 [1]：大图展示 - PS合成篇入門 -->
                 <div class="comparison-item w-full">
                     <div class="single-image-display outline-display w-full">
-                        <img src="public/showcase/outline-1.jpg" alt="PS合成篇入門" class="full-image w-full">
+                        <img src="public/showcase/outline-1.jpg" alt="PS合成篇入門" class="full-image w-full" loading="lazy">
                     </div>
                 </div>
                 <!-- 位置 [2]：交互对比滑块 - Wink同款原地擦除效果 -->
@@ -505,12 +517,12 @@
                             <!-- 底层：Before 图片（原始图）作为背景 -->
                             <div class="slider-before w-full">
                                 <div class="slider-label w-full">Before</div>
-                                <img src="public/showcase/2-before.jpg" alt="原始图" class="slider-image w-full">
+                                <img src="public/showcase/2-before.jpg" alt="原始图" class="slider-image w-full" loading="lazy">
                             </div>
                             <!-- 顶层：After 图片（精修后）- 使用clip-path显示 -->
                             <div class="slider-after w-full">
                                 <div class="slider-label w-full">After</div>
-                                <img src="public/showcase/2-after.jpg" alt="精修后效果" class="slider-image w-full">
+                                <img src="public/showcase/2-after.jpg" alt="精修后效果" class="slider-image w-full" loading="lazy">
                             </div>
                             <!-- 专业竖向分割线滑块 -->
                             <div class="slider-control w-full">
@@ -532,12 +544,12 @@
                             <!-- 底层：After 图片（精修后） -->
                             <div class="slider-after w-full">
                                 <div class="slider-label w-full">After</div>
-                                <img src="public/showcase/3-after.jpg" alt="精修后效果" class="slider-image w-full">
+                                <img src="public/showcase/3-after.jpg" alt="精修后效果" class="slider-image w-full" loading="lazy">
                             </div>
                             <!-- 顶层：Before 图片（原始图）- 使用clip-path擦除 -->
                             <div class="slider-before w-full">
                                 <div class="slider-label w-full">Before</div>
-                                <img src="public/showcase/3-before.jpg" alt="原始图" class="slider-image w-full">
+                                <img src="public/showcase/3-before.jpg" alt="原始图" class="slider-image w-full" loading="lazy">
                             </div>
                             <!-- 专业竖向分割线滑块 -->
                             <div class="slider-control w-full">
@@ -555,7 +567,7 @@
                 <!-- 位置 [4]：大图展示 - 与第一个展示框逻辑一致 -->
                 <div class="comparison-item w-full">
                     <div class="single-image-display outline-display w-full">
-                        <img src="public/showcase/outline-4.jpg" alt="展示图" class="full-image w-full">
+                        <img src="public/showcase/outline-4.jpg" alt="展示图" class="full-image w-full" loading="lazy">
                     </div>
                 </div>
 
@@ -776,22 +788,22 @@
                 <div class="gallery-track w-full">
                     <div class="gallery-item w-full">
                         <div class="gallery-image w-full">
-                            <img src="public/showcase/portfolio-1.jpg" alt="赛博朋克风格合成" class="portfolio-image w-full">
+                            <img src="public/showcase/portfolio-1.jpg" alt="赛博朋克风格合成" class="portfolio-image w-full" loading="lazy">
                         </div>
                     </div>
                     <div class="gallery-item w-full">
                         <div class="gallery-image w-full">
-                            <img src="public/showcase/portfolio-2.jpg" alt="古风人像合成" class="portfolio-image w-full">
+                            <img src="public/showcase/portfolio-2.jpg" alt="古风人像合成" class="portfolio-image w-full" loading="lazy">
                         </div>
                     </div>
                     <div class="gallery-item w-full">
                         <div class="gallery-image w-full">
-                            <img src="public/showcase/portfolio-3.jpg" alt="科幻场景构建" class="portfolio-image w-full">
+                            <img src="public/showcase/portfolio-3.jpg" alt="科幻场景构建" class="portfolio-image w-full" loading="lazy">
                         </div>
                     </div>
                     <div class="gallery-item w-full">
                         <div class="gallery-image w-full">
-                            <img src="public/showcase/portfolio-4.jpg" alt="奇幻世界合成" class="portfolio-image w-full">
+                            <img src="public/showcase/portfolio-4.jpg" alt="奇幻世界合成" class="portfolio-image w-full" loading="lazy">
                         </div>
                     </div>
                     <div class="gallery-item w-full">
@@ -1031,13 +1043,13 @@
                     <div class="contact-methods w-full">
                         <div class="qr-container w-full">
                             <div class="qr-code w-full">
-                                <img src="public/showcase/wechat-qr.jpg" alt="微信二维码" class="qr-image w-full">
+                                <img src="public/showcase/wechat-qr.jpg" alt="微信二维码" class="qr-image w-full" loading="lazy">
                             </div>
                             <p class="qr-label w-full">微信咨询二维码</p>
                         </div>
                         <div class="qr-container w-full">
                             <div class="qr-code w-full">
-                                <img src="public/showcase/social-qr.jpg" alt="支付宝二维码" class="qr-image w-full">
+                                <img src="public/showcase/social-qr.jpg" alt="支付宝二维码" class="qr-image w-full" loading="lazy">
                             </div>
                             <p class="qr-label w-full">支付宝二维码</p>
                         </div>
