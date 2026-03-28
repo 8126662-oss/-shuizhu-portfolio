@@ -527,21 +527,42 @@ nav .container {
     font-size: 1.2rem;
 }
 
-/* 鍥惧儚婊戝潡 */
+/* 图像滑块 — 16:9 横版，触摸横向拖动时不带动页面滚动 */
 .image-slider {
     position: relative;
     border-radius: 12px;
     overflow: hidden;
     aspect-ratio: 16 / 9;
     width: 100%;
+    max-width: 100%;
+    min-height: 0;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.comparison-item .image-slider {
+    flex-shrink: 0;
+    min-height: 0;
+}
+
+#slider1.image-slider,
+#slider2.image-slider {
+    aspect-ratio: 16 / 9;
 }
 
 .slider-container {
     position: relative;
     width: 100%;
     height: 100%;
-    cursor: pointer;
+    min-height: 0;
+    cursor: grab;
+    touch-action: none;
+}
+
+.slider-container:active {
+    cursor: grabbing;
 }
 
 .slider-before,
@@ -551,6 +572,7 @@ nav .container {
     left: 0;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 .slider-after {
@@ -559,10 +581,14 @@ nav .container {
 }
 
 .slider-image {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
+    max-width: none;
     object-fit: cover;
     object-position: center;
+    display: block;
 }
 
 .slider-label {
@@ -1913,7 +1939,7 @@ footer {
         height: auto !important;
     }
 
-    /* 小屏关闭重度 3D 无限动画，降低 GPU 压力，避免卡顿/白屏 */
+    /* 小屏无 Hover：关闭 3D 循环；默认合并态，点击 .layer-user-expanded 展开 */
     #layerStackContainer,
     #layerStackContainer.layer-user-expanded {
         animation: none !important;
@@ -1927,13 +1953,22 @@ footer {
     #layerStackContainer .layer-image-5 {
         animation: none !important;
         opacity: 1 !important;
+        transition: transform 0.35s ease;
     }
 
-    #layerStackContainer .layer-image-1 { transform: translate(-8px, -8px) !important; }
-    #layerStackContainer .layer-image-2 { transform: translate(-4px, -4px) !important; }
-    #layerStackContainer .layer-image-3 { transform: translate(0, 0) !important; }
-    #layerStackContainer .layer-image-4 { transform: translate(4px, 4px) !important; }
-    #layerStackContainer .layer-image-5 { transform: translate(8px, 8px) !important; }
+    #layerStackContainer:not(.layer-user-expanded) .layer-image-1,
+    #layerStackContainer:not(.layer-user-expanded) .layer-image-2,
+    #layerStackContainer:not(.layer-user-expanded) .layer-image-3,
+    #layerStackContainer:not(.layer-user-expanded) .layer-image-4,
+    #layerStackContainer:not(.layer-user-expanded) .layer-image-5 {
+        transform: translate(0, 0) !important;
+    }
+
+    #layerStackContainer.layer-user-expanded .layer-image-1 { transform: translate(-18px, -18px) !important; }
+    #layerStackContainer.layer-user-expanded .layer-image-2 { transform: translate(-9px, -9px) !important; }
+    #layerStackContainer.layer-user-expanded .layer-image-3 { transform: translate(0, 0) !important; }
+    #layerStackContainer.layer-user-expanded .layer-image-4 { transform: translate(9px, 9px) !important; }
+    #layerStackContainer.layer-user-expanded .layer-image-5 { transform: translate(18px, 18px) !important; }
     
     .layer-image {
         border-radius: 10px;
@@ -2033,6 +2068,7 @@ footer {
     -webkit-appearance: none;
     appearance: none;
     background: transparent;
+    touch-action: none;
 }
 
 /* 绔栧悜鍒嗗壊绾?- 鐧借壊鍗婇€忔槑绔栫嚎 */

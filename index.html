@@ -333,115 +333,87 @@
                 });
             });
 
-            // 交互对比滑块功能
-            const sliders = document.querySelectorAll('.image-slider');
-            sliders.forEach(slider => {
-                const container = slider.querySelector('.slider-container');
-                const after = slider.querySelector('.slider-after');
-                const knob = slider.querySelector('.slider-knob');
-                const range = slider.querySelector('.slider-range');
-                let isDragging = false;
-
-                function updateSlider(e) {
-                    const rect = container.getBoundingClientRect();
-                    let x = e.clientX - rect.left;
-                    x = Math.max(0, Math.min(x, rect.width));
-                    const percentage = (x / rect.width) * 100;
-                    updateClipPath(percentage, slider.id);
-                    updateSliderPosition({ value: percentage }, slider.id);
-                    if (range) {
-                        range.value = percentage;
+            // 交互对比滑块：Pointer Events 同时支持鼠标拖动与触摸滑动
+            (function initWinkSliders() {
+                function updateClipPath(percentage, sliderId) {
+                    const el = document.getElementById(sliderId);
+                    if (!el) return;
+                    const after = el.querySelector('.slider-after');
+                    if (after) {
+                        after.style.clipPath = 'inset(0 ' + (100 - percentage) + '% 0 0)';
                     }
                 }
 
-                // 专业竖向分割线滑块 - 丝滑跟手逻辑
-                window.updateWinkSlider = function(sliderInput, sliderId) {
-                    const percentage = sliderInput.value;
-                    updateClipPath(percentage, sliderId);
-                    updateSliderPosition(sliderInput, sliderId);
+                function updateSliderPosition(percentage, sliderId) {
+                    const el = document.getElementById(sliderId);
+                    if (!el) return;
+                    const divider = el.querySelector('.slider-divider');
+                    const knob = el.querySelector('.slider-knob');
+                    const range = el.querySelector('.slider-range');
+                    var p = String(percentage);
+                    if (divider) divider.style.left = p + '%';
+                    if (knob) knob.style.left = p + '%';
+                    if (range) range.value = p;
+                }
+
+                window.updateWinkSlider = function (sliderInput, sliderId) {
+                    var v = parseFloat(sliderInput.value, 10);
+                    if (isNaN(v)) v = 50;
+                    v = Math.max(0, Math.min(100, v));
+                    updateClipPath(v, sliderId);
+                    updateSliderPosition(v, sliderId);
                 };
 
-                // 更新clip-path（零延迟）
-                function updateClipPath(percentage, sliderId) {
-                    const slider = document.getElementById(sliderId);
-                    if (slider) {
-                        const after = slider.querySelector('.slider-after');
-                        if (after) {
-                            // 实时更新clip-path，无transition延迟
-                            // inset(top right bottom left)
-                            // (100 - percentage)% 表示从右侧裁剪多少
-                            after.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
-                        }
-                    }
-                }
+                document.querySelectorAll('.image-slider').forEach(function (slider) {
+                    var container = slider.querySelector('.slider-container');
+                    var range = slider.querySelector('.slider-range');
+                    if (!container || !slider.id) return;
 
-                // 更新滑块位置（实时跟手）
-                function updateSliderPosition(sliderInput, sliderId) {
-                    const percentage = sliderInput.value;
-                    const slider = document.getElementById(sliderId);
-                    if (slider) {
-                        const divider = slider.querySelector('.slider-divider');
-                        const knob = slider.querySelector('.slider-knob');
-                        if (divider && knob) {
-                            // 实时更新分割线和圆钮位置
-                            const leftPosition = `${percentage}%`;
-                            divider.style.left = leftPosition;
-                            knob.style.left = leftPosition;
-                        }
+                    function setFromClientX(clientX) {
+                        var rect = container.getBoundingClientRect();
+                        if (!rect.width) return;
+                        var x = clientX - rect.left;
+                        x = Math.max(0, Math.min(x, rect.width));
+                        var percentage = (x / rect.width) * 100;
+                        updateClipPath(percentage, slider.id);
+                        updateSliderPosition(percentage, slider.id);
                     }
-                }
 
-                // 初始化滑块位置和视觉元素
-                document.addEventListener('DOMContentLoaded', function() {
-                    // 初始化第一个滑块
-                    const slider1 = document.getElementById('slider1');
-                    if (slider1) {
-                        const after1 = slider1.querySelector('.slider-after');
-                        const divider1 = slider1.querySelector('.slider-divider');
-                        const knob1 = slider1.querySelector('.slider-knob');
-                        const range1 = slider1.querySelector('.slider-range');
-                        
-                        if (after1) after1.style.clipPath = 'inset(0 50% 0 0)';
-                        if (divider1) divider1.style.left = '50%';
-                        if (knob1) knob1.style.left = '50%';
-                        if (range1) range1.value = '50';
-                    }
-                    
-                    // 初始化第二个滑块
-                    const slider2 = document.getElementById('slider2');
-                    if (slider2) {
-                        const after2 = slider2.querySelector('.slider-after');
-                        const divider2 = slider2.querySelector('.slider-divider');
-                        const knob2 = slider2.querySelector('.slider-knob');
-                        const range2 = slider2.querySelector('.slider-range');
-                        
-                        if (after2) after2.style.clipPath = 'inset(0 50% 0 0)';
-                        if (divider2) divider2.style.left = '50%';
-                        if (knob2) knob2.style.left = '50%';
-                        if (range2) range2.value = '50';
-                    }
-                });
+                    var activePointerId = null;
 
-                if (knob) {
-                    knob.addEventListener('mousedown', () => {
-                        isDragging = true;
+                    slider.addEventListener('pointerdown', function (e) {
+                        if (e.pointerType === 'mouse' && e.button !== 0) return;
+                        activePointerId = e.pointerId;
+                        try { slider.setPointerCapture(e.pointerId); } catch (err) {}
+                        setFromClientX(e.clientX);
                     });
-                }
 
-                document.addEventListener('mousemove', (e) => {
-                    if (isDragging) {
-                        updateSlider(e);
+                    slider.addEventListener('pointermove', function (e) {
+                        if (activePointerId !== e.pointerId) return;
+                        e.preventDefault();
+                        setFromClientX(e.clientX);
+                    }, { passive: false });
+
+                    function endPointer(e) {
+                        if (activePointerId !== e.pointerId) return;
+                        activePointerId = null;
+                        try { slider.releasePointerCapture(e.pointerId); } catch (err) {}
+                    }
+
+                    slider.addEventListener('pointerup', endPointer);
+                    slider.addEventListener('pointercancel', endPointer);
+
+                    if (range) {
+                        range.addEventListener('input', function () {
+                            window.updateWinkSlider(range, slider.id);
+                        });
                     }
                 });
 
-                document.addEventListener('mouseup', () => {
-                    isDragging = false;
+                ['slider1', 'slider2'].forEach(function (id) {
+                    window.updateWinkSlider({ value: 50 }, id);
                 });
-
-                container.addEventListener('click', (e) => {
-                    updateSlider(e);
-                });
-            });
+            })();
         });
     </script>
 </head>
@@ -552,8 +524,7 @@
                             <!-- 专业竖向分割线滑块 -->
                             <div class="slider-control w-full">
                                 <input type="range" min="0" max="100" value="50" class="slider-range w-full" 
-                                       oninput="updateWinkSlider(this, 'slider1')"
-                                       onmousemove="updateSliderPosition(this, 'slider1')">
+                                       oninput="updateWinkSlider(this, 'slider1')">
                                 <!-- 竖向分割线 -->
                                 <div class="slider-divider w-full" id="divider1"></div>
                                 <!-- 圆钮 -->
@@ -579,8 +550,7 @@
                             <!-- 专业竖向分割线滑块 -->
                             <div class="slider-control w-full">
                                 <input type="range" min="0" max="100" value="50" class="slider-range w-full" 
-                                       oninput="updateWinkSlider(this, 'slider2')"
-                                       onmousemove="updateSliderPosition(this, 'slider2')">
+                                       oninput="updateWinkSlider(this, 'slider2')">
                                 <!-- 竖向分割线 -->
                                 <div class="slider-divider w-full" id="divider2"></div>
                                 <!-- 圆钮 -->
@@ -670,7 +640,7 @@
         if (!c) return;
         c.setAttribute('tabindex', '0');
         c.setAttribute('role', 'button');
-        c.setAttribute('aria-label', '图层合成演示：点击在五层展开与自动循环之间切换');
+        c.setAttribute('aria-label', '图层合成演示：点击展开五层，再次点击合并（手机端）');
         function restartLayerAnimations(el) {
             el.style.animation = 'none';
             el.querySelectorAll('.layer-image').forEach(function (layer) {
