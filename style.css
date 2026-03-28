@@ -1092,8 +1092,10 @@ nav .container {
     border-radius: 20px;
     overflow: hidden;
     transition: all 0.3s ease;
-    aspect-ratio: 4/3; /* 固定4:3宽高比，解决外边框比例问题 */
+    /* aspect-ratio 将由JavaScript动态设置，匹配图片实际比例 */
     position: relative;
+    max-width: 300px; /* 默认最大宽度 */
+    margin: 0 auto; /* 居中显示 */
 }
 
 .gallery-image:hover {
@@ -1103,8 +1105,8 @@ nav .container {
 
 .portfolio-image {
     width: 100%;
-    height: 100%; /* 填充整个容器，保持4:3比例 */
-    object-fit: contain; /* 100%完整显示横图边缘，不被切掉一丁点 */
+    height: 100%; /* 填充整个容器 */
+    object-fit: contain; /* 100%完整显示图片，不被切掉一丁点 */
     display: block;
     position: absolute;
     top: 0;
