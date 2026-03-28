@@ -1092,7 +1092,8 @@ nav .container {
     border-radius: 20px;
     overflow: hidden;
     transition: all 0.3s ease;
-    height: auto; /* 容器自适应高度 */
+    aspect-ratio: 4/3; /* 固定4:3宽高比，解决外边框比例问题 */
+    position: relative;
 }
 
 .gallery-image:hover {
@@ -1102,17 +1103,24 @@ nav .container {
 
 .portfolio-image {
     width: 100%;
-    height: auto; /* 原始比例写法，图片主导比例 */
+    height: 100%; /* 填充整个容器，保持4:3比例 */
     object-fit: contain; /* 100%完整显示横图边缘，不被切掉一丁点 */
     display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .image-placeholder {
-    height: 400px;
+    width: 100%;
+    height: 100%; /* 填充整个4:3容器 */
     background: rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .image-placeholder p {
