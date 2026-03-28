@@ -4,6 +4,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const nextConfig = {
   basePath: isProd ? '/-shuizhu-portfolio' : '',
   assetPrefix: isProd ? '/-shuizhu-portfolio/' : '',
+  trailingSlash: true,
   output: 'export',
   images: { unoptimized: true },
   env: {

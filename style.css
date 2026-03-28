@@ -1903,6 +1903,7 @@ footer {
         margin: 120px 0;
         padding: 120px 0;
         transform: translateY(60px);
+        perspective: none;
     }
     
     .layer-stack-container {
@@ -1911,6 +1912,28 @@ footer {
         aspect-ratio: 16 / 9;
         height: auto !important;
     }
+
+    /* 小屏关闭重度 3D 无限动画，降低 GPU 压力，避免卡顿/白屏 */
+    #layerStackContainer,
+    #layerStackContainer.layer-user-expanded {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    #layerStackContainer .layer-image-1,
+    #layerStackContainer .layer-image-2,
+    #layerStackContainer .layer-image-3,
+    #layerStackContainer .layer-image-4,
+    #layerStackContainer .layer-image-5 {
+        animation: none !important;
+        opacity: 1 !important;
+    }
+
+    #layerStackContainer .layer-image-1 { transform: translate(-8px, -8px) !important; }
+    #layerStackContainer .layer-image-2 { transform: translate(-4px, -4px) !important; }
+    #layerStackContainer .layer-image-3 { transform: translate(0, 0) !important; }
+    #layerStackContainer .layer-image-4 { transform: translate(4px, 4px) !important; }
+    #layerStackContainer .layer-image-5 { transform: translate(8px, 8px) !important; }
     
     .layer-image {
         border-radius: 10px;
@@ -1962,6 +1985,7 @@ footer {
         margin: 80px 0;
         padding: 80px 0;
         transform: translateY(40px);
+        perspective: none;
     }
     
     .layer-stack-container {

@@ -4,20 +4,18 @@
  */
 
 (function() {
-    console.log('🚨 手机端图片显示紧急修复启动...');
-    
-    // 立即执行，不等待DOM加载
-    emergencyImageFix();
-    
-    // 同时监听DOM加载完成
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', emergencyImageFix);
+    'use strict';
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+        return;
     }
-    
-    // 监听窗口加载完成
-    window.addEventListener('load', emergencyImageFix);
-    
+
+    console.log('🚨 手机端图片显示紧急修复启动...');
+
     function emergencyImageFix() {
+        if (!document.body) {
+            return;
+        }
+
         console.log('🖼️ 执行图片显示紧急修复...');
         
         // 1. 修复所有图片元素
@@ -116,23 +114,15 @@
             });
         }
         
-        // 5. 添加调试信息
-        const debugInfo = document.createElement('div');
-        debugInfo.style.cssText = `
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.8);
-            color: #0f0;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-family: monospace;
-            z-index: 9999;
-            border: 1px solid #0f0;
-        `;
-        debugInfo.textContent = `🖼️ 图片修复: ${allImages.length}张`;
-        document.body.appendChild(debugInfo);
+        // 5. 调试信息（仅 body 已存在时；避免阻塞首屏）
+        var debugInfo = null;
+        try {
+            debugInfo = document.createElement('div');
+            debugInfo.style.cssText =
+                'position:fixed;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#0f0;padding:6px 10px;border-radius:6px;font-size:11px;z-index:9998;pointer-events:none;opacity:0.85;';
+            debugInfo.textContent = '🖼️ 图片: ' + allImages.length + ' 张';
+            document.body.appendChild(debugInfo);
+        } catch (e) { /* ignore */ }
         
         // 6. 监控图片加载状态
         setTimeout(() => {
@@ -143,8 +133,10 @@
             console.log(`   ✅ 成功加载: ${loadedImages.length}`);
             console.log(`   ❌ 加载失败: ${failedImages.length}`);
             console.log(`   ⏳ 加载中: ${allImages.length - loadedImages.length - failedImages.length}`);
-            
-            debugInfo.textContent = `🖼️ 图片: ${loadedImages.length}✅ ${failedImages.length}❌`;
+
+            if (debugInfo && debugInfo.parentNode) {
+                debugInfo.textContent = `🖼️ 图片: ${loadedImages.length}✅ ${failedImages.length}❌`;
+            }
             
             // 如果有图片加载失败，尝试重新加载
             if (failedImages.length > 0) {
@@ -186,24 +178,38 @@
         resizeTimeout = setTimeout(emergencyImageFix, 250);
     });
     
-    // 监听图片动态加载
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach(mutation => {
+    var domObserver = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
             if (mutation.addedNodes.length) {
-                mutation.addedNodes.forEach(node => {
+                mutation.addedNodes.forEach(function (node) {
                     if (node.tagName === 'IMG' || (node.querySelector && node.querySelector('img'))) {
-                        console.log('🆕 检测到新图片，应用修复');
                         setTimeout(emergencyImageFix, 100);
                     }
                 });
             }
         });
     });
-    
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-    
+
+    function attachBodyObserver() {
+        if (!document.body) {
+            return;
+        }
+        try {
+            domObserver.observe(document.body, { childList: true, subtree: true });
+        } catch (e) { /* ignore */ }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function onReady() {
+            emergencyImageFix();
+            attachBodyObserver();
+        });
+    } else {
+        emergencyImageFix();
+        attachBodyObserver();
+    }
+
+    window.addEventListener('load', emergencyImageFix);
+
     console.log('🚨 手机端图片显示紧急修复已部署');
 })();

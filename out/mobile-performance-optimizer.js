@@ -4,10 +4,14 @@
  */
 
 (function() {
+    if (typeof window === 'undefined' || typeof document === 'undefined' || typeof navigator === 'undefined') {
+        return;
+    }
+
     console.log('📱 手机端性能优化器启动...');
     
-    // 检测是否为移动设备
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    var ua = navigator.userAgent || '';
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
     
     if (!isMobile) {
         console.log('💻 检测到桌面设备，跳过手机端优化');
