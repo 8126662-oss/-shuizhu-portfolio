@@ -9,8 +9,6 @@ export const rootFiles = [
 ];
 
 export const optionalRootFiles = [
-  'RESTORE_ORIGINAL_ANIMATION.css',
-  'REMOVE_ALL_MODIFICATIONS.js',
   'dynamic-border-ratio.js',
   'mobile-optimizations.css',
   'mobile-image-fix.css',

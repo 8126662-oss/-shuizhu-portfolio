@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿/* 鍏ㄥ眬鏍峰紡 */
+/* 鍏ㄥ眬鏍峰紡 */
 html {
     overflow-x: hidden;
     max-width: 100vw;
@@ -1495,7 +1495,8 @@ footer {
     position: relative;
     padding: 150px 0;
     background: linear-gradient(180deg, rgba(10, 10, 15, 0.95) 0%, rgba(26, 26, 46, 0.9) 50%, rgba(22, 33, 62, 0.95) 100%);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
     width: 100%;
     max-width: 100vw;
 }
@@ -1545,6 +1546,9 @@ footer {
     align-items: center;
     min-height: 800px;
     margin: 100px 0;
+    overflow: visible;
+    padding: 0 clamp(24px, 8vw, 120px);
+    box-sizing: border-box;
 }
 
 /* 图层堆叠容器 */
@@ -1555,6 +1559,38 @@ footer {
     transform-style: preserve-3d;
     transform-origin: center center;
     animation: stage-animation 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+    cursor: pointer;
+}
+
+/* 点击固定为「五层抽屉」展开态（与自动动画 35%–75% 关键帧一致） */
+.layer-stack-container.layer-user-expanded {
+    animation: none !important;
+    transform: rotateX(55deg) rotateZ(-360deg) scale(0.65) !important;
+}
+
+.layer-stack-container.layer-user-expanded .layer-image-1 {
+    animation: none !important;
+    transform: translate3d(-90px, -90px, -300px) !important;
+}
+
+.layer-stack-container.layer-user-expanded .layer-image-2 {
+    animation: none !important;
+    transform: translate3d(-45px, -45px, -150px) !important;
+}
+
+.layer-stack-container.layer-user-expanded .layer-image-3 {
+    animation: none !important;
+    transform: translate3d(0, 0, 0) !important;
+}
+
+.layer-stack-container.layer-user-expanded .layer-image-4 {
+    animation: none !important;
+    transform: translate3d(45px, 45px, 150px) !important;
+}
+
+.layer-stack-container.layer-user-expanded .layer-image-5 {
+    animation: none !important;
+    transform: translate3d(90px, 90px, 300px) !important;
 }
 
 /* 核心动画关键帧 */

@@ -33,10 +33,6 @@
     <link rel="stylesheet" href="fix-lazy-loading.css">
     <link rel="stylesheet" href="EMERGENCY_GREEN_BOX_FIX.css">
     
-    <!-- 恢复原始动画 - 移除所有修改 -->
-    <link rel="stylesheet" href="RESTORE_ORIGINAL_ANIMATION.css">
-    <script src="REMOVE_ALL_MODIFICATIONS.js"></script>
-    
     <!-- 动态外边框比例匹配 -->
     <script src="dynamic-border-ratio.js" defer></script>
     
@@ -660,6 +656,37 @@
             </div>
         </div>
     </section>
+    <script>
+    (function () {
+        var c = document.getElementById('layerStackContainer');
+        if (!c) return;
+        c.setAttribute('tabindex', '0');
+        c.setAttribute('role', 'button');
+        c.setAttribute('aria-label', '图层合成演示：点击在五层展开与自动循环之间切换');
+        function restartLayerAnimations(el) {
+            el.style.animation = 'none';
+            el.querySelectorAll('.layer-image').forEach(function (layer) {
+                layer.style.animation = 'none';
+            });
+            void el.offsetWidth;
+            el.style.removeProperty('animation');
+            el.querySelectorAll('.layer-image').forEach(function (layer) {
+                layer.style.removeProperty('animation');
+            });
+        }
+        c.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (c.classList.toggle('layer-user-expanded')) return;
+            restartLayerAnimations(c);
+        });
+        c.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                c.click();
+            }
+        });
+    })();
+    </script>
 
     <!-- 定价方案 -->
     <section id="pricing" class="pricing w-full">
