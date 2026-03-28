@@ -1,0 +1,356 @@
+/* 
+ * 移动端专用性能优化CSS
+ * 针对手机端加载慢、卡顿问题
+ */
+
+/* ===== 移动端基础优化 ===== */
+@media (max-width: 768px) {
+    /* 1. 字体优化 */
+    body {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+    
+    h1 { font-size: 1.8rem !important; }
+    h2 { font-size: 1.5rem !important; }
+    h3 { font-size: 1.2rem !important; }
+    h4 { font-size: 1.1rem !important; }
+    h5, h6 { font-size: 1rem !important; }
+    
+    /* 2. 布局优化 */
+    .container {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        max-width: 100% !important;
+    }
+    
+    /* 3. 画廊优化 */
+    .gallery-item {
+        flex: 0 0 min(250px, 85vw) !important;
+        margin: 8px !important;
+    }
+    
+    .gallery-track {
+        gap: 12px !important;
+        padding: 8px !important;
+    }
+    
+    /* 4. 卡片优化 */
+    .testimonial-card {
+        flex: 0 0 min(280px, 90vw) !important;
+        padding: 16px !important;
+        margin: 8px !important;
+    }
+    
+    .testimonial-track {
+        gap: 12px !important;
+        padding: 8px !important;
+    }
+    
+    /* 5. 图片优化 */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    .portfolio-image, .gallery-image {
+        border-radius: 12px !important;
+    }
+    
+    /* 6. 按钮和触摸目标优化 */
+    button, 
+    a, 
+    .gallery-item, 
+    .portfolio-image,
+    .testimonial-card {
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
+    
+    /* 7. 简化动画 */
+    .gallery-item:hover,
+    .portfolio-image:hover,
+    .testimonial-card:hover {
+        transform: none !important;
+        transition: none !important;
+    }
+    
+    .image-placeholder {
+        animation-duration: 2s !important;
+    }
+    
+    /* 8. 减少视觉效果 */
+    .gallery-image {
+        backdrop-filter: blur(10px) saturate(120%) !important;
+        border-width: 0.5px !important;
+    }
+    
+    .gallery-image:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* 9. 隐藏非必要元素 */
+    .desktop-only {
+        display: none !important;
+    }
+    
+    /* 10. 优化滚动性能 */
+    .gallery-track,
+    .testimonial-track {
+        -webkit-overflow-scrolling: touch !important;
+        overflow-scrolling: touch !important;
+        scroll-behavior: smooth !important;
+    }
+}
+
+/* ===== 超小屏幕优化 ===== */
+@media (max-width: 480px) {
+    /* 1. 进一步简化布局 */
+    .gallery-item {
+        flex: 0 0 min(200px, 90vw) !important;
+        margin: 6px !important;
+    }
+    
+    .testimonial-card {
+        flex: 0 0 min(260px, 95vw) !important;
+        padding: 12px !important;
+        margin: 6px !important;
+    }
+    
+    /* 2. 简化字体 */
+    body {
+        font-size: 13px !important;
+    }
+    
+    h1 { font-size: 1.6rem !important; }
+    h2 { font-size: 1.3rem !important; }
+    h3 { font-size: 1.1rem !important; }
+    
+    /* 3. 减少内边距 */
+    .container {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+    
+    section {
+        padding: 30px 0 !important;
+    }
+    
+    /* 4. 简化边框和阴影 */
+    .gallery-image,
+    .testimonial-card,
+    .portfolio-image {
+        border-radius: 8px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* 5. 移除所有悬停效果 */
+    *:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+}
+
+/* ===== 性能优先的CSS规则 ===== */
+
+/* 1. 减少重绘和重排 */
+.gallery-track,
+.testimonial-track,
+.isometric-gallery,
+.testimonials-masonry {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* 2. 优化图片渲染 */
+img {
+    content-visibility: auto;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* 3. 字体显示优化 */
+@font-face {
+    font-display: swap;
+}
+
+/* 4. 滚动性能优化 */
+* {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* 5. 触摸反馈优化 */
+button:active,
+a:active,
+.gallery-item:active,
+.portfolio-image:active {
+    opacity: 0.7;
+    transition: opacity 0.1s;
+}
+
+/* 6. 减少动画复杂度 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 7. 黑暗模式优化 */
+@media (prefers-color-scheme: dark) {
+    .gallery-image,
+    .testimonial-card {
+        background: rgba(30, 30, 30, 0.8) !important;
+        border-color: rgba(255, 255, 255, 0.05) !important;
+    }
+    
+    .image-placeholder {
+        background: linear-gradient(90deg, #222 25%, #333 50%, #222 75%) !important;
+    }
+}
+
+/* 8. 数据保存模式优化 */
+@media (prefers-reduced-data: reduce) {
+    .image-placeholder {
+        animation: none !important;
+    }
+    
+    .gallery-image {
+        backdrop-filter: none !important;
+    }
+    
+    * {
+        background-image: none !important;
+    }
+}
+
+/* 9. 连接速度优化 - 已调整为可选优化 */
+/* 注释掉自动隐藏图片，改为用户可选功能 */
+/*
+@media (prefers-reduced-data: reduce) and (max-width: 768px) {
+    .portfolio-image,
+    .gallery-image img {
+        display: none;
+    }
+    
+    .image-placeholder {
+        display: block !important;
+    }
+}
+*/
+
+/* 10. 打印优化 */
+@media print {
+    .gallery-track,
+    .testimonial-track,
+    .isometric-gallery,
+    .testimonials-masonry {
+        display: block !important;
+    }
+    
+    .gallery-item,
+    .testimonial-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
+/* ===== 移动端特定的性能修复 ===== */
+
+/* 修复iOS Safari的100vh问题 */
+@supports (-webkit-touch-callout: none) {
+    .full-height {
+        height: -webkit-fill-available;
+    }
+}
+
+/* 修复Android Chrome的字体渲染 */
+@supports (-webkit-overflow-scrolling: touch) {
+    body {
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+/* 修复移动端输入框缩放 */
+input, textarea, select {
+    font-size: 16px !important;
+    max-width: 100% !important;
+}
+
+/* 修复移动端点击延迟 */
+a, button, input, label, select, textarea {
+    touch-action: manipulation;
+}
+
+/* 修复移动端滚动条 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+/* 修复移动端选择文本 */
+::selection {
+    background: rgba(165, 243, 252, 0.3);
+    color: white;
+}
+
+/* 修复移动端长按菜单 */
+img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* 移动端性能监控提示 */
+.mobile-performance-hint {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    z-index: 9998;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-performance-hint {
+        display: block;
+        animation: slideInUp 0.3s ease;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

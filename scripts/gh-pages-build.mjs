@@ -19,6 +19,17 @@ const rootFiles = [
   'EMERGENCY_GREEN_BOX_FIX.css',
 ];
 
+/** Referenced by index.html / layer-demo; copy when present so GitHub Pages out/ stays complete */
+const optionalRootFiles = [
+  'RESTORE_ORIGINAL_ANIMATION.css',
+  'REMOVE_ALL_MODIFICATIONS.js',
+  'dynamic-border-ratio.js',
+  'mobile-optimizations.css',
+  'mobile-image-fix.css',
+  'mobile-performance-optimizer.js',
+  'mobile-image-emergency-fix.js',
+];
+
 if (existsSync(outDir)) {
   rmSync(outDir, { recursive: true, force: true });
 }
@@ -30,6 +41,13 @@ for (const name of rootFiles) {
     throw new Error(`Missing required file: ${name}`);
   }
   cpSync(from, join(outDir, name));
+}
+
+for (const name of optionalRootFiles) {
+  const from = join(root, name);
+  if (existsSync(from)) {
+    cpSync(from, join(outDir, name));
+  }
 }
 
 const pub = join(root, 'public');
