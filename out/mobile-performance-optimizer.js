@@ -182,6 +182,10 @@
         
         images.forEach(img => {
             const src = img.src;
+
+            if (img.classList.contains('layer-img') || img.closest('#layerStackContainer')) {
+                return;
+            }
             
             // 如果是大图，尝试使用移动端优化版本
             // 注意：暂时注释掉srcset优化，因为移动端优化版本图片可能不存在

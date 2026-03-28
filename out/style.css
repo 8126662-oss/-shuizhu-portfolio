@@ -1537,6 +1537,10 @@ footer {
     z-index: 1;
 }
 
+#layer-showcase .container {
+    overflow: visible;
+}
+
 /* 容器环境 */
 .layer-showcase-wrapper {
     perspective: 3500px; /* 必须大透视，保持画质不畸变 */
@@ -1551,11 +1555,15 @@ footer {
     box-sizing: border-box;
 }
 
-/* 图层堆叠容器 */
+/* 图层堆叠容器 — 16:9 横版画框随宽度缩放（等价 Tailwind aspect-video） */
 .layer-stack-container {
     position: relative;
-    width: min(600px, 85vw);
-    aspect-ratio: 16 / 9; /* 强制16:9横向比例 */
+    width: 100%;
+    max-width: min(960px, 92vw);
+    margin-left: auto;
+    margin-right: auto;
+    aspect-ratio: 16 / 9;
+    height: auto;
     transform-style: preserve-3d;
     transform-origin: center center;
     animation: stage-animation 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
@@ -1628,6 +1636,7 @@ footer {
 
 .layer-image {
     position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     border-radius: 12px;
@@ -1643,14 +1652,19 @@ footer {
         inset 0 1px 0 rgba(255, 255, 255, 0.08); /* 更柔和的内发光 */
 }
 
-/* 图层图片 */
+/* 图层图片 — 铺满 16:9 画框，横图裁切不留白、不压扁 */
 .layer-img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
+    max-width: none;
+    min-width: 100%;
+    min-height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
-    backface-visibility: hidden; /* 防止旋转时闪烁 */
+    backface-visibility: hidden;
 }
 
 /* 图层标签 */
@@ -1892,8 +1906,10 @@ footer {
     }
     
     .layer-stack-container {
-        width: min(320px, 80vw);
-        height: min(205px, 50vw);
+        width: 100%;
+        max-width: min(960px, 92vw);
+        aspect-ratio: 16 / 9;
+        height: auto !important;
     }
     
     .layer-image {
@@ -1949,8 +1965,10 @@ footer {
     }
     
     .layer-stack-container {
-        width: min(280px, 80vw);
-        height: min(180px, 50vw);
+        width: 100%;
+        max-width: 100%;
+        aspect-ratio: 16 / 9;
+        height: auto !important;
     }
     
     .layer-image {
@@ -2215,7 +2233,7 @@ footer {
 /* 娣诲姞鍒扮幇鏈塻tyle.css鐨勬湯灏?*/
 
 /* 1. 纭繚鎵€鏈夊浘鐗囧湪绉诲姩绔笉婧㈠嚭 */
-img {
+img:not(.layer-img) {
     max-width: 100%;
     height: auto;
 }

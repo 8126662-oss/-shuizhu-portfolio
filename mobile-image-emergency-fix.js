@@ -29,8 +29,20 @@
             img.style.display = 'block';
             img.style.visibility = 'visible';
             img.style.opacity = '1';
-            img.style.maxWidth = '100%';
-            img.style.height = 'auto';
+
+            var inLayerStack = img.classList.contains('layer-img') || img.closest('#layerStackContainer');
+            if (inLayerStack) {
+                img.style.removeProperty('max-width');
+                img.style.removeProperty('height');
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.position = 'absolute';
+                img.style.inset = '0';
+            } else {
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+            }
             
             // 修复懒加载图片
             if (img.dataset.src && !img.src) {
