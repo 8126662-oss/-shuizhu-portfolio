@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简单图片测试</title>
+    <style>
+        body { margin: 0; padding: 20px; background: #000; color: #fff; font-family: sans-serif; }
+        .test { margin: 20px 0; padding: 20px; background: #222; border-radius: 10px; }
+        img { display: block; max-width: 100%; height: auto; margin: 10px 0; border: 2px solid #0f0; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #0a0; }
+        .error { background: #a00; }
+    </style>
+</head>
+<body>
+    <h1>简单图片测试</h1>
+    
+    <div class="test">
+        <h2>测试1: 直接引用图片</h2>
+        <img src="public/showcase/01.jpg" alt="测试图片1" onload="logLoad(1, true)" onerror="logLoad(1, false)">
+        <div id="status1" class="status">等待加载...</div>
+    </div>
+    
+    <div class="test">
+        <h2>测试2: 懒加载图片</h2>
+        <img src="public/showcase/02.jpg" alt="测试图片2" loading="lazy" onload="logLoad(2, true)" onerror="logLoad(2, false)">
+        <div id="status2" class="status">等待加载...</div>
+    </div>
+    
+    <div class="test">
+        <h2>测试3: 作品集图片</h2>
+        <img src="public/showcase/portfolio-1.jpg" alt="作品集图片" onload="logLoad(3, true)" onerror="logLoad(3, false)">
+        <div id="status3" class="status">等待加载...</div>
+    </div>
+    
+    <script>
+        function logLoad(num, success) {
+            const status = document.getElementById(`status${num}`);
+            if (success) {
+                status.textContent = `✅ 图片${num}加载成功`;
+                status.className = 'status success';
+            } else {
+                status.textContent = `❌ 图片${num}加载失败`;
+                status.className = 'status error';
+            }
+        }
+        
+        // 检查所有图片状态
+        setTimeout(() => {
+            const images = document.querySelectorAll('img');
+            images.forEach((img, i) => {
+                if (!img.complete) {
+                    document.getElementById(`status${i+1}`).textContent = `⏳ 图片${i+1}仍在加载中...`;
+                }
+            });
+        }, 1000);
+    </script>
+</body>
+</html>
