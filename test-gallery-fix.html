@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试：后期选集图框尺寸修复</title>
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: #0a0a0a;
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #a5f3fc;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .test-section {
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+        
+        .test-title {
+            color: #a5f3fc;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .gallery-track {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+        
+        /* 当前有问题的样式 */
+        .gallery-item-problem {
+            flex: 0 0 300px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            height: 400px;
+        }
+        
+        /* 修复方案1：自适应宽度 */
+        .gallery-item-fix1 {
+            flex: 0 0 min(300px, 90vw);
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            height: 400px;
+        }
+        
+        /* 修复方案2：百分比宽度 */
+        .gallery-item-fix2 {
+            flex: 0 0 calc(33.333% - 14px);
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            height: 400px;
+        }
+        
+        /* 修复方案3：响应式设计 */
+        .gallery-item-fix3 {
+            flex: 0 0 300px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            height: 400px;
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-item-fix3 {
+                flex: 0 0 min(250px, 85vw);
+            }
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(45deg, #a5f3fc, #22d3ee);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #0a0a0a;
+        }
+        
+        .image-title {
+            padding: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+        
+        .recommendation {
+            background: rgba(165, 243, 252, 0.1);
+            border-left: 4px solid #a5f3fc;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>后期选集图框尺寸Bug测试与修复方案</h1>
+        
+        <div class="test-section">
+            <div class="test-title">当前有问题的样式（固定300px宽度）</div>
+            <div class="code-block">
+                .gallery-item {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;flex: 0 0 300px; /* 问题：固定宽度 */<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;transition: all 0.3s ease;<br>
+                }
+            </div>
+            <div class="gallery-track">
+                <div class="gallery-item-problem">
+                    <div class="gallery-image">作品1</div>
+                    <div class="image-title">赛博朋克风格合成</div>
+                </div>
+                <div class="gallery-item-problem">
+                    <div class="gallery-image">作品2</div>
+                    <div class="image-title">古风人像合成</div>
+                </div>
+                <div class="gallery-item-problem">
+                    <div class="gallery-image">作品3</div>
+                    <div class="image-title">科幻场景构建</div>
+                </div>
+            </div>
+            <div class="recommendation">
+                <strong>问题分析：</strong>固定300px宽度在小屏幕上会导致图框过大，超出屏幕边界。
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">修复方案1：自适应宽度（min函数）</div>
+            <div class="code-block">
+                .gallery-item {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;flex: 0 0 min(300px, 90vw); /* 修复：自适应宽度 */<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;transition: all 0.3s ease;<br>
+                }
+            </div>
+            <div class="gallery-track">
+                <div class="gallery-item-fix1">
+                    <div class="gallery-image">作品1</div>
+                    <div class="image-title">赛博朋克风格合成</div>
+                </div>
+                <div class="gallery-item-fix1">
+                    <div class="gallery-image">作品2</div>
+                    <div class="image-title">古风人像合成</div>
+                </div>
+                <div class="gallery-item-fix1">
+                    <div class="gallery-image">作品3</div>
+                    <div class="image-title">科幻场景构建</div>
+                </div>
+            </div>
+            <div class="recommendation">
+                <strong>优点：</strong>在小屏幕上自动缩小，最大不超过300px，最小为屏幕宽度的90%。
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">修复方案2：百分比宽度</div>
+            <div class="code-block">
+                .gallery-item {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;flex: 0 0 calc(33.333% - 14px); /* 修复：百分比宽度 */<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;transition: all 0.3s ease;<br>
+                }
+            </div>
+            <div class="gallery-track">
+                <div class="gallery-item-fix2">
+                    <div class="gallery-image">作品1</div>
+                    <div class="image-title">赛博朋克风格合成</div>
+                </div>
+                <div class="gallery-item-fix2">
+                    <div class="gallery-image">作品2</div>
+                    <div class="image-title">古风人像合成</div>
+                </div>
+                <div class="gallery-item-fix2">
+                    <div class="gallery-image">作品3</div>
+                    <div class="image-title">科幻场景构建</div>
+                </div>
+            </div>
+            <div class="recommendation">
+                <strong>优点：</strong>始终占据三分之一宽度（减去间隙），完全响应式。
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">修复方案3：媒体查询响应式</div>
+            <div class="code-block">
+                .gallery-item {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;flex: 0 0 300px;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;transition: all 0.3s ease;<br>
+                }<br><br>
+                @media (max-width: 768px) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;.gallery-item {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flex: 0 0 min(250px, 85vw);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                }
+            </div>
+            <div class="gallery-track">
+                <div class="gallery-item-fix3">
+                    <div class="gallery-image">作品1</div>
+                    <div class="image-title">赛博朋克风格合成</div>
+                </div>
+                <div class="gallery-item-fix3">
+                    <div class="gallery-image">作品2</div>
+                    <div class="image-title">古风人像合成</div>
+                </div>
+                <div class="gallery-item-fix3">
+                    <div class="gallery-image">作品3</div>
+                    <div class="image-title">科幻场景构建</div>
+                </div>
+            </div>
+            <div class="recommendation">
+                <strong>优点：</strong>桌面端保持300px，移动端自适应缩小，兼容性好。
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">推荐修复方案</div>
+            <div class="recommendation">
+                <strong>建议采用方案3（媒体查询响应式）：</strong><br>
+                1. 保持桌面端300px的优雅显示<br>
+                2. 移动端自动缩小到min(250px, 85vw)<br>
+                3. 兼容所有设备<br>
+                4. 与现有代码结构一致
+            </div>
+            <div class="code-block">
+                /* 修复后的CSS代码 */<br>
+                .gallery-item {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;flex: 0 0 300px;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;transition: all 0.3s ease;<br>
+                }<br><br>
+                @media (max-width: 768px) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;.gallery-item {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flex: 0 0 min(250px, 85vw);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 模拟不同屏幕尺寸
+        function updateScreenSize() {
+            const width = window.innerWidth;
+            document.title = `测试：后期选集图框尺寸修复 (${width}px)`;
+        }
+        
+        window.addEventListener('resize', updateScreenSize);
+        updateScreenSize();
+    </script>
+</body>
+</html>
