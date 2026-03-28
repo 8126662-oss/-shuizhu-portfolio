@@ -1,0 +1,196 @@
+/* 
+ * 临时图片优化
+ * 在大图片压缩期间改善用户体验
+ */
+
+/* 1. 渐进式加载效果 */
+.layer-img,
+.portfolio-image img,
+.gallery-image img {
+    filter: blur(10px) !important;
+    transition: filter 0.8s ease !important;
+}
+
+.layer-img.loaded,
+.portfolio-image img.loaded,
+.gallery-image img.loaded {
+    filter: blur(0) !important;
+}
+
+/* 2. 移动端使用低分辨率版本 */
+@media (max-width: 768px) {
+    .layer-img,
+    .portfolio-image img,
+    .gallery-image img {
+        /* 强制使用较小的内联预览 */
+        image-rendering: -webkit-optimize-contrast !important;
+        image-rendering: crisp-edges !important;
+    }
+    
+    /* 降低移动端图片质量要求 */
+    img {
+        content-visibility: auto !important;
+        loading: lazy !important;
+    }
+}
+
+/* 3. 连接速度优化 */
+@media (prefers-reduced-data: reduce) {
+    .layer-img,
+    .portfolio-image img,
+    .gallery-image img {
+        filter: blur(5px) !important;
+        image-rendering: pixelated !important;
+    }
+}
+
+/* 4. 加载占位符 */
+.image-loading-placeholder {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%) !important;
+    background-size: 200% 100% !important;
+    animation: loading 1.5s infinite !important;
+    z-index: 1 !important;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* 5. 错误状态 */
+.image-error {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: #f8f8f8 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #666 !important;
+    font-size: 14px !important;
+    z-index: 2 !important;
+}
+
+/* 6. 优先级加载 */
+.priority-image {
+    fetchpriority: high !important;
+    loading: eager !important;
+}
+
+/* 7. 图层图片特殊处理 */
+.layer-image .layer-img {
+    /* 确保图层图片即使加载慢也能显示 */
+    min-height: 200px !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 8. 添加加载提示 */
+.layer-showcase::after {
+    content: '图片加载中...' !important;
+    position: absolute !important;
+    bottom: -30px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-size: 12px !important;
+    color: #888 !important;
+    opacity: 0.8 !important;
+}
+
+/* 9. 性能监控提示 */
+@media (max-width: 768px) {
+    body::before {
+        content: '移动端优化模式' !important;
+        position: fixed !important;
+        top: 10px !important;
+        right: 10px !important;
+        background: rgba(255, 100, 100, 0.1) !important;
+        color: #ff6464 !important;
+        padding: 5px 10px !important;
+        border-radius: 4px !important;
+        font-size: 10px !important;
+        z-index: 9999 !important;
+        opacity: 0.7 !important;
+    }
+}
+
+/* 10. 临时禁用部分动画以减少负载 */
+@media (prefers-reduced-motion: reduce) {
+    .layer-image {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* 11. 数据节省模式优化 */
+@media (prefers-reduced-data: reduce) {
+    /* 显示低质量预览 */
+    img {
+        filter: blur(3px) !important;
+        image-rendering: pixelated !important;
+    }
+    
+    /* 隐藏非关键图片 */
+    .portfolio-image:not(.priority),
+    .gallery-image:not(.priority) {
+        display: none !important;
+    }
+}
+
+/* 12. 打印优化 */
+@media print {
+    /* 打印时只显示关键图片 */
+    .layer-img,
+    .portfolio-image img {
+        filter: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+
+/* 13. 黑暗模式优化 */
+@media (prefers-color-scheme: dark) {
+    .image-loading-placeholder {
+        background: linear-gradient(90deg, #222 25%, #333 50%, #222 75%) !important;
+    }
+    
+    .image-error {
+        background: #1a1a1a !important;
+        color: #999 !important;
+    }
+}
+
+/* 14. 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    /* 触摸设备上禁用悬停效果 */
+    .layer-image:hover {
+        transform: none !important;
+    }
+}
+
+/* 15. 最终保障：确保至少显示占位符 */
+.layer-image,
+.portfolio-image,
+.gallery-image {
+    position: relative !important;
+    min-height: 200px !important;
+}
+
+.layer-image::before,
+.portfolio-image::before,
+.gallery-image::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.02) !important;
+    z-index: 0 !important;
+}
