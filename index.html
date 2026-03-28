@@ -9,6 +9,14 @@
         if (host === 'localhost' || host === '127.0.0.1') return;
         if (!host.endsWith('github.io')) return;
         var p = location.pathname || '/';
+        /* 项目页无尾斜杠时，相对路径会解析到 github.io 根目录，手机端常见白屏 */
+        if (p.length > 1 && !p.endsWith('/')) {
+          var rest = p.slice(1);
+          if (rest.indexOf('/') === -1) {
+            location.replace(p + '/' + location.search + location.hash);
+            return;
+          }
+        }
         var parts = p.split('/').filter(Boolean);
         if (parts.length < 1) return;
         var basePath = '/' + parts[0] + '/';
@@ -42,7 +50,7 @@
     <link rel="stylesheet" href="mobile-image-fix.css">
     <script src="mobile-performance-optimizer.js" defer></script>
     <!-- 图片显示紧急修复脚本 -->
-    <script src="mobile-image-emergency-fix.js"></script>
+    <script src="mobile-image-emergency-fix.js" defer></script>
     
     <!-- 性能优化CSS -->
     <style>
