@@ -1,0 +1,105 @@
+/* 紧急绿框修复 - 覆盖所有可能的绿框样式 */
+
+/* 1. 移除所有图片的边框、轮廓、阴影 */
+img,
+img[loading="lazy"],
+img[loading="eager"],
+img[loading="auto"] {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+}
+
+/* 2. 移除所有focus状态样式 */
+img:focus,
+img:focus-visible,
+img:focus-within {
+    outline: 0 !important;
+    outline-offset: 0 !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+/* 3. 移除浏览器默认懒加载样式 */
+img[loading="lazy"]::-webkit-media-controls,
+img[loading="lazy"]::-webkit-scrollbar,
+img[loading="lazy"]::-webkit-scrollbar-thumb {
+    display: none !important;
+}
+
+/* 4. 强制移除所有边框相关属性 */
+* {
+    border: 0 !important;
+    outline: 0 !important;
+}
+
+/* 5. 针对特定元素的额外修复 */
+.hero-bg,
+.portfolio-img,
+.showcase-img,
+.comparison-img,
+.gallery-img,
+.feature-img,
+.testimonial-img {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* 6. 移除所有伪元素边框 */
+::before,
+::after {
+    border: none !important;
+    outline: none !important;
+}
+
+/* 7. 确保没有内联样式覆盖 */
+img[style*="border"],
+img[style*="outline"],
+img[style*="box-shadow"] {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* 8. 最高优先级修复 */
+html body img {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+
+/* 9. 移除所有可能的绿框变体 */
+img {
+    /* 移除所有边框变体 */
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    
+    /* 移除轮廓 */
+    outline-width: 0 !important;
+    outline-style: none !important;
+    outline-color: transparent !important;
+    
+    /* 移除阴影 */
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    
+    /* 移除焦点环 */
+    --focus-ring: none !important;
+    
+    /* 确保没有绿框 */
+    background-color: transparent !important;
+}
+
+/* 10. 如果绿框是图片本身的问题 */
+img[src*=".jpg"],
+img[src*=".png"],
+img[src*=".jpeg"],
+img[src*=".webp"] {
+    border: none !important;
+    outline: none !important;
+}

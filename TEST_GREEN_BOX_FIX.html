@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绿框修复测试</title>
+    <style>
+        /* 复制所有绿框修复CSS */
+        img, img[loading="lazy"] {
+            border: 0 !important;
+            outline: 0 !important;
+            box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+        }
+        
+        img:focus {
+            outline: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+        
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .test-image {
+            width: 300px;
+            height: 200px;
+            margin: 20px;
+            background: #f0f0f0;
+            display: inline-block;
+            text-align: center;
+            line-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>绿框修复测试</h1>
+    <p>测试图片是否还有绿框：</p>
+    
+    <!-- 测试懒加载图片 -->
+    <div class="test-image">
+        <img src="public/hero-bg.jpg" loading="lazy" alt="测试图片1" style="max-width: 100%; max-height: 100%;">
+        <br>hero-bg.jpg
+    </div>
+    
+    <div class="test-image">
+        <img src="public/showcase/portfolio-5.jpg" loading="lazy" alt="测试图片2" style="max-width: 100%; max-height: 100%;">
+        <br>portfolio-5.jpg
+    </div>
+    
+    <div class="test-image">
+        <img src="public/showcase/3-before.jpg" loading="lazy" alt="测试图片3" style="max-width: 100%; max-height: 100%;">
+        <br>3-before.jpg
+    </div>
+    
+    <h2>修复状态：</h2>
+    <ul>
+        <li>✅ 已添加紧急绿框修复CSS</li>
+        <li>✅ 已添加到index.html</li>
+        <li>✅ 已添加内联CSS确保优先级</li>
+        <li>✅ 创建测试页面验证效果</li>
+    </ul>
+    
+    <h2>如果还有绿框：</h2>
+    <p>请按 F12 打开开发者工具，检查：</p>
+    <ol>
+        <li>哪个CSS规则导致绿框</li>
+        <li>绿框的具体CSS属性（border/outline/box-shadow）</li>
+        <li>截图发给我，我立即修复</li>
+    </ol>
+    
+    <button onclick="window.open('index.html', '_blank')">打开主网站测试</button>
+</body>
+</html>
