@@ -1,0 +1,50 @@
+📦 self-improving-agent Skill安装指南
+
+🔍 步骤1：访问SkillHub
+1. 打开：https://skillhub.tencent.com/#featured
+2. 搜索："self-improving-agent"
+3. 找到skill详情页
+
+📥 步骤2：下载Skill
+通常有以下几种方式：
+A. 直接下载ZIP文件
+B. GitHub仓库链接
+C. 安装命令
+
+🛠️ 步骤3：安装到OpenClaw
+根据下载的文件类型：
+
+情况A：如果是ZIP文件
+1. 解压到：C:\Users\86152\.openclaw\skills\self-improving-agent\
+2. 确保里面有SKILL.md文件
+
+情况B：如果是GitHub仓库
+1. 克隆仓库：
+   git clone <仓库地址> "C:\Users\86152\.openclaw\skills\self-improving-agent"
+
+情况C：如果有安装命令
+1. 在命令行运行安装命令
+
+🔧 步骤4：验证安装
+1. 检查目录结构：
+   C:\Users\86152\.openclaw\skills\self-improving-agent\
+     ├── SKILL.md
+     ├── references/
+     └── scripts/
+
+2. 重启OpenClaw或等待skill自动加载
+
+❓ 常见问题：
+1. 如果找不到skill，可能名称不同
+2. 如果需要登录，使用GitHub/腾讯账号
+3. 如果下载失败，尝试其他镜像源
+
+💡 提示：
+- 下载完成后告诉我文件位置
+- 我可以帮你完成后续安装步骤
+- 或者你直接运行安装命令
+
+⏱️ 时间安排：
+- 先完成Vercel部署（2分钟）
+- 再处理skill安装（5分钟）
+- 总时间：7分钟

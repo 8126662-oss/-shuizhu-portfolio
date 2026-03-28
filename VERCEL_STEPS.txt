@@ -1,0 +1,30 @@
+🚀 Vercel部署步骤 - 水墨竹作品集
+========================================
+
+⚠️ GitHub Pages已失败87分钟！
+✅ Vercel部署只需2分钟！
+
+📋 部署步骤：
+1. 打开浏览器，访问：https://vercel.com
+2. 使用GitHub登录（点击"Continue with GitHub"）
+3. 点击"Add New" -> "Project"
+4. 导入仓库：8126662-oss/-shuizhu-portfolio
+5. 点击"Deploy"（所有设置保持默认）
+6. 等待1-2分钟，获得新网址
+
+📍 新网址格式：https://-shuizhu-portfolio.vercel.app
+
+✅ 完成后：
+1. 测试新网址速度
+2. 告诉我新网址
+3. 验证图片加载是否变快
+
+⏱️ 当前时间：02:04
+⏱️ 目标完成：02:06
+
+💡 提示：如果双击.bat文件没反应，请：
+1. 右键点击QUICK_VERCEL.bat
+2. 选择"以管理员身份运行"
+3. 或使用PowerShell运行
+
+📞 如有问题，随时告诉我！

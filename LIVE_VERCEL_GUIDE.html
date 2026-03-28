@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vercel实时部署指导 - 跟我一步步操作</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #000; color: white; }
+        .header { background: white; color: black; padding: 20px; text-align: center; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .step { background: #111; border-radius: 10px; padding: 20px; margin: 15px 0; border-left: 5px solid #00ff00; }
+        .step.current { border-left-color: #ff0000; background: #222; }
+        .step-number { background: #00ff00; color: black; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 10px; }
+        .step.current .step-number { background: #ff0000; }
+        .action-btn { background: #00ff00; color: black; border: none; padding: 12px 24px; border-radius: 6px; font-size: 16px; cursor: pointer; margin: 10px 5px; text-decoration: none; display: inline-block; font-weight: bold; }
+        .action-btn:hover { opacity: 0.9; }
+        .screenshot { background: white; padding: 10px; border-radius: 8px; margin: 15px 0; color: black; }
+        .screenshot img { max-width: 100%; border: 1px solid #ddd; }
+        .timer { font-size: 24px; text-align: center; margin: 20px 0; color: #00ff00; }
+        .status { padding: 10px; border-radius: 6px; margin: 10px 0; text-align: center; }
+        .status-waiting { background: rgba(255, 255, 0, 0.1); border: 1px solid yellow; }
+        .status-done { background: rgba(0, 255, 0, 0.1); border: 1px solid #00ff00; }
+        .chat { background: #111; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        .chat-message { margin: 10px 0; padding: 10px; border-radius: 6px; }
+        .chat-user { background: #333; }
+        .chat-assistant { background: #222; }
+        .progress-bar { width: 100%; height: 10px; background: #333; border-radius: 5px; margin: 20px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: #00ff00; width: 0%; transition: width 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Vercel实时部署指导 - 跟我一步步操作</h1>
+        <p>当前时间: <span id="currentTime">01:14</span> | 目标: 01:20前完成部署</p>
+    </div>
+    
+    <div class="container">
+        <div class="timer">⏱️ 部署倒计时: <span id="timer">00:00</span></div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <!-- 步骤1 -->
+        <div class="step current" id="step1">
+            <h3><span class="step-number">1</span> 打开Vercel网站</h3>
+            <p>请立即在浏览器中打开：</p>
+            <a href="https://vercel.com" target="_blank" class="action-btn">🌐 点击打开 Vercel.com</a>
+            <div class="status status-waiting">
+                ⏳ 等待你打开网站...
+            </div>
+            <p><strong>完成后点击：</strong> <button onclick="completeStep(1)" class="action-btn">✅ 已完成步骤1</button></p>
+        </div>
+        
+        <!-- 步骤2 -->
+        <div class="step" id="step2">
+            <h3><span class="step-number">2</span> 使用GitHub登录</h3>
+            <div class="screenshot">
+                <p><strong>操作：</strong></p>
+                <ol>
+                    <li>点击"Sign Up"或"Log In"</li>
+                    <li>选择"Continue with GitHub"</li>
+                    <li>授权Vercel访问你的GitHub账号</li>
+                </ol>
+            </div>
+            <p><strong>完成后点击：</strong> <button onclick="completeStep(2)" class="action-btn">✅ 已完成步骤2</button></p>
+        </div>
+        
+        <!-- 步骤3 -->
+        <div class="step" id="step3">
+            <h3><span class="step-number">3</span> 导入GitHub仓库</h3>
+            <div class="screenshot">
+                <p><strong>操作：</strong></p>
+                <ol>
+                    <li>点击"Add New" → "Project"</li>
+                    <li>点击"Import Git Repository"</li>
+                    <li>搜索: <code>8126662-oss/-shuizhu-portfolio</code></li>
+                    <li>点击"Import"按钮</li>
+                </ol>
+            </div>
+            <a href="https://vercel.com/new" target="_blank" class="action-btn">📦 点击导入仓库</a>
+            <p><strong>完成后点击：</strong> <button onclick="completeStep(3)" class="action-btn">✅ 已完成步骤3</button></p>
+        </div>
+        
+        <!-- 步骤4 -->
+        <div class="step" id="step4">
+            <h3><span class="step-number">4</span> 配置并部署</h3>
+            <div class="screenshot">
+                <p><strong>配置（保持默认即可）：</strong></p>
+                <ul>
+                    <li><strong>Framework Preset</strong>: 选择 "Other"</li>
+                    <li><strong>Build Command</strong>: 留空</li>
+                    <li><strong>Output Directory</strong>: 留空</li>
+                    <li>点击 <strong>"Deploy"</strong> 按钮</li>
+                </ul>
+            </div>
+            <p><strong>完成后点击：</strong> <button onclick="completeStep(4)" class="action-btn">✅ 已完成步骤4</button></p>
+        </div>
+        
+        <!-- 步骤5 -->
+        <div class="step" id="step5">
+            <h3><span class="step-number">5</span> 获取并测试新网址</h3>
+            <div class="screenshot">
+                <p><strong>等待1-2分钟，然后：</strong></p>
+                <ol>
+                    <li>获得新网址：<code>https://-shuizhu-portfolio.vercel.app</code></li>
+                    <li>点击网址测试网站</li>
+                    <li>验证图片加载速度</li>
+                </ol>
+            </div>
+            <div class="status status-waiting" id="finalStatus">
+                ⏳ 等待部署完成...
+            </div>
+            <p><strong>完成后点击：</strong> <button onclick="completeStep(5)" class="action-btn">🎉 部署完成！</button></p>
+        </div>
+        
+        <div class="chat">
+            <h3>💬 实时指导对话</h3>
+            <div id="chatMessages">
+                <div class="chat-message chat-assistant">
+                    <strong>助手</strong>: 我已准备好指导你部署Vercel！请从步骤1开始。
+                </div>
+            </div>
+            <div style="margin-top: 15px;">
+                <input type="text" id="userInput" placeholder="遇到问题？在这里描述..." style="width: 70%; padding: 10px; background: #222; color: white; border: 1px solid #444; border-radius: 4px;">
+                <button onclick="sendMessage()" class="action-btn" style="background: #666;">发送</button>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; color: #999;">
+            <p><strong>GitHub Pages状态</strong>: ❌ 已等待43分钟，"Save"按钮按不了</p>
+            <p><strong>Vercel优势</strong>: ✅ 2分钟部署，自动SSL，全球CDN</p>
+            <p><strong>当前优化</strong>: 图片已压缩，代码已优化，只需正确部署</p>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let startTime = Date.now();
+        let timerInterval;
+        
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = 
+                `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
+        
+        // 更新计时器
+        function updateTimer() {
+            const elapsed = Date.now() - startTime;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // 更新进度条
+            const progress = Math.min((elapsed / (6 * 60 * 1000)) * 100, 100); // 6分钟满进度
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            
+            if (minutes >= 6) {
+                document.getElementById('timer').style.color = '#ff0000';
+                document.getElementById('timer').innerHTML += '<br>⚠️ 超过预期时间！';
+            }
+        }
+        
+        // 完成步骤
+        function completeStep(step) {
+            // 标记当前步骤完成
+            const currentStepEl = document.getElementById(`step${step}`);
+            currentStepEl.classList.remove('current');
+            currentStepEl.querySelector('.step-number').style.background = '#00ff00';
+            
+            // 添加完成消息
+            addChatMessage('assistant', `✅ 步骤${step}完成！`);
+            
+            // 激活下一步
+            if (step < 5) {
+                const nextStep = step + 1;
+                const nextStepEl = document.getElementById(`step${nextStep}`);
+                nextStepEl.classList.add('current');
+                nextStepEl.scrollIntoView({ behavior: 'smooth' });
+                
+                addChatMessage('assistant', `➡️ 请继续步骤${nextStep}...`);
+            } else {
+                // 所有步骤完成
+                document.getElementById('finalStatus').className = 'status status-done';
+                document.getElementById('finalStatus').innerHTML = '✅ 部署完成！请测试新网址。';
+                addChatMessage('assistant', '🎉 恭喜！Vercel部署完成！请测试新网址。');
+                
+                // 显示成功网址
+                const successDiv = document.createElement('div');
+                successDiv.className = 'status status-done';
+                successDiv.innerHTML = `
+                    <h4>🌐 你的新网站地址：</h4>
+                    <p style="font-size: 20px; margin: 10px 0;">
+                        <a href="https://-shuizhu-portfolio.vercel.app" target="_blank" style="color: #00ff00;">
+                            https://-shuizhu-portfolio.vercel.app
+                        </a>
+                    </p>
+                    <p>请立即测试网站速度！</p>
+                `;
+                document.getElementById('step5').appendChild(successDiv);
+            }
+        }
+        
+        // 添加聊天消息
+        function addChatMessage(sender, message) {
+            const chatDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message chat-${sender}`;
+            messageDiv.innerHTML = `<strong>${sender === 'user' ? '你' : '助手'}</strong>: ${message}`;
+            chatDiv.appendChild(messageDiv);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        }
+        
+        // 发送消息
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            if (input.value.trim()) {
+                addChatMessage('user', input.value);
+                
+                // 简单回复
+                setTimeout(() => {
+                    addChatMessage('assistant', '请继续按照步骤操作，如果遇到具体问题请描述。');
+                }, 1000);
+                
+                input.value = '';
+            }
+        }
+        
+        // 初始化
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 60000); // 每分钟更新一次时间
+        timerInterval = setInterval(updateTimer, 1000);
+        updateTimer();
+        
+        // 自动提示
+        setTimeout(() => {
+            addChatMessage('assistant', '💡 提示：如果Vercel网站加载慢，可以尝试刷新或使用其他浏览器。');
+        }, 10000);
+        
+        console.log('🚀 Vercel实时指导已启动');
+        console.log('⏱️ 目标：6分钟内完成部署');
+        console.log('🔗 仓库：8126662-oss/-shuizhu-portfolio');
+    </script>
+</body>
+</html>

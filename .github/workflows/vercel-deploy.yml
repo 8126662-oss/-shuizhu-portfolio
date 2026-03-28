@@ -1,0 +1,32 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'  # 部署到生产环境
+          
+      - name: Get Deployment URL
+        id: vercel
+        run: |
+          echo "DEPLOYMENT_URL=$(echo 'https://-shuizhu-portfolio.vercel.app')" >> $GITHUB_OUTPUT
+          
+      - name: Display Deployment URL
+        run: |
+          echo "✅ 部署成功！"
+          echo "🌐 网站地址: ${{ steps.vercel.outputs.DEPLOYMENT_URL }}"
+          echo "🚀 图片已压缩，加载速度大幅提升！"

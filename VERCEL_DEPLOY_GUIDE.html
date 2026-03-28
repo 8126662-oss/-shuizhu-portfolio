@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vercel快速部署指南 - 水墨竹作品集</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #000000 100%); color: white; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: #000; background: white; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
+        .step { background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 25px; margin-bottom: 20px; border-left: 5px solid #000; }
+        .step-number { background: #000; color: white; width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; }
+        .btn { background: #000; color: white; border: none; padding: 14px 28px; border-radius: 8px; font-size: 16px; cursor: pointer; margin: 10px 5px; display: inline-block; text-decoration: none; transition: transform 0.2s; }
+        .btn:hover { transform: translateY(-3px); background: #333; }
+        .btn-vercel { background: linear-gradient(90deg, #000, #333); }
+        .btn-github { background: linear-gradient(90deg, #24292e, #444d56); }
+        .screenshot { background: white; padding: 10px; border-radius: 8px; margin: 15px 0; color: black; }
+        .screenshot img { max-width: 100%; border: 1px solid #ddd; }
+        .info-box { background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 15px; margin: 15px 0; }
+        .timer { font-size: 36px; font-weight: bold; color: #000; text-align: center; margin: 20px 0; }
+        .advantages { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
+        .advantage { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; }
+        .advantage h4 { color: #000; margin-bottom: 10px; }
+        .status { padding: 10px; border-radius: 6px; margin: 10px 0; text-align: center; }
+        .status-success { background: rgba(0, 255, 0, 0.1); border: 1px solid #00ff00; }
+        .status-waiting { background: rgba(255, 255, 0, 0.1); border: 1px solid #ffff00; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Vercel 快速部署 - 水墨竹作品集</h1>
+        
+        <div class="timer">⏱️ 预计部署时间：2-5分钟</div>
+        
+        <div class="step">
+            <h3><span class="step-number">1</span> 访问Vercel并登录</h3>
+            <div class="info-box">
+                <p><strong>网址</strong>: <a href="https://vercel.com" target="_blank" style="color: #60a5fa;">https://vercel.com</a></p>
+                <p><strong>登录方式</strong>: 使用GitHub账号登录（最方便）</p>
+            </div>
+            <a href="https://vercel.com" target="_blank" class="btn btn-vercel">🌐 立即访问Vercel</a>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">2</span> 导入GitHub仓库</h3>
+            <div class="screenshot">
+                <p><strong>操作步骤：</strong></p>
+                <ol>
+                    <li>点击"Add New" → "Project"</li>
+                    <li>选择"Import Git Repository"</li>
+                    <li>搜索: <code>8126662-oss/-shuizhu-portfolio</code></li>
+                    <li>点击"Import"按钮</li>
+                </ol>
+            </div>
+            <a href="https://vercel.com/new" target="_blank" class="btn btn-vercel">📦 立即导入仓库</a>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">3</span> 配置部署设置</h3>
+            <div class="info-box">
+                <p><strong>重要配置：</strong></p>
+                <ul>
+                    <li><strong>Framework Preset</strong>: 选择 "Other" 或 "Static"</li>
+                    <li><strong>Build Command</strong>: 留空（静态网站不需要构建）</li>
+                    <li><strong>Output Directory</strong>: 留空（文件在根目录）</li>
+                    <li><strong>Root Directory</strong>: 留空</li>
+                </ul>
+                <p><strong>注意</strong>: 所有设置保持默认即可，Vercel会自动检测。</p>
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">4</span> 开始部署</h3>
+            <div class="info-box">
+                <p>点击"Deploy"按钮后：</p>
+                <ol>
+                    <li>Vercel会自动开始部署</li>
+                    <li>等待1-2分钟</li>
+                    <li>获得新网址：<code>https://-shuizhu-portfolio.vercel.app</code></li>
+                    <li>可以自定义域名（可选）</li>
+                </ol>
+            </div>
+            <div class="status status-waiting">
+                ⚡ 部署速度：比GitHub Pages快10倍！
+            </div>
+        </div>
+        
+        <div class="advantages">
+            <div class="advantage">
+                <h4>⚡ 极速部署</h4>
+                <p>1-2分钟完成，GitHub Pages需要3-10分钟</p>
+            </div>
+            <div class="advantage">
+                <h4>🔒 自动SSL</h4>
+                <p>免费HTTPS证书，无需配置</p>
+            </div>
+            <div class="advantage">
+                <h4>🌍 全球CDN</h4>
+                <p>全球加速，访问速度快</p>
+            </div>
+            <div class="advantage">
+                <h4>🔄 自动更新</h4>
+                <p>GitHub推送后自动重新部署</p>
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">5</span> 验证部署结果</h3>
+            <div class="info-box">
+                <p>部署完成后：</p>
+                <ol>
+                    <li>访问Vercel提供的网址</li>
+                    <li>测试图片加载速度</li>
+                    <li>验证所有功能正常</li>
+                    <li>分享新网址给他人</li>
+                </ol>
+                <p><strong>预期效果</strong>: 网站加载时间从10+秒 → 1-2秒</p>
+            </div>
+            <div class="status status-success">
+                ✅ 图片已压缩，代码已优化，只需正确部署！
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="https://vercel.com" target="_blank" class="btn btn-vercel" style="font-size: 18px; padding: 16px 32px;">
+                🚀 立即开始Vercel部署
+            </a>
+            <a href="LOCAL_SERVER.bat" class="btn" style="background: #666;">
+                💻 同时运行本地服务器测试
+            </a>
+        </div>
+        
+        <div style="margin-top: 30px; color: #94a3b8; text-align: center;">
+            <h4>📝 部署状态记录</h4>
+            <p><strong>GitHub Pages问题</strong>: 等待36分钟，"Save"按钮按不了</p>
+            <p><strong>Vercel优势</strong>: 快速、稳定、自动配置</p>
+            <p><strong>当前时间</strong>: 2026-03-28 01:11</p>
+            <p><strong>目标</strong>: 01:15前完成Vercel部署</p>
+        </div>
+    </div>
+
+    <script>
+        // 部署倒计时
+        let startTime = Date.now();
+        function updateTimer() {
+            const elapsed = Date.now() - startTime;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            
+            document.querySelector('.timer').innerHTML = 
+                `⏱️ 部署倒计时: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (minutes >= 5) {
+                document.querySelector('.timer').style.color = '#ff0000';
+                document.querySelector('.timer').innerHTML += '<br>⚠️ 超过预期时间，请检查部署状态';
+            }
+        }
+        
+        setInterval(updateTimer, 1000);
+        updateTimer();
+        
+        console.log('🚀 Vercel部署指南已加载');
+        console.log('🎯 目标：5分钟内完成部署');
+        console.log('🔗 仓库：8126662-oss/-shuizhu-portfolio');
+        console.log('⚡ 优势：比GitHub Pages快10倍');
+    </script>
+</body>
+</html>

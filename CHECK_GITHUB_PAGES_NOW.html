@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>立即检查GitHub Pages状态</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #f59e0b; margin-bottom: 20px; text-align: center; }
+        .urgent { background: rgba(239, 68, 68, 0.2); border: 2px solid #ef4444; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .test-section { background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 20px; margin: 15px 0; }
+        .btn { background: linear-gradient(90deg, #ef4444, #dc2626); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; margin: 10px 5px; display: inline-block; text-decoration: none; }
+        .btn:hover { opacity: 0.9; }
+        .btn-green { background: linear-gradient(90deg, #10b981, #059669); }
+        .status { padding: 10px; border-radius: 6px; margin: 10px 0; }
+        .status-pending { background: rgba(245, 158, 11, 0.2); }
+        .status-error { background: rgba(239, 68, 68, 0.2); }
+        .status-success { background: rgba(16, 185, 129, 0.2); }
+        .image-test { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .image-item { text-align: center; }
+        .image-item img { max-width: 100%; height: 150px; object-fit: cover; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 GitHub Pages部署超时检查</h1>
+        
+        <div class="urgent">
+            <h2>⚠️ 紧急：部署已等待13分钟！</h2>
+            <p><strong>推送时间</strong>: 00:31</p>
+            <p><strong>当前时间</strong>: 00:44</p>
+            <p><strong>已等待</strong>: 13分钟（远超正常1-3分钟）</p>
+            <p><strong>可能原因</strong>: GitHub Pages服务延迟、配置问题、或需要手动触发</p>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 立即测试在线网站</h3>
+            <div class="status status-error">
+                <strong>测试方法1：直接访问</strong><br>
+                <a href="https://8126662-oss.github.io/-shuizhu-portfolio/" target="_blank" style="color: #60a5fa;">
+                    https://8126662-oss.github.io/-shuizhu-portfolio/
+                </a>
+                <p>按 F12 → Network标签 → 刷新页面 → 查看图片大小</p>
+            </div>
+            
+            <div class="image-test">
+                <div class="image-item">
+                    <p>测试图片1：portfolio-5.jpg</p>
+                    <img src="https://8126662-oss.github.io/-shuizhu-portfolio/public/showcase/portfolio-5.jpg" 
+                         onload="imageLoaded(this, 'portfolio-5')" 
+                         onerror="imageError(this, 'portfolio-5')">
+                    <div id="img1-status">加载中...</div>
+                </div>
+                <div class="image-item">
+                    <p>测试图片2：01.jpg</p>
+                    <img src="https://8126662-oss.github.io/-shuizhu-portfolio/public/showcase/01.jpg" 
+                         onload="imageLoaded(this, '01')" 
+                         onerror="imageError(this, '01')">
+                    <div id="img2-status">加载中...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🛠️ 解决方案</h3>
+            <div class="status status-pending">
+                <strong>方案1：手动触发GitHub Pages</strong>
+                <ol>
+                    <li>访问 <a href="https://github.com/8126662-oss/-shuizhu-portfolio/settings/pages" target="_blank" style="color: #60a5fa;">GitHub Pages设置</a></li>
+                    <li>点击"Save"按钮（即使设置没变）</li>
+                    <li>这会强制重新部署</li>
+                </ol>
+            </div>
+            
+            <div class="status status-pending">
+                <strong>方案2：清除GitHub缓存</strong>
+                <p>GitHub有时会缓存旧版本，需要：</p>
+                <ol>
+                    <li>访问仓库Settings → Pages</li>
+                    <li>暂时关闭GitHub Pages</li>
+                    <li>等待30秒</li>
+                    <li>重新开启</li>
+                </ol>
+            </div>
+            
+            <div class="status status-pending">
+                <strong>方案3：检查Actions状态</strong>
+                <p>访问 <a href="https://github.com/8126662-oss/-shuizhu-portfolio/actions" target="_blank" style="color: #60a5fa;">GitHub Actions</a></p>
+                <p>查看是否有部署任务卡住或失败</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="https://github.com/8126662-oss/-shuizhu-portfolio/settings/pages" target="_blank" class="btn">
+                🔧 立即打开GitHub Pages设置
+            </a>
+            <a href="https://8126662-oss.github.io/-shuizhu-portfolio/" target="_blank" class="btn btn-green">
+                🌐 测试在线网站
+            </a>
+            <button onclick="runAllTests()" class="btn">
+                🔄 运行所有测试
+            </button>
+        </div>
+        
+        <div style="margin-top: 30px; color: #94a3b8; text-align: center;">
+            <p>如果以上方法都不行，可能需要：</p>
+            <p>1. 等待GitHub服务恢复（有时需要几小时）</p>
+            <p>2. 使用其他部署平台（Vercel、Netlify等）</p>
+            <p>3. 暂时使用本地版本</p>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {};
+        
+        function imageLoaded(img, name) {
+            const statusDiv = document.getElementById(`img${name.includes('portfolio') ? '1' : '2'}-status`);
+            
+            // 获取图片大小
+            const sizeKB = Math.round(img.naturalWidth * img.naturalHeight * 3 / 1024); // 估算
+            const actualSize = performance.getEntriesByName(img.src)[0];
+            
+            if (actualSize) {
+                const transferKB = Math.round(actualSize.transferSize / 1024);
+                statusDiv.innerHTML = `✅ 已加载 | 传输: ${transferKB}KB`;
+                statusDiv.style.color = transferKB < 500 ? '#10b981' : '#ef4444';
+                
+                testResults[name] = {
+                    loaded: true,
+                    sizeKB: transferKB,
+                    status: transferKB < 500 ? '正常' : '过大'
+                };
+            } else {
+                statusDiv.innerHTML = '✅ 已加载';
+                statusDiv.style.color = '#10b981';
+            }
+            
+            updateSummary();
+        }
+        
+        function imageError(img, name) {
+            const statusDiv = document.getElementById(`img${name.includes('portfolio') ? '1' : '2'}-status`);
+            statusDiv.innerHTML = '❌ 加载失败';
+            statusDiv.style.color = '#ef4444';
+            
+            testResults[name] = {
+                loaded: false,
+                error: true
+            };
+            
+            updateSummary();
+        }
+        
+        function updateSummary() {
+            if (Object.keys(testResults).length === 2) {
+                const summary = document.createElement('div');
+                summary.className = 'status';
+                summary.innerHTML = '<h4>测试结果汇总：</h4>';
+                
+                for (const [name, result] of Object.entries(testResults)) {
+                    if (result.loaded) {
+                        summary.innerHTML += `<p>${name}: ${result.sizeKB}KB (${result.status})</p>`;
+                    } else {
+                        summary.innerHTML += `<p>${name}: ❌ 加载失败</p>`;
+                    }
+                }
+                
+                document.querySelector('.test-section').appendChild(summary);
+            }
+        }
+        
+        function runAllTests() {
+            alert('正在运行所有测试...\n1. 测试图片加载\n2. 检查GitHub状态\n3. 验证部署');
+            
+            // 重新加载测试图片
+            document.querySelectorAll('img').forEach(img => {
+                img.src = img.src.split('?')[0] + '?t=' + Date.now();
+            });
+            
+            // 打开GitHub链接
+            window.open('https://github.com/8126662-oss/-shuizhu-portfolio/actions', '_blank');
+        }
+        
+        console.log('🚨 GitHub Pages超时检查已启动');
+        console.log('⏱️ 已等待13分钟，远超正常时间');
+        console.log('🔗 在线网站: https://8126662-oss.github.io/-shuizhu-portfolio/');
+    </script>
+</body>
+</html>
