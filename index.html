@@ -514,12 +514,12 @@
                             <!-- 底层：Before 图片（原始图）作为背景 -->
                             <div class="slider-before w-full">
                                 <div class="slider-label w-full">Before</div>
-                                <img src="public/showcase/2-before.jpg" alt="原始图" class="slider-image w-full" loading="lazy">
+                                <img src="public/showcase/2-before.jpg" alt="原始图" class="slider-image w-full" fetchpriority="high" loading="eager" decoding="async">
                             </div>
                             <!-- 顶层：After 图片（精修后）- 使用clip-path显示 -->
                             <div class="slider-after w-full">
                                 <div class="slider-label w-full">After</div>
-                                <img src="public/showcase/2-after.jpg" alt="精修后效果" class="slider-image w-full" loading="lazy">
+                                <img src="public/showcase/2-after.jpg" alt="精修后效果" class="slider-image w-full" fetchpriority="high" loading="eager" decoding="async">
                             </div>
                             <!-- 专业竖向分割线滑块 -->
                             <div class="slider-control w-full">
@@ -580,31 +580,31 @@
                 <div class="layer-stack-container w-full" id="layerStackContainer">
                     <!-- 图层1 - 背景层 (最底层) -->
                     <div class="layer-image layer-image-1 w-full">
-                        <img src="public/showcase/01.jpg" alt="背景层" class="layer-img w-full" loading="lazy" data-lazy-processed="true">
+                        <img src="public/showcase/01.jpg" alt="背景层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
                         <div class="layer-label w-full">背景层</div>
                     </div>
 
                     <!-- 图层2 - 光影层 -->
                     <div class="layer-image layer-image-2 w-full">
-                        <img src="public/showcase/02.jpg" alt="光影层" class="layer-img w-full" loading="lazy" data-lazy-processed="true">
+                        <img src="public/showcase/02.jpg" alt="光影层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
                         <div class="layer-label w-full">光影层</div>
                     </div>
 
                     <!-- 图层3 - 主体层 -->
                     <div class="layer-image layer-image-3 w-full">
-                        <img src="public/showcase/03.jpg" alt="主体层" class="layer-img w-full" loading="lazy" data-lazy-processed="true">
+                        <img src="public/showcase/03.jpg" alt="主体层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
                         <div class="layer-label w-full">主体层</div>
                     </div>
 
                     <!-- 图层4 - 特效层 -->
                     <div class="layer-image layer-image-4 w-full">
-                        <img src="public/showcase/04.jpg" alt="特效层" class="layer-img w-full" loading="lazy" data-lazy-processed="true">
+                        <img src="public/showcase/04.jpg" alt="特效层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
                         <div class="layer-label w-full">特效层</div>
                     </div>
 
                     <!-- 图层5 - 调色层 (最顶层) -->
                     <div class="layer-image layer-image-5 w-full">
-                        <img src="public/showcase/05.jpg" alt="调色层" class="layer-img w-full" loading="lazy" data-lazy-processed="true">
+                        <img src="public/showcase/05.jpg" alt="调色层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
                         <div class="layer-label w-full">调色层</div>
                     </div>
                 </div>
@@ -637,10 +637,14 @@
     <script>
     (function () {
         var c = document.getElementById('layerStackContainer');
-        if (!c) return;
-        c.setAttribute('tabindex', '0');
-        c.setAttribute('role', 'button');
-        c.setAttribute('aria-label', '图层合成演示：点击展开五层，再次点击合并（手机端）');
+        var wrap = document.querySelector('.layer-showcase-wrapper');
+        if (!c || !wrap) return;
+
+        var mqMobile = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 768px)');
+        var mqReduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)');
+        var isMobile = function () { return mqMobile && mqMobile.matches; };
+        var prefersReduce = function () { return mqReduce && mqReduce.matches; };
+
         function restartLayerAnimations(el) {
             el.style.animation = 'none';
             el.querySelectorAll('.layer-image').forEach(function (layer) {
@@ -652,17 +656,86 @@
                 layer.style.removeProperty('animation');
             });
         }
-        c.addEventListener('click', function (e) {
-            e.stopPropagation();
-            if (c.classList.toggle('layer-user-expanded')) return;
-            restartLayerAnimations(c);
-        });
-        c.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                c.click();
+
+        function setupDesktopLayerUi() {
+            c.setAttribute('tabindex', '0');
+            c.setAttribute('role', 'button');
+            c.setAttribute('aria-label', '图层合成演示：点击进入五层展开态，再次点击恢复自动循环');
+            c.style.cursor = '';
+            c.addEventListener('click', function onLayerClick(e) {
+                e.stopPropagation();
+                if (c.classList.toggle('layer-user-expanded')) return;
+                restartLayerAnimations(c);
+            });
+            c.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    c.click();
+                }
+            });
+        }
+
+        function setupMobileViewportDemo() {
+            c.removeAttribute('tabindex');
+            c.removeAttribute('role');
+            c.setAttribute('aria-label', '图层合成原理演示：滚入画面后将自动播放一次分层与合拢');
+            c.style.cursor = 'default';
+            if (prefersReduce()) return;
+
+            var played = false;
+            var demoMs = 6000;
+
+            var finished = false;
+            function finishDemo() {
+                if (finished) return;
+                finished = true;
+                c.classList.remove('layer-vp-playing');
+                c.classList.add('layer-vp-done');
+                wrap.classList.remove('layer-vp-context');
             }
-        });
+
+            function startDemo() {
+                if (played) return;
+                played = true;
+                wrap.classList.add('layer-vp-context');
+                c.classList.add('layer-vp-playing');
+                var t = window.setTimeout(finishDemo, demoMs + 80);
+                c.addEventListener('animationend', function onEnd(e) {
+                    if (e.target !== c) return;
+                    window.clearTimeout(t);
+                    finishDemo();
+                }, { once: true });
+            }
+
+            if (!('IntersectionObserver' in window)) {
+                startDemo();
+                return;
+            }
+
+            var io = new IntersectionObserver(
+                function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.target !== c || played) return;
+                        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                            io.disconnect();
+                            startDemo();
+                        }
+                    });
+                },
+                { threshold: [0, 0.25, 0.5, 0.75, 1], rootMargin: '0px' }
+            );
+            io.observe(c);
+        }
+
+        function route() {
+            if (isMobile()) {
+                setupMobileViewportDemo();
+            } else {
+                setupDesktopLayerUi();
+            }
+        }
+
+        route();
     })();
     </script>
 
