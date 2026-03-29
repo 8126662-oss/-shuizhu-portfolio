@@ -1855,39 +1855,39 @@ footer {
     }
 }
 
-/* Mobile: 3s ????????0%?50% ???100% ???? Framer repeat + reverse????? animation-play-state: paused */
+/* Mobile only: 4s / cycle, ease-in-out infinite ? Framer repeat:Infinity + repeatType:reverse */
 @keyframes layer-mob-breathe-stage {
     0%, 100% {
-        transform: rotateX(0deg) rotateZ(0deg) scale(1);
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
     }
     50% {
-        transform: rotateX(44deg) rotateZ(-11deg) scale(0.76);
+        transform: rotateX(42deg) rotateY(-7deg) rotateZ(-10deg) scale(0.77);
     }
 }
 
 @keyframes layer-mob-breathe-l1 {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(-7vw, -16px, -100px); }
+    0%, 100% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+    50% { transform: translate3d(-7vw, -18px, -105px) rotateY(-6deg); }
 }
 
 @keyframes layer-mob-breathe-l2 {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(-3.5vw, -10px, -52px); }
+    0%, 100% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+    50% { transform: translate3d(-3.5vw, -12px, -54px) rotateY(-3.5deg); }
 }
 
 @keyframes layer-mob-breathe-l3 {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(0, -18px, 12px); }
+    0%, 100% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+    50% { transform: translate3d(0, -20px, 14px) rotateY(1deg); }
 }
 
 @keyframes layer-mob-breathe-l4 {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(3.5vw, -10px, 52px); }
+    0%, 100% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+    50% { transform: translate3d(3.5vw, -12px, 54px) rotateY(3.5deg); }
 }
 
 @keyframes layer-mob-breathe-l5 {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(7vw, -16px, 100px); }
+    0%, 100% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+    50% { transform: translate3d(7vw, -18px, 105px) rotateY(6deg); }
 }
 
 /* ???? */
@@ -1966,12 +1966,12 @@ footer {
         margin: 120px 0;
         padding: 120px 0;
         transform: translateY(60px);
-        perspective: 1600px;
+        perspective: 1200px;
         transform-style: preserve-3d;
     }
 
     .layer-showcase-wrapper.layer-vp-context {
-        perspective: 2000px;
+        perspective: 1200px;
     }
     
     .layer-stack-container {
@@ -1999,9 +1999,9 @@ footer {
         transform: translate3d(0, 0, 0) !important;
     }
 
-    /* ?????3s / ???ease-in-out????? */
+    /* 4s / ?? + ??? running?? duration:4, easeInOut, repeat+reverse? */
     #layerStackContainer.layer-mob-loop {
-        animation: layer-mob-breathe-stage 3s ease-in-out infinite !important;
+        animation: layer-mob-breathe-stage 4s ease-in-out infinite !important;
         animation-play-state: paused !important;
         transform-style: preserve-3d !important;
         will-change: transform;
@@ -2012,29 +2012,34 @@ footer {
     }
 
     #layerStackContainer.layer-mob-loop .layer-image-1 {
-        animation: layer-mob-breathe-l1 3s ease-in-out infinite !important;
+        animation: layer-mob-breathe-l1 4s ease-in-out infinite !important;
         animation-play-state: paused !important;
         will-change: transform;
+        transform-style: preserve-3d !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-2 {
-        animation: layer-mob-breathe-l2 3s ease-in-out infinite !important;
+        animation: layer-mob-breathe-l2 4s ease-in-out infinite !important;
         animation-play-state: paused !important;
         will-change: transform;
+        transform-style: preserve-3d !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-3 {
-        animation: layer-mob-breathe-l3 3s ease-in-out infinite !important;
+        animation: layer-mob-breathe-l3 4s ease-in-out infinite !important;
         animation-play-state: paused !important;
         will-change: transform;
+        transform-style: preserve-3d !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-4 {
-        animation: layer-mob-breathe-l4 3s ease-in-out infinite !important;
+        animation: layer-mob-breathe-l4 4s ease-in-out infinite !important;
         animation-play-state: paused !important;
         will-change: transform;
+        transform-style: preserve-3d !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-5 {
-        animation: layer-mob-breathe-l5 3s ease-in-out infinite !important;
+        animation: layer-mob-breathe-l5 4s ease-in-out infinite !important;
         animation-play-state: paused !important;
         will-change: transform;
+        transform-style: preserve-3d !important;
     }
 
     #layerStackContainer.layer-mob-loop.layer-vp-inview .layer-image-1,
@@ -2078,6 +2083,19 @@ footer {
     .legend-color {
         width: 18px;
         height: 18px;
+    }
+
+    /* ????????? 16:9 + cover?????????????? */
+    #slider1.image-slider,
+    #slider2.image-slider {
+        aspect-ratio: 16 / 9;
+        border-radius: 12px;
+        min-height: 0;
+    }
+
+    .image-slider .slider-image {
+        object-fit: cover;
+        object-position: center;
     }
 
     /* ????????????????????????? */
@@ -2125,7 +2143,7 @@ footer {
         margin: 80px 0;
         padding: 80px 0;
         transform: translateY(40px);
-        perspective: 1600px;
+        perspective: 1200px;
         transform-style: preserve-3d;
     }
     
