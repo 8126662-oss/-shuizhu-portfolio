@@ -1855,55 +1855,39 @@ footer {
     }
 }
 
-/* Mobile: viewport-triggered one-shot (? Framer whileInView), 6s = ease-in 3D + spread + 1.5s hold + merge */
-@keyframes layer-mob-stage {
-    0% {
+/* Mobile: 3s ????????0%?50% ???100% ???? Framer repeat + reverse????? animation-play-state: paused */
+@keyframes layer-mob-breathe-stage {
+    0%, 100% {
         transform: rotateX(0deg) rotateZ(0deg) scale(1);
     }
-    20% {
-        transform: rotateX(50deg) rotateZ(-14deg) scale(0.76);
-    }
-    58% {
-        transform: rotateX(50deg) rotateZ(-14deg) scale(0.76);
-    }
-    100% {
-        transform: rotateX(0deg) rotateZ(0deg) scale(1);
+    50% {
+        transform: rotateX(44deg) rotateZ(-11deg) scale(0.76);
     }
 }
 
-@keyframes layer-mob-l1 {
-    0%, 20% { transform: translate3d(0, 0, 0); }
-    33% { transform: translate3d(-9vw, -9vw, -120px); }
-    58% { transform: translate3d(-9vw, -9vw, -120px); }
-    100% { transform: translate3d(0, 0, 0); }
+@keyframes layer-mob-breathe-l1 {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(-7vw, -16px, -100px); }
 }
 
-@keyframes layer-mob-l2 {
-    0%, 20% { transform: translate3d(0, 0, 0); }
-    33% { transform: translate3d(-4.5vw, -4.5vw, -60px); }
-    58% { transform: translate3d(-4.5vw, -4.5vw, -60px); }
-    100% { transform: translate3d(0, 0, 0); }
+@keyframes layer-mob-breathe-l2 {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(-3.5vw, -10px, -52px); }
 }
 
-@keyframes layer-mob-l3 {
-    0%, 20% { transform: translate3d(0, 0, 0); }
-    33% { transform: translate3d(0, 0, 0); }
-    58% { transform: translate3d(0, 0, 0); }
-    100% { transform: translate3d(0, 0, 0); }
+@keyframes layer-mob-breathe-l3 {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -18px, 12px); }
 }
 
-@keyframes layer-mob-l4 {
-    0%, 20% { transform: translate3d(0, 0, 0); }
-    33% { transform: translate3d(4.5vw, 4.5vw, 60px); }
-    58% { transform: translate3d(4.5vw, 4.5vw, 60px); }
-    100% { transform: translate3d(0, 0, 0); }
+@keyframes layer-mob-breathe-l4 {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(3.5vw, -10px, 52px); }
 }
 
-@keyframes layer-mob-l5 {
-    0%, 20% { transform: translate3d(0, 0, 0); }
-    33% { transform: translate3d(9vw, 9vw, 120px); }
-    58% { transform: translate3d(9vw, 9vw, 120px); }
-    100% { transform: translate3d(0, 0, 0); }
+@keyframes layer-mob-breathe-l5 {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(7vw, -16px, 100px); }
 }
 
 /* ???? */
@@ -2000,52 +1984,77 @@ footer {
         transform-style: preserve-3d;
     }
 
-    /* ?????????????? .layer-vp-playing ?????? keyframes layer-mob-*? */
-    #layerStackContainer:not(.layer-vp-playing) {
+    /* ?????????? / ??????????? */
+    #layerStackContainer:not(.layer-mob-loop) {
         transform: none !important;
     }
 
-    #layerStackContainer:not(.layer-vp-playing) .layer-image-1,
-    #layerStackContainer:not(.layer-vp-playing) .layer-image-2,
-    #layerStackContainer:not(.layer-vp-playing) .layer-image-3,
-    #layerStackContainer:not(.layer-vp-playing) .layer-image-4,
-    #layerStackContainer:not(.layer-vp-playing) .layer-image-5 {
+    #layerStackContainer:not(.layer-mob-loop) .layer-image-1,
+    #layerStackContainer:not(.layer-mob-loop) .layer-image-2,
+    #layerStackContainer:not(.layer-mob-loop) .layer-image-3,
+    #layerStackContainer:not(.layer-mob-loop) .layer-image-4,
+    #layerStackContainer:not(.layer-mob-loop) .layer-image-5 {
         animation: none !important;
         opacity: 1 !important;
         transform: translate3d(0, 0, 0) !important;
     }
 
-    #layerStackContainer.layer-vp-playing {
-        animation: layer-mob-stage 6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+    /* ?????3s / ???ease-in-out????? */
+    #layerStackContainer.layer-mob-loop {
+        animation: layer-mob-breathe-stage 3s ease-in-out infinite !important;
+        animation-play-state: paused !important;
         transform-style: preserve-3d !important;
+        will-change: transform;
     }
 
-    #layerStackContainer.layer-vp-playing .layer-image-1 {
-        animation: layer-mob-l1 6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
-    }
-    #layerStackContainer.layer-vp-playing .layer-image-2 {
-        animation: layer-mob-l2 6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
-    }
-    #layerStackContainer.layer-vp-playing .layer-image-3 {
-        animation: layer-mob-l3 6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
-    }
-    #layerStackContainer.layer-vp-playing .layer-image-4 {
-        animation: layer-mob-l4 6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
-    }
-    #layerStackContainer.layer-vp-playing .layer-image-5 {
-        animation: layer-mob-l5 6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+    #layerStackContainer.layer-mob-loop.layer-vp-inview {
+        animation-play-state: running !important;
     }
 
-    #layerStackContainer.layer-vp-playing .layer-image-1,
-    #layerStackContainer.layer-vp-playing .layer-image-2,
-    #layerStackContainer.layer-vp-playing .layer-image-3,
-    #layerStackContainer.layer-vp-playing .layer-image-4,
-    #layerStackContainer.layer-vp-playing .layer-image-5 {
+    #layerStackContainer.layer-mob-loop .layer-image-1 {
+        animation: layer-mob-breathe-l1 3s ease-in-out infinite !important;
+        animation-play-state: paused !important;
+        will-change: transform;
+    }
+    #layerStackContainer.layer-mob-loop .layer-image-2 {
+        animation: layer-mob-breathe-l2 3s ease-in-out infinite !important;
+        animation-play-state: paused !important;
+        will-change: transform;
+    }
+    #layerStackContainer.layer-mob-loop .layer-image-3 {
+        animation: layer-mob-breathe-l3 3s ease-in-out infinite !important;
+        animation-play-state: paused !important;
+        will-change: transform;
+    }
+    #layerStackContainer.layer-mob-loop .layer-image-4 {
+        animation: layer-mob-breathe-l4 3s ease-in-out infinite !important;
+        animation-play-state: paused !important;
+        will-change: transform;
+    }
+    #layerStackContainer.layer-mob-loop .layer-image-5 {
+        animation: layer-mob-breathe-l5 3s ease-in-out infinite !important;
+        animation-play-state: paused !important;
+        will-change: transform;
+    }
+
+    #layerStackContainer.layer-mob-loop.layer-vp-inview .layer-image-1,
+    #layerStackContainer.layer-mob-loop.layer-vp-inview .layer-image-2,
+    #layerStackContainer.layer-mob-loop.layer-vp-inview .layer-image-3,
+    #layerStackContainer.layer-mob-loop.layer-vp-inview .layer-image-4,
+    #layerStackContainer.layer-mob-loop.layer-vp-inview .layer-image-5 {
+        animation-play-state: running !important;
+    }
+
+    #layerStackContainer.layer-mob-loop .layer-image-1,
+    #layerStackContainer.layer-mob-loop .layer-image-2,
+    #layerStackContainer.layer-mob-loop .layer-image-3,
+    #layerStackContainer.layer-mob-loop .layer-image-4,
+    #layerStackContainer.layer-mob-loop .layer-image-5 {
         opacity: 1 !important;
         transition: none !important;
     }
 
-    #layerStackContainer.layer-vp-playing .layer-label {
+    #layerStackContainer.layer-mob-loop.layer-vp-inview .layer-label {
         opacity: 1;
     }
     
