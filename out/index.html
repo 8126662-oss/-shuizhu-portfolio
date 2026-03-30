@@ -20,6 +20,8 @@
         var parts = p.split('/').filter(Boolean);
         if (parts.length < 1) return;
         var basePath = '/' + parts[0] + '/';
+        /* 与 next.config basePath 对齐，供脚本拼接资源 URL（GitHub Pages 子路径） */
+        window.__NEXT_PUBLIC_BASE_PATH__ = '/' + parts[0];
         var b = document.createElement('base');
         b.href = location.origin + basePath;
         var charset = document.querySelector('meta[charset]');
@@ -29,6 +31,9 @@
           document.head.appendChild(b);
         }
       } catch (e) {}
+      if (typeof window.__NEXT_PUBLIC_BASE_PATH__ === 'undefined') {
+        window.__NEXT_PUBLIC_BASE_PATH__ = '';
+      }
     })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -498,13 +503,13 @@
             <h2>系统化教学大纲，每一步都清晰可见</h2>
             <p class="section-subtitle w-full">以下为课程详细安排，助你构建完整的合成知识体系。</p>
             <div class="curriculum-image-container w-full">
-                <img src="public/showcase/course-outline.jpg" alt="课程大纲" class="curriculum-image w-full" loading="lazy">
+                <img src="/-shuizhu-portfolio/public/showcase/course-outline.jpg" alt="课程大纲" class="curriculum-image w-full" loading="lazy">
             </div>
             <div class="comparison-gallery w-full">
                 <!-- 位置 [1]：大图展示 - PS合成篇入門 -->
                 <div class="comparison-item w-full">
                     <div class="single-image-display outline-display w-full">
-                        <img src="public/showcase/outline-1.jpg" alt="PS合成篇入門" class="full-image w-full" loading="lazy">
+                        <img src="/-shuizhu-portfolio/public/showcase/outline-1.jpg" alt="PS合成篇入門" class="full-image w-full" loading="lazy">
                     </div>
                 </div>
                 <!-- 位置 [2]：交互对比滑块 - Wink同款原地擦除效果 -->
@@ -514,12 +519,12 @@
                             <!-- 底层：Before 图片（原始图）作为背景 -->
                             <div class="slider-before w-full">
                                 <div class="slider-label w-full">Before</div>
-                                <img src="public/showcase/2-before.jpg" alt="原始图" class="slider-image w-full" fetchpriority="high" loading="eager" decoding="async">
+                                <img src="/-shuizhu-portfolio/public/showcase/2-before.jpg" alt="原始图" class="slider-image w-full" fetchpriority="high" loading="eager" decoding="async">
                             </div>
                             <!-- 顶层：After 图片（精修后）- 使用clip-path显示 -->
                             <div class="slider-after w-full">
                                 <div class="slider-label w-full">After</div>
-                                <img src="public/showcase/2-after.jpg" alt="精修后效果" class="slider-image w-full" fetchpriority="high" loading="eager" decoding="async">
+                                <img src="/-shuizhu-portfolio/public/showcase/2-after.jpg" alt="精修后效果" class="slider-image w-full" fetchpriority="high" loading="eager" decoding="async">
                             </div>
                             <!-- 专业竖向分割线滑块 -->
                             <div class="slider-control w-full">
@@ -540,12 +545,12 @@
                             <!-- 底层：After 图片（精修后） -->
                             <div class="slider-after w-full">
                                 <div class="slider-label w-full">After</div>
-                                <img src="public/showcase/3-after.jpg" alt="精修后效果" class="slider-image w-full" loading="lazy">
+                                <img src="/-shuizhu-portfolio/public/showcase/3-after.jpg" alt="精修后效果" class="slider-image w-full" loading="lazy">
                             </div>
                             <!-- 顶层：Before 图片（原始图）- 使用clip-path擦除 -->
                             <div class="slider-before w-full">
                                 <div class="slider-label w-full">Before</div>
-                                <img src="public/showcase/3-before.jpg" alt="原始图" class="slider-image w-full" loading="lazy">
+                                <img src="/-shuizhu-portfolio/public/showcase/3-before.jpg" alt="原始图" class="slider-image w-full" loading="lazy">
                             </div>
                             <!-- 专业竖向分割线滑块 -->
                             <div class="slider-control w-full">
@@ -562,7 +567,7 @@
                 <!-- 位置 [4]：大图展示 - 与第一个展示框逻辑一致 -->
                 <div class="comparison-item w-full">
                     <div class="single-image-display outline-display w-full">
-                        <img src="public/showcase/outline-4.jpg" alt="展示图" class="full-image w-full" loading="lazy">
+                        <img src="/-shuizhu-portfolio/public/showcase/outline-4.jpg" alt="展示图" class="full-image w-full" loading="lazy">
                     </div>
                 </div>
 
@@ -580,31 +585,31 @@
                 <div class="layer-stack-container w-full" id="layerStackContainer">
                     <!-- 图层1 - 背景层 (最底层) -->
                     <div class="layer-image layer-image-1 w-full">
-                        <img src="public/showcase/01.jpg" alt="背景层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
+                        <img src="/-shuizhu-portfolio/public/showcase/01.jpg" alt="背景层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="01">
                         <div class="layer-label w-full">背景层</div>
                     </div>
 
                     <!-- 图层2 - 光影层 -->
                     <div class="layer-image layer-image-2 w-full">
-                        <img src="public/showcase/02.jpg" alt="光影层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
+                        <img src="/-shuizhu-portfolio/public/showcase/02.jpg" alt="光影层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="02">
                         <div class="layer-label w-full">光影层</div>
                     </div>
 
                     <!-- 图层3 - 主体层 -->
                     <div class="layer-image layer-image-3 w-full">
-                        <img src="public/showcase/03.jpg" alt="主体层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
+                        <img src="/-shuizhu-portfolio/public/showcase/03.jpg" alt="主体层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="03">
                         <div class="layer-label w-full">主体层</div>
                     </div>
 
                     <!-- 图层4 - 特效层 -->
                     <div class="layer-image layer-image-4 w-full">
-                        <img src="public/showcase/04.jpg" alt="特效层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
+                        <img src="/-shuizhu-portfolio/public/showcase/04.jpg" alt="特效层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="04">
                         <div class="layer-label w-full">特效层</div>
                     </div>
 
                     <!-- 图层5 - 调色层 (最顶层) -->
                     <div class="layer-image layer-image-5 w-full">
-                        <img src="public/showcase/05.jpg" alt="调色层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
+                        <img src="/-shuizhu-portfolio/public/showcase/05.jpg" alt="调色层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="05">
                         <div class="layer-label w-full">调色层</div>
                     </div>
                 </div>
@@ -640,10 +645,51 @@
         var wrap = document.querySelector('.layer-showcase-wrapper');
         if (!c || !wrap) return;
 
+        var bp =
+            typeof window.__NEXT_PUBLIC_BASE_PATH__ === 'string'
+                ? window.__NEXT_PUBLIC_BASE_PATH__
+                : '';
+        c.querySelectorAll('img.layer-img[src]').forEach(function (img) {
+            var s = img.getAttribute('src') || '';
+            if (!s || s.indexOf('http') === 0 || s.charAt(0) === '/') return;
+            if (bp && s.indexOf('public/showcase/') === 0) {
+                img.src = bp.replace(/\/$/, '') + '/' + s.replace(/^\//, '');
+            }
+        });
+
         var mqMobile = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 768px)');
         var mqReduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)');
         var isMobile = function () { return mqMobile && mqMobile.matches; };
         var prefersReduce = function () { return mqReduce && mqReduce.matches; };
+
+        function waitLayerImagesReady(done) {
+            var imgs = c.querySelectorAll('img.layer-img');
+            if (!imgs.length) {
+                done();
+                return;
+            }
+            var left = imgs.length;
+            function one() {
+                left -= 1;
+                if (left <= 0) done();
+            }
+            Array.prototype.forEach.call(imgs, function (img) {
+                function finish() {
+                    if (img.decode) {
+                        img.decode().then(one).catch(one);
+                    } else {
+                        one();
+                    }
+                }
+                if (img.complete) {
+                    if (img.naturalWidth > 0) finish();
+                    else one();
+                } else {
+                    img.addEventListener('load', finish, { once: true });
+                    img.addEventListener('error', one, { once: true });
+                }
+            });
+        }
 
         function restartLayerAnimations(el) {
             el.style.animation = 'none';
@@ -685,29 +731,31 @@
             c.style.cursor = 'default';
             if (prefersReduce()) return;
 
-            c.classList.add('layer-mob-loop');
-
             function setInView(on) {
                 c.classList.toggle('layer-vp-inview', on);
                 wrap.classList.toggle('layer-vp-context', on);
             }
 
-            if (!('IntersectionObserver' in window)) {
-                setInView(true);
-                return;
+            function startMobileLoop() {
+                c.classList.add('layer-mob-loop');
+                if (!('IntersectionObserver' in window)) {
+                    setInView(true);
+                    return;
+                }
+                var io = new IntersectionObserver(
+                    function (entries) {
+                        entries.forEach(function (entry) {
+                            if (entry.target !== c) return;
+                            var on = entry.isIntersecting && entry.intersectionRatio >= 0.2;
+                            setInView(on);
+                        });
+                    },
+                    { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1], rootMargin: '0px' }
+                );
+                io.observe(c);
             }
 
-            var io = new IntersectionObserver(
-                function (entries) {
-                    entries.forEach(function (entry) {
-                        if (entry.target !== c) return;
-                        var on = entry.isIntersecting && entry.intersectionRatio >= 0.2;
-                        setInView(on);
-                    });
-                },
-                { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1], rootMargin: '0px' }
-            );
-            io.observe(c);
+            waitLayerImagesReady(startMobileLoop);
         }
 
         function route() {
@@ -870,27 +918,27 @@
                 <div class="gallery-track w-full">
                     <div class="gallery-item w-full">
                         <div class="gallery-image w-full">
-                            <img src="public/showcase/portfolio-1.jpg" alt="赛博朋克风格合成" class="portfolio-image w-full" loading="lazy">
+                            <img src="/-shuizhu-portfolio/public/showcase/portfolio-1.jpg" alt="赛博朋克风格合成" class="portfolio-image w-full" loading="lazy">
                         </div>
                     </div>
                     <div class="gallery-item w-full">
                         <div class="gallery-image w-full">
-                            <img src="public/showcase/portfolio-2.jpg" alt="古风人像合成" class="portfolio-image w-full" loading="lazy">
+                            <img src="/-shuizhu-portfolio/public/showcase/portfolio-2.jpg" alt="古风人像合成" class="portfolio-image w-full" loading="lazy">
                         </div>
                     </div>
                     <div class="gallery-item w-full">
                         <div class="gallery-image w-full">
-                            <img src="public/showcase/portfolio-3.jpg" alt="科幻场景构建" class="portfolio-image w-full" loading="lazy">
+                            <img src="/-shuizhu-portfolio/public/showcase/portfolio-3.jpg" alt="科幻场景构建" class="portfolio-image w-full" loading="lazy">
                         </div>
                     </div>
                     <div class="gallery-item w-full">
                         <div class="gallery-image w-full">
-                            <img src="public/showcase/portfolio-4.jpg" alt="奇幻世界合成" class="portfolio-image w-full" loading="lazy">
+                            <img src="/-shuizhu-portfolio/public/showcase/portfolio-4.jpg" alt="奇幻世界合成" class="portfolio-image w-full" loading="lazy">
                         </div>
                     </div>
                     <div class="gallery-item w-full">
                         <div class="gallery-image w-full">
-                            <img src="public/showcase/portfolio-5.jpg" alt="未来主义风格" class="portfolio-image w-full" loading="lazy" data-lazy-processed="true">
+                            <img src="/-shuizhu-portfolio/public/showcase/portfolio-5.jpg" alt="未来主义风格" class="portfolio-image w-full" loading="lazy" data-lazy-processed="true">
                         </div>
                     </div>
                     <div class="gallery-item w-full">
@@ -1125,13 +1173,13 @@
                     <div class="contact-methods w-full">
                         <div class="qr-container w-full">
                             <div class="qr-code w-full">
-                                <img src="public/showcase/wechat-qr.jpg" alt="微信二维码" class="qr-image w-full" loading="lazy">
+                                <img src="/-shuizhu-portfolio/public/showcase/wechat-qr.jpg" alt="微信二维码" class="qr-image w-full" loading="lazy">
                             </div>
                             <p class="qr-label w-full">微信咨询二维码</p>
                         </div>
                         <div class="qr-container w-full">
                             <div class="qr-code w-full">
-                                <img src="public/showcase/social-qr.jpg" alt="支付宝二维码" class="qr-image w-full" loading="lazy">
+                                <img src="/-shuizhu-portfolio/public/showcase/social-qr.jpg" alt="支付宝二维码" class="qr-image w-full" loading="lazy">
                             </div>
                             <p class="qr-label w-full">支付宝二维码</p>
                         </div>

@@ -1,4 +1,4 @@
-import { cpSync, mkdirSync, rmSync, existsSync } from 'fs';
+import { cpSync, mkdirSync, rmSync, existsSync, readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import nextConfig from '../next.config.mjs';
@@ -41,5 +41,22 @@ if (!existsSync(pub)) {
   throw new Error('Missing public/ directory');
 }
 cpSync(pub, join(outDir, 'public'), { recursive: true });
+
+/** 生产子路径：把 public/showcase/* 写成 /{basePath}/public/...，避免 <base> 未生效时手机黑块 */
+function rewritePublicShowcasePathsInHtml(fileName) {
+  if (!basePath) return;
+  const filePath = join(outDir, fileName);
+  if (!existsSync(filePath)) return;
+  const bp = basePath.startsWith('/') ? basePath : `/${basePath}`;
+  let html = readFileSync(filePath, 'utf8');
+  const next = html.replace(/src="public\/showcase\//g, `src="${bp}/public/showcase/`);
+  if (next !== html) {
+    writeFileSync(filePath, next);
+    console.log('gh-pages-build: prefixed public/showcase in', fileName);
+  }
+}
+
+rewritePublicShowcasePathsInHtml('index.html');
+rewritePublicShowcasePathsInHtml('layer-demo.html');
 
 console.log('gh-pages-build: wrote', outDir);

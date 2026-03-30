@@ -20,6 +20,8 @@
         var parts = p.split('/').filter(Boolean);
         if (parts.length < 1) return;
         var basePath = '/' + parts[0] + '/';
+        /* 与 next.config basePath 对齐，供脚本拼接资源 URL（GitHub Pages 子路径） */
+        window.__NEXT_PUBLIC_BASE_PATH__ = '/' + parts[0];
         var b = document.createElement('base');
         b.href = location.origin + basePath;
         var charset = document.querySelector('meta[charset]');
@@ -29,6 +31,9 @@
           document.head.appendChild(b);
         }
       } catch (e) {}
+      if (typeof window.__NEXT_PUBLIC_BASE_PATH__ === 'undefined') {
+        window.__NEXT_PUBLIC_BASE_PATH__ = '';
+      }
     })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -580,31 +585,31 @@
                 <div class="layer-stack-container w-full" id="layerStackContainer">
                     <!-- 图层1 - 背景层 (最底层) -->
                     <div class="layer-image layer-image-1 w-full">
-                        <img src="public/showcase/01.jpg" alt="背景层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
+                        <img src="public/showcase/01.jpg" alt="背景层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="01">
                         <div class="layer-label w-full">背景层</div>
                     </div>
 
                     <!-- 图层2 - 光影层 -->
                     <div class="layer-image layer-image-2 w-full">
-                        <img src="public/showcase/02.jpg" alt="光影层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
+                        <img src="public/showcase/02.jpg" alt="光影层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="02">
                         <div class="layer-label w-full">光影层</div>
                     </div>
 
                     <!-- 图层3 - 主体层 -->
                     <div class="layer-image layer-image-3 w-full">
-                        <img src="public/showcase/03.jpg" alt="主体层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
+                        <img src="public/showcase/03.jpg" alt="主体层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="03">
                         <div class="layer-label w-full">主体层</div>
                     </div>
 
                     <!-- 图层4 - 特效层 -->
                     <div class="layer-image layer-image-4 w-full">
-                        <img src="public/showcase/04.jpg" alt="特效层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
+                        <img src="public/showcase/04.jpg" alt="特效层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="04">
                         <div class="layer-label w-full">特效层</div>
                     </div>
 
                     <!-- 图层5 - 调色层 (最顶层) -->
                     <div class="layer-image layer-image-5 w-full">
-                        <img src="public/showcase/05.jpg" alt="调色层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="async">
+                        <img src="public/showcase/05.jpg" alt="调色层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="05">
                         <div class="layer-label w-full">调色层</div>
                     </div>
                 </div>
@@ -640,10 +645,51 @@
         var wrap = document.querySelector('.layer-showcase-wrapper');
         if (!c || !wrap) return;
 
+        var bp =
+            typeof window.__NEXT_PUBLIC_BASE_PATH__ === 'string'
+                ? window.__NEXT_PUBLIC_BASE_PATH__
+                : '';
+        c.querySelectorAll('img.layer-img[src]').forEach(function (img) {
+            var s = img.getAttribute('src') || '';
+            if (!s || s.indexOf('http') === 0 || s.charAt(0) === '/') return;
+            if (bp && s.indexOf('public/showcase/') === 0) {
+                img.src = bp.replace(/\/$/, '') + '/' + s.replace(/^\//, '');
+            }
+        });
+
         var mqMobile = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 768px)');
         var mqReduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)');
         var isMobile = function () { return mqMobile && mqMobile.matches; };
         var prefersReduce = function () { return mqReduce && mqReduce.matches; };
+
+        function waitLayerImagesReady(done) {
+            var imgs = c.querySelectorAll('img.layer-img');
+            if (!imgs.length) {
+                done();
+                return;
+            }
+            var left = imgs.length;
+            function one() {
+                left -= 1;
+                if (left <= 0) done();
+            }
+            Array.prototype.forEach.call(imgs, function (img) {
+                function finish() {
+                    if (img.decode) {
+                        img.decode().then(one).catch(one);
+                    } else {
+                        one();
+                    }
+                }
+                if (img.complete) {
+                    if (img.naturalWidth > 0) finish();
+                    else one();
+                } else {
+                    img.addEventListener('load', finish, { once: true });
+                    img.addEventListener('error', one, { once: true });
+                }
+            });
+        }
 
         function restartLayerAnimations(el) {
             el.style.animation = 'none';
@@ -685,29 +731,31 @@
             c.style.cursor = 'default';
             if (prefersReduce()) return;
 
-            c.classList.add('layer-mob-loop');
-
             function setInView(on) {
                 c.classList.toggle('layer-vp-inview', on);
                 wrap.classList.toggle('layer-vp-context', on);
             }
 
-            if (!('IntersectionObserver' in window)) {
-                setInView(true);
-                return;
+            function startMobileLoop() {
+                c.classList.add('layer-mob-loop');
+                if (!('IntersectionObserver' in window)) {
+                    setInView(true);
+                    return;
+                }
+                var io = new IntersectionObserver(
+                    function (entries) {
+                        entries.forEach(function (entry) {
+                            if (entry.target !== c) return;
+                            var on = entry.isIntersecting && entry.intersectionRatio >= 0.2;
+                            setInView(on);
+                        });
+                    },
+                    { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1], rootMargin: '0px' }
+                );
+                io.observe(c);
             }
 
-            var io = new IntersectionObserver(
-                function (entries) {
-                    entries.forEach(function (entry) {
-                        if (entry.target !== c) return;
-                        var on = entry.isIntersecting && entry.intersectionRatio >= 0.2;
-                        setInView(on);
-                    });
-                },
-                { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1], rootMargin: '0px' }
-            );
-            io.observe(c);
+            waitLayerImagesReady(startMobileLoop);
         }
 
         function route() {
