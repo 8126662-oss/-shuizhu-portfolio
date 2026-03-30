@@ -36,26 +36,8 @@
       }
     })();
     </script>
-    <script>
-    (function () {
-      function layerShowcaseAssetUrl(name) {
-        var bp = (typeof window.__NEXT_PUBLIC_BASE_PATH__ === 'string' ? window.__NEXT_PUBLIC_BASE_PATH__ : '').trim();
-        var rel = 'public/showcase/' + name.replace(/^\/+/, '');
-        if (!bp) return rel;
-        var p = bp.charAt(0) === '/' ? bp : '/' + bp;
-        if (p.length > 1 && p.slice(-1) === '/') p = p.slice(0, -1);
-        return p + '/' + rel;
-      }
-      ['01.jpg', '05.jpg'].forEach(function (n) {
-        var link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'image';
-        link.href = layerShowcaseAssetUrl(n);
-        link.setAttribute('fetchpriority', 'high');
-        document.head.appendChild(link);
-      });
-    })();
-    </script>
+    <link rel="preload" as="image" href="/-shuizhu-portfolio/images/layers/layer-background.jpg" fetchpriority="high">
+    <link rel="preload" as="image" href="/-shuizhu-portfolio/images/layers/layer-top.jpg" fetchpriority="high">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>水煮｜后期合成全体系课程</title>
     <link rel="stylesheet" href="style.css">
@@ -601,11 +583,11 @@
             <h2>图层合成原理演示</h2>
             <p class="section-subtitle w-full">专业后期合成的五层结构，通过3D空间展开展示每一层的作用与关系</p>
             
-            <div class="layer-showcase-wrapper w-full">
-                <div class="layer-stack-container w-full" id="layerStackContainer">
-                    <!-- 图层1 - 背景层 (最底层) -->
-                    <div class="layer-image layer-image-1 w-full">
-                        <img src="/-shuizhu-portfolio/public/showcase/01.jpg" alt="背景层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="01.jpg" data-unoptimized="1">
+            <div class="layer-showcase-wrapper w-full" style="clip-path: none;">
+                <div class="layer-stack-container w-full" id="layerStackContainer" style="clip-path: none;">
+                    <!-- 图层1 - 背景层 (最底层)：硬编码路径，避免子路径下 showcase 404 -->
+                    <div class="layer-image layer-image-1 w-full" style="z-index: 1;">
+                        <img src="/-shuizhu-portfolio/images/layers/layer-background.jpg" alt="背景层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-unoptimized="1">
                         <div class="layer-label w-full">背景层</div>
                     </div>
 
@@ -627,9 +609,9 @@
                         <div class="layer-label w-full">特效层</div>
                     </div>
 
-                    <!-- 图层5 - 调色层 (最顶层) -->
-                    <div class="layer-image layer-image-5 w-full">
-                        <img src="/-shuizhu-portfolio/public/showcase/05.jpg" alt="调色层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="05.jpg" data-unoptimized="1">
+                    <!-- 图层5 - 调色层 (最顶层)：硬编码路径 -->
+                    <div class="layer-image layer-image-5 w-full" style="z-index: 100;">
+                        <img src="/-shuizhu-portfolio/images/layers/layer-top.jpg" alt="调色层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-unoptimized="1">
                         <div class="layer-label w-full">调色层</div>
                     </div>
                 </div>
@@ -683,11 +665,9 @@
             var f = img.getAttribute('data-layer-file');
             if (!f) return;
             var cur = img.getAttribute('src') || '';
-            var isEndLayer = f === '01.jpg' || f === '05.jpg';
             if (
-                !isEndLayer &&
-                (cur.indexOf('http') === 0 ||
-                    (cur.charAt(0) === '/' && cur.indexOf('/public/showcase/') !== -1))
+                cur.indexOf('http') === 0 ||
+                (cur.charAt(0) === '/' && cur.indexOf('/public/showcase/') !== -1)
             ) {
                 return;
             }
