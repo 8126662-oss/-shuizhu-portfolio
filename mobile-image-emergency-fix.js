@@ -60,7 +60,10 @@
                 
                 img.onerror = function() {
                     console.warn(`❌ 图片加载失败: ${this.alt || '未命名'}`);
-                    // 显示占位符
+                    if (inLayerStack || inImageSlider) {
+                        this.style.opacity = '1';
+                        return;
+                    }
                     this.style.backgroundColor = '#f0f0f0';
                     this.style.minHeight = '100px';
                     this.style.display = 'flex';

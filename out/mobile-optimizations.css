@@ -167,8 +167,8 @@
     perspective: 1000px;
 }
 
-/* 2. 优化图片渲染 */
-img {
+/* 2. 优化图片渲染（排除图层/滑块，避免破坏 3D 合成） */
+img:not(.layer-img):not(.slider-image) {
     content-visibility: auto;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;

@@ -583,35 +583,31 @@
             <h2>图层合成原理演示</h2>
             <p class="section-subtitle w-full">专业后期合成的五层结构，通过3D空间展开展示每一层的作用与关系</p>
             
-            <div class="layer-showcase-wrapper w-full" style="clip-path: none;">
-                <div class="layer-stack-container w-full" id="layerStackContainer" style="clip-path: none;">
-                    <!-- 图层1 - 背景层 (最底层)：硬编码路径，避免子路径下 showcase 404 -->
-                    <div class="layer-image layer-image-1 w-full" style="z-index: 1;">
-                        <img src="/-shuizhu-portfolio/images/layers/layer-background.jpg" alt="背景层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-unoptimized="1">
+            <div class="layer-showcase-wrapper w-full" style="clip-path: none; overflow: visible;">
+                <div class="layer-stack-container w-full" id="layerStackContainer" style="clip-path: none; overflow: visible;">
+                    <!-- 五层均为原生 img；首尾硬编码绝对路径（文件实为 JPEG，扩展名用 .jpg） -->
+                    <div class="layer-image layer-image-1 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
+                        <img src="/-shuizhu-portfolio/images/layers/layer-background.jpg" alt="背景层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-unoptimized="1">
                         <div class="layer-label w-full">背景层</div>
                     </div>
 
-                    <!-- 图层2 - 光影层 -->
-                    <div class="layer-image layer-image-2 w-full">
-                        <img src="/-shuizhu-portfolio/public/showcase/02.jpg" alt="光影层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="02.jpg" data-unoptimized="1">
+                    <div class="layer-image layer-image-2 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
+                        <img src="/-shuizhu-portfolio/public/showcase/02.jpg" alt="光影层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="02.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">光影层</div>
                     </div>
 
-                    <!-- 图层3 - 主体层 -->
-                    <div class="layer-image layer-image-3 w-full">
-                        <img src="/-shuizhu-portfolio/public/showcase/03.jpg" alt="主体层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="03.jpg" data-unoptimized="1">
+                    <div class="layer-image layer-image-3 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
+                        <img src="/-shuizhu-portfolio/public/showcase/03.jpg" alt="主体层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="03.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">主体层</div>
                     </div>
 
-                    <!-- 图层4 - 特效层 -->
-                    <div class="layer-image layer-image-4 w-full">
-                        <img src="/-shuizhu-portfolio/public/showcase/04.jpg" alt="特效层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="04.jpg" data-unoptimized="1">
+                    <div class="layer-image layer-image-4 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
+                        <img src="/-shuizhu-portfolio/public/showcase/04.jpg" alt="特效层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="04.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">特效层</div>
                     </div>
 
-                    <!-- 图层5 - 调色层 (最顶层)：硬编码路径 -->
-                    <div class="layer-image layer-image-5 w-full" style="z-index: 100;">
-                        <img src="/-shuizhu-portfolio/images/layers/layer-top.jpg" alt="调色层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-unoptimized="1">
+                    <div class="layer-image layer-image-5 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
+                        <img src="/-shuizhu-portfolio/images/layers/layer-top.jpg" alt="调色层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-unoptimized="1">
                         <div class="layer-label w-full">调色层</div>
                     </div>
                 </div>
@@ -675,9 +671,7 @@
         });
 
         var mqMobile = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 768px)');
-        var mqReduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)');
-        var isMobile = function () { return mqMobile && mqMobile.matches; };
-        var prefersReduce = function () { return mqReduce && mqReduce.matches; };
+        var narrowViewport = mqMobile && mqMobile.matches;
 
         function waitLayerImagesReady(done) {
             var imgs = c.querySelectorAll('img.layer-img');
@@ -746,44 +740,44 @@
                 '图层合成原理演示：与电脑端相同的 12 秒舞台与分层动画，进入画面后播放，离开后暂停'
             );
             c.style.cursor = 'default';
-            if (prefersReduce()) return;
 
             function setInView(on) {
                 c.classList.toggle('layer-vp-inview', on);
                 wrap.classList.toggle('layer-vp-context', on);
             }
 
-            function startMobileLoop() {
-                c.classList.add('layer-mob-loop');
+            /* 首屏立即挂上移动端图层类与透视父级，避免等图期间五层被当成“未启用”而样式异常 */
+            c.classList.add('layer-mob-loop');
+            wrap.classList.add('layer-vp-context');
+            c.classList.add('layer-vp-inview');
+            setInView(true);
+
+            function attachIntersection() {
                 if (!('IntersectionObserver' in window)) {
-                    setInView(true);
                     return;
                 }
                 var io = new IntersectionObserver(
                     function (entries) {
                         entries.forEach(function (entry) {
                             if (entry.target !== c) return;
-                            var on = entry.isIntersecting && entry.intersectionRatio >= 0.2;
+                            var on = entry.isIntersecting && entry.intersectionRatio >= 0.05;
                             setInView(on);
                         });
                     },
-                    { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1], rootMargin: '0px' }
+                    { threshold: [0, 0.05, 0.1, 0.2, 0.35, 0.5, 0.75, 1], rootMargin: '120px 0px 120px 0px' }
                 );
                 io.observe(c);
             }
 
-            waitLayerImagesReady(startMobileLoop);
+            waitLayerImagesReady(attachIntersection);
         }
 
-        function route() {
-            if (isMobile()) {
-                setupMobileViewportDemo();
-            } else {
-                setupDesktopLayerUi();
-            }
+        /* 桌面：点击展开；窄屏：视口内播放（五层 DOM 始终存在，不做隐藏） */
+        if (narrowViewport) {
+            setupMobileViewportDemo();
+        } else {
+            setupDesktopLayerUi();
         }
-
-        route();
     })();
     </script>
 

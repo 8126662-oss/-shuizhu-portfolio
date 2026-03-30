@@ -4,6 +4,17 @@ html {
     max-width: 100vw;
 }
 
+/* 与页面 class 命名一致的工具类（图层 img 使用） */
+.w-full {
+    width: 100%;
+}
+.h-full {
+    height: 100%;
+}
+.object-cover {
+    object-fit: cover;
+}
+
 /* ?????? - ??????? */
 @keyframes fixedRotateLayerAnimation {
     /* ?? 1: ???? - ??????05.jpg (0-20%) */
@@ -1596,6 +1607,7 @@ footer {
     transform-origin: center center;
     animation: stage-animation 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
     cursor: pointer;
+    overflow: visible;
 }
 
 /* ???????????????????? 35%?75% ?????? */
@@ -1668,9 +1680,11 @@ footer {
     width: 100%;
     height: 100%;
     border-radius: 12px;
-    overflow: hidden;
+    overflow: visible;
     transform-style: preserve-3d;
-    backface-visibility: hidden; /* ??????? */
+    -webkit-transform-style: preserve-3d;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
     -webkit-font-smoothing: subpixel-antialiased; /* ????? */
     will-change: transform; /* ????GPU???? */
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -1678,6 +1692,7 @@ footer {
         0 25px 70px rgba(0, 0, 0, 0.35),
         0 0 50px rgba(0, 0, 0, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.08); /* ??????? */
+    opacity: 1;
 }
 
 /* ???? ? ?? 16:9 ?????????????? */
@@ -1692,7 +1707,11 @@ footer {
     object-fit: cover;
     object-position: center;
     display: block;
-    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
+    opacity: 1;
 }
 
 /* ???? */
@@ -1984,13 +2003,13 @@ footer {
         margin: 120px 0;
         padding: 120px 0;
         transform: translateY(60px);
-        perspective: 2400px;
+        perspective: 1500px;
         transform-style: preserve-3d;
         overflow: visible !important;
     }
 
     .layer-showcase-wrapper.layer-vp-context {
-        perspective: 2400px;
+        perspective: 1500px;
     }
 
     #layerStackContainer {
@@ -2037,9 +2056,10 @@ footer {
         will-change: transform;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
-        z-index: 10 !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        z-index: 1 !important;
+        opacity: 1 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-2 {
         animation: layer2-animation-mobile 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
@@ -2047,9 +2067,10 @@ footer {
         will-change: transform;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
         z-index: 20 !important;
+        opacity: 1 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-3 {
         animation: layer3-animation-mobile 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
@@ -2057,9 +2078,10 @@ footer {
         will-change: transform;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
         z-index: 30 !important;
+        opacity: 1 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-4 {
         animation: layer4-animation-mobile 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
@@ -2067,9 +2089,10 @@ footer {
         will-change: transform;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
         z-index: 40 !important;
+        opacity: 1 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-5 {
         animation: layer5-animation-mobile 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
@@ -2077,9 +2100,10 @@ footer {
         will-change: transform;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
-        z-index: 50 !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        z-index: 100 !important;
+        opacity: 1 !important;
     }
 
     #layerStackContainer.layer-mob-loop.layer-vp-inview .layer-image-1,
@@ -2106,8 +2130,8 @@ footer {
     /* 3D 展开不裁切；图层容器 GPU 提示（与动画 transform 叠加在子级 img） */
     #layerStackContainer.layer-mob-loop .layer-image {
         overflow: visible !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
         -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
         transform-style: preserve-3d !important;
@@ -2116,8 +2140,10 @@ footer {
     }
 
     #layerStackContainer.layer-mob-loop .layer-img {
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        transform-style: preserve-3d !important;
+        -webkit-transform-style: preserve-3d !important;
         -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
         opacity: 1 !important;
@@ -2140,6 +2166,17 @@ footer {
 
     #layer-showcase .container {
         overflow: visible !important;
+    }
+
+    @media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+        #layerStackContainer.layer-mob-loop,
+        #layerStackContainer.layer-mob-loop .layer-image-1,
+        #layerStackContainer.layer-mob-loop .layer-image-2,
+        #layerStackContainer.layer-mob-loop .layer-image-3,
+        #layerStackContainer.layer-mob-loop .layer-image-4,
+        #layerStackContainer.layer-mob-loop .layer-image-5 {
+            animation: none !important;
+        }
     }
 
     .layer-image {
