@@ -36,6 +36,26 @@
       }
     })();
     </script>
+    <script>
+    (function () {
+      function layerShowcaseAssetUrl(name) {
+        var bp = (typeof window.__NEXT_PUBLIC_BASE_PATH__ === 'string' ? window.__NEXT_PUBLIC_BASE_PATH__ : '').trim();
+        var rel = 'public/showcase/' + name.replace(/^\/+/, '');
+        if (!bp) return rel;
+        var p = bp.charAt(0) === '/' ? bp : '/' + bp;
+        if (p.length > 1 && p.slice(-1) === '/') p = p.slice(0, -1);
+        return p + '/' + rel;
+      }
+      ['01.jpg', '05.jpg'].forEach(function (n) {
+        var link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = layerShowcaseAssetUrl(n);
+        link.setAttribute('fetchpriority', 'high');
+        document.head.appendChild(link);
+      });
+    })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>水煮｜后期合成全体系课程</title>
     <link rel="stylesheet" href="style.css">
@@ -663,7 +683,12 @@
             var f = img.getAttribute('data-layer-file');
             if (!f) return;
             var cur = img.getAttribute('src') || '';
-            if (cur.indexOf('http') === 0 || (cur.charAt(0) === '/' && cur.indexOf('/public/showcase/') !== -1)) {
+            var isEndLayer = f === '01.jpg' || f === '05.jpg';
+            if (
+                !isEndLayer &&
+                (cur.indexOf('http') === 0 ||
+                    (cur.charAt(0) === '/' && cur.indexOf('/public/showcase/') !== -1))
+            ) {
                 return;
             }
             img.src = resolveShowcaseSrc(f);

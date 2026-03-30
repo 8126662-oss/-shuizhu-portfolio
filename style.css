@@ -1859,8 +1859,8 @@ footer {
 @keyframes layer5-animation-mobile {
     0%, 10% { transform: translate3d(0, 0, 0); }
     25% { transform: translate3d(0, 0, 0); }
-    35% { transform: translate3d(60px, 60px, 200px); }
-    35%, 75% { transform: translate3d(60px, 60px, 200px); }
+    35% { transform: translate3d(36px, 36px, 95px); }
+    35%, 75% { transform: translate3d(36px, 36px, 95px); }
     85% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(0, 0, 0); }
 }
@@ -1895,8 +1895,8 @@ footer {
 @keyframes layer1-animation-mobile {
     0%, 10% { transform: translate3d(0, 0, 0); }
     25% { transform: translate3d(0, 0, 0); }
-    35% { transform: translate3d(-60px, -60px, -200px); }
-    35%, 75% { transform: translate3d(-60px, -60px, -200px); }
+    35% { transform: translate3d(-36px, -36px, -95px); }
+    35%, 75% { transform: translate3d(-36px, -36px, -95px); }
     85% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(0, 0, 0); }
 }
@@ -1984,13 +1984,13 @@ footer {
         margin: 120px 0;
         padding: 120px 0;
         transform: translateY(60px);
-        perspective: 2000px;
+        perspective: 2400px;
         transform-style: preserve-3d;
         overflow: visible !important;
     }
 
     .layer-showcase-wrapper.layer-vp-context {
-        perspective: 2000px;
+        perspective: 2400px;
     }
 
     #layerStackContainer {
@@ -2129,6 +2129,13 @@ footer {
         object-fit: cover;
         object-position: center;
         mix-blend-mode: normal !important;
+    }
+
+    /* 首尾层图片：独立合成层，避免父级 3D 动画时整层被裁成黑块 */
+    #layerStackContainer.layer-mob-loop .layer-image-1 .layer-img,
+    #layerStackContainer.layer-mob-loop .layer-image-5 .layer-img {
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
     }
 
     #layer-showcase .container {
