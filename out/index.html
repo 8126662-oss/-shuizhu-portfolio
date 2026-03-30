@@ -585,31 +585,31 @@
                 <div class="layer-stack-container w-full" id="layerStackContainer">
                     <!-- 图层1 - 背景层 (最底层) -->
                     <div class="layer-image layer-image-1 w-full">
-                        <img src="/-shuizhu-portfolio/public/showcase/01.jpg" alt="背景层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="01">
+                        <img src="/-shuizhu-portfolio/public/showcase/01.jpg" alt="背景层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="01.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">背景层</div>
                     </div>
 
                     <!-- 图层2 - 光影层 -->
                     <div class="layer-image layer-image-2 w-full">
-                        <img src="/-shuizhu-portfolio/public/showcase/02.jpg" alt="光影层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="02">
+                        <img src="/-shuizhu-portfolio/public/showcase/02.jpg" alt="光影层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="02.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">光影层</div>
                     </div>
 
                     <!-- 图层3 - 主体层 -->
                     <div class="layer-image layer-image-3 w-full">
-                        <img src="/-shuizhu-portfolio/public/showcase/03.jpg" alt="主体层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="03">
+                        <img src="/-shuizhu-portfolio/public/showcase/03.jpg" alt="主体层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="03.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">主体层</div>
                     </div>
 
                     <!-- 图层4 - 特效层 -->
                     <div class="layer-image layer-image-4 w-full">
-                        <img src="/-shuizhu-portfolio/public/showcase/04.jpg" alt="特效层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="04">
+                        <img src="/-shuizhu-portfolio/public/showcase/04.jpg" alt="特效层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="04.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">特效层</div>
                     </div>
 
                     <!-- 图层5 - 调色层 (最顶层) -->
                     <div class="layer-image layer-image-5 w-full">
-                        <img src="/-shuizhu-portfolio/public/showcase/05.jpg" alt="调色层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-asset="05">
+                        <img src="/-shuizhu-portfolio/public/showcase/05.jpg" alt="调色层" class="layer-img w-full" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="05.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">调色层</div>
                     </div>
                 </div>
@@ -645,16 +645,28 @@
         var wrap = document.querySelector('.layer-showcase-wrapper');
         if (!c || !wrap) return;
 
-        var bp =
-            typeof window.__NEXT_PUBLIC_BASE_PATH__ === 'string'
-                ? window.__NEXT_PUBLIC_BASE_PATH__
-                : '';
-        c.querySelectorAll('img.layer-img[src]').forEach(function (img) {
-            var s = img.getAttribute('src') || '';
-            if (!s || s.indexOf('http') === 0 || s.charAt(0) === '/') return;
-            if (bp && s.indexOf('public/showcase/') === 0) {
-                img.src = bp.replace(/\/$/, '') + '/' + s.replace(/^\//, '');
+        /* 等价 ${process.env.NEXT_PUBLIC_BASE_PATH || ''}/public/showcase/xxx（静态站用 window.__NEXT_PUBLIC_BASE_PATH__） */
+        function resolveShowcaseSrc(fileName) {
+            var raw =
+                typeof window.__NEXT_PUBLIC_BASE_PATH__ === 'string'
+                    ? window.__NEXT_PUBLIC_BASE_PATH__
+                    : '';
+            var bp = String(raw).trim();
+            var name = (fileName || '').replace(/^\/+/, '');
+            var rel = 'public/showcase/' + name;
+            if (!bp) return rel;
+            var prefix = bp.charAt(0) === '/' ? bp : '/' + bp;
+            if (prefix.length > 1 && prefix.slice(-1) === '/') prefix = prefix.slice(0, -1);
+            return prefix + '/' + rel;
+        }
+        c.querySelectorAll('img.layer-img[data-layer-file]').forEach(function (img) {
+            var f = img.getAttribute('data-layer-file');
+            if (!f) return;
+            var cur = img.getAttribute('src') || '';
+            if (cur.indexOf('http') === 0 || (cur.charAt(0) === '/' && cur.indexOf('/public/showcase/') !== -1)) {
+                return;
             }
+            img.src = resolveShowcaseSrc(f);
         });
 
         var mqMobile = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 768px)');

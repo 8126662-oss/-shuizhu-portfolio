@@ -2037,8 +2037,8 @@ footer {
         will-change: transform;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
-        backface-visibility: visible !important;
-        -webkit-backface-visibility: visible !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
         z-index: 10 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-2 {
@@ -2047,8 +2047,8 @@ footer {
         will-change: transform;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
-        backface-visibility: visible !important;
-        -webkit-backface-visibility: visible !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
         z-index: 20 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-3 {
@@ -2057,8 +2057,8 @@ footer {
         will-change: transform;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
-        backface-visibility: visible !important;
-        -webkit-backface-visibility: visible !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
         z-index: 30 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-4 {
@@ -2067,8 +2067,8 @@ footer {
         will-change: transform;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
-        backface-visibility: visible !important;
-        -webkit-backface-visibility: visible !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
         z-index: 40 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-5 {
@@ -2077,8 +2077,8 @@ footer {
         will-change: transform;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
-        backface-visibility: visible !important;
-        -webkit-backface-visibility: visible !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
         z-index: 50 !important;
     }
 
@@ -2103,19 +2103,23 @@ footer {
         opacity: 1;
     }
 
-    /* 展开时勿裁切子层；双面可见，避免 WebKit 把图“吃没” */
+    /* 3D 展开不裁切；图层容器 GPU 提示（与动画 transform 叠加在子级 img） */
     #layerStackContainer.layer-mob-loop .layer-image {
         overflow: visible !important;
-        backface-visibility: visible !important;
-        -webkit-backface-visibility: visible !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
         opacity: 1 !important;
     }
 
     #layerStackContainer.layer-mob-loop .layer-img {
-        backface-visibility: visible !important;
-        -webkit-backface-visibility: visible !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
         opacity: 1 !important;
         width: 100%;
         height: 100%;
@@ -2125,8 +2129,10 @@ footer {
         object-fit: cover;
         object-position: center;
         mix-blend-mode: normal !important;
-        -webkit-transform: translateZ(0.05px);
-        transform: translateZ(0.05px);
+    }
+
+    #layer-showcase .container {
+        overflow: visible !important;
     }
 
     .layer-image {

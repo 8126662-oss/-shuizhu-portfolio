@@ -8,7 +8,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
 const outDir = join(root, 'out');
 
-const basePath = nextConfig.basePath || '';
+const basePath = String(
+  process.env.NEXT_PUBLIC_BASE_PATH || nextConfig.basePath || ''
+).trim();
 console.log(
   'gh-pages-build: NODE_ENV=%s basePath=%s assetPrefix=%s',
   process.env.NODE_ENV,
