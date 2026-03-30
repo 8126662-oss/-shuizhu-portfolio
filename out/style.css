@@ -1855,6 +1855,52 @@ footer {
     }
 }
 
+/* Mobile only: same 12s timing as desktop; translateZ clamped to [-200px, 200px] to avoid clipping behind camera */
+@keyframes layer5-animation-mobile {
+    0%, 10% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(0, 0, 0); }
+    35% { transform: translate3d(60px, 60px, 200px); }
+    35%, 75% { transform: translate3d(60px, 60px, 200px); }
+    85% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes layer4-animation-mobile {
+    0%, 10% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(0, 0, 0); }
+    35% { transform: translate3d(30px, 30px, 100px); }
+    35%, 75% { transform: translate3d(30px, 30px, 100px); }
+    85% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes layer3-animation-mobile {
+    0%, 10% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(0, 0, 0); }
+    35% { transform: translate3d(0, 0, 0); }
+    35%, 75% { transform: translate3d(0, 0, 0); }
+    85% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes layer2-animation-mobile {
+    0%, 10% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(0, 0, 0); }
+    35% { transform: translate3d(-30px, -30px, -100px); }
+    35%, 75% { transform: translate3d(-30px, -30px, -100px); }
+    85% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes layer1-animation-mobile {
+    0%, 10% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(0, 0, 0); }
+    35% { transform: translate3d(-60px, -60px, -200px); }
+    35%, 75% { transform: translate3d(-60px, -60px, -200px); }
+    85% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+}
+
 /* ???? */
 .layer-legend {
     display: flex;
@@ -1926,18 +1972,25 @@ footer {
         gap: 24px;
     }
     
-    /* ???????? 3D??? .layer-showcase-wrapper ? 3500px? */
+    /* 图层区：禁止横向 overflow 裁切 3D；透视 2000px 拉远“相机” */
+    #layer-showcase.layer-showcase,
+    section#layer-showcase {
+        overflow-x: visible !important;
+        overflow-y: visible !important;
+    }
+
     .layer-showcase-wrapper {
         min-height: 450px;
         margin: 120px 0;
         padding: 120px 0;
         transform: translateY(60px);
-        perspective: 3500px;
+        perspective: 2000px;
         transform-style: preserve-3d;
+        overflow: visible !important;
     }
 
     .layer-showcase-wrapper.layer-vp-context {
-        perspective: 3500px;
+        perspective: 2000px;
     }
 
     #layerStackContainer {
@@ -1947,6 +2000,7 @@ footer {
         height: auto !important;
         cursor: default;
         transform-style: preserve-3d;
+        overflow: visible !important;
     }
 
     /* ???? / ?????????? */
@@ -1978,34 +2032,54 @@ footer {
     }
 
     #layerStackContainer.layer-mob-loop .layer-image-1 {
-        animation: layer1-animation 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
+        animation: layer1-animation-mobile 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
         animation-play-state: paused !important;
         will-change: transform;
         transform-style: preserve-3d !important;
+        -webkit-transform-style: preserve-3d !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        z-index: 10 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-2 {
-        animation: layer2-animation 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
+        animation: layer2-animation-mobile 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
         animation-play-state: paused !important;
         will-change: transform;
         transform-style: preserve-3d !important;
+        -webkit-transform-style: preserve-3d !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        z-index: 20 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-3 {
-        animation: layer3-animation 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
+        animation: layer3-animation-mobile 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
         animation-play-state: paused !important;
         will-change: transform;
         transform-style: preserve-3d !important;
+        -webkit-transform-style: preserve-3d !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        z-index: 30 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-4 {
-        animation: layer4-animation 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
+        animation: layer4-animation-mobile 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
         animation-play-state: paused !important;
         will-change: transform;
         transform-style: preserve-3d !important;
+        -webkit-transform-style: preserve-3d !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        z-index: 40 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-5 {
-        animation: layer5-animation 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
+        animation: layer5-animation-mobile 12s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
         animation-play-state: paused !important;
         will-change: transform;
         transform-style: preserve-3d !important;
+        -webkit-transform-style: preserve-3d !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        z-index: 50 !important;
     }
 
     #layerStackContainer.layer-mob-loop.layer-vp-inview .layer-image-1,
@@ -2027,6 +2101,22 @@ footer {
 
     #layerStackContainer.layer-mob-loop.layer-vp-inview .layer-label {
         opacity: 1;
+    }
+
+    /* 展开时勿裁切子层；双面可见，避免 WebKit 把图“吃没” */
+    #layerStackContainer.layer-mob-loop .layer-image {
+        overflow: visible !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        transform-style: preserve-3d !important;
+        -webkit-transform-style: preserve-3d !important;
+        opacity: 1 !important;
+    }
+
+    #layerStackContainer.layer-mob-loop .layer-img {
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .layer-image {
@@ -2102,6 +2192,8 @@ footer {
     
     .layer-showcase {
         padding: 100px 0;
+        overflow-x: visible !important;
+        overflow-y: visible !important;
     }
     
     .layer-showcase-wrapper {
@@ -2109,8 +2201,9 @@ footer {
         margin: 80px 0;
         padding: 80px 0;
         transform: translateY(40px);
-        perspective: 3500px;
+        perspective: 2000px;
         transform-style: preserve-3d;
+        overflow: visible !important;
     }
     
     #layerStackContainer {
