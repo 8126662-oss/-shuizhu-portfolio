@@ -1960,12 +1960,12 @@ footer {
     }
 }
 
-/* Mobile only: same 12s timing as desktop; translateZ clamped to [-200px, 200px] to avoid clipping behind camera */
+/* Mobile：与桌面同一套前后关系（L5 最前 Z+、L1 最后 Z-），整体约为桌面的 1/3，避免 Z 被写反 */
 @keyframes layer5-animation-mobile {
     0%, 10% { transform: translate3d(0, 0, 0); }
     25% { transform: translate3d(0, 0, 0); }
-    35% { transform: translate3d(36px, 36px, 95px); }
-    35%, 75% { transform: translate3d(36px, 36px, 95px); }
+    35% { transform: translate3d(30px, 30px, 100px); }
+    35%, 75% { transform: translate3d(30px, 30px, 100px); }
     85% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(0, 0, 0); }
 }
@@ -1973,8 +1973,8 @@ footer {
 @keyframes layer4-animation-mobile {
     0%, 10% { transform: translate3d(0, 0, 0); }
     25% { transform: translate3d(0, 0, 0); }
-    35% { transform: translate3d(30px, 30px, 100px); }
-    35%, 75% { transform: translate3d(30px, 30px, 100px); }
+    35% { transform: translate3d(15px, 15px, 50px); }
+    35%, 75% { transform: translate3d(15px, 15px, 50px); }
     85% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(0, 0, 0); }
 }
@@ -1991,8 +1991,8 @@ footer {
 @keyframes layer2-animation-mobile {
     0%, 10% { transform: translate3d(0, 0, 0); }
     25% { transform: translate3d(0, 0, 0); }
-    35% { transform: translate3d(-30px, -30px, -100px); }
-    35%, 75% { transform: translate3d(-30px, -30px, -100px); }
+    35% { transform: translate3d(-15px, -15px, -50px); }
+    35%, 75% { transform: translate3d(-15px, -15px, -50px); }
     85% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(0, 0, 0); }
 }
@@ -2000,8 +2000,8 @@ footer {
 @keyframes layer1-animation-mobile {
     0%, 10% { transform: translate3d(0, 0, 0); }
     25% { transform: translate3d(0, 0, 0); }
-    35% { transform: translate3d(-36px, -36px, -95px); }
-    35%, 75% { transform: translate3d(-36px, -36px, -95px); }
+    35% { transform: translate3d(-30px, -30px, -100px); }
+    35%, 75% { transform: translate3d(-30px, -30px, -100px); }
     85% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(0, 0, 0); }
 }
@@ -2144,7 +2144,7 @@ footer {
         -webkit-transform-style: preserve-3d !important;
         backface-visibility: visible !important;
         -webkit-backface-visibility: visible !important;
-        z-index: 1 !important;
+        z-index: 10 !important;
         opacity: 1 !important;
     }
     #layerStackContainer.layer-mob-loop .layer-image-2 {
@@ -2188,7 +2188,7 @@ footer {
         -webkit-transform-style: preserve-3d !important;
         backface-visibility: visible !important;
         -webkit-backface-visibility: visible !important;
-        z-index: 100 !important;
+        z-index: 50 !important;
         opacity: 1 !important;
     }
 
