@@ -10,7 +10,7 @@ export const rootFiles = [
 
 export const optionalRootFiles = [
   'dynamic-border-ratio.js',
-  'marquee-seamless.js',
+  'infinite-marquee.js',
   'mobile-optimizations.css',
   'mobile-image-fix.css',
   'mobile-performance-optimizer.js',

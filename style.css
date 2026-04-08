@@ -1107,23 +1107,29 @@ nav .container {
     align-items: stretch;
     gap: 0;
     width: max-content !important;
-    animation: scroll 52s linear infinite;
+    --marquee-loop-seconds: 52;
 }
 
-/* JS 写入 --marquee-shift 前暂停，避免未测量时用 50% 闪一下接缝 */
-@media (prefers-reduced-motion: no-preference) {
-    .gallery-track,
-    .testimonial-track {
-        animation-play-state: paused;
-    }
-
-    .gallery-track[data-marquee-ready="true"],
-    .testimonial-track[data-marquee-ready="true"] {
-        animation-play-state: running;
-    }
+/* 无 JS 时 CSS 无缝循环；有 JS 时 infinite-marquee.js 接管 transform */
+.gallery-track:not(.marquee-js-active) {
+    animation: scroll calc(var(--marquee-loop-seconds) * 1s) linear infinite;
 }
 
-/* 每一组内间距；两组之间无 gap；位移由 --marquee-shift（首组像素宽）决定 */
+.gallery-track.marquee-js-active,
+.testimonial-track.marquee-js-active {
+    animation: none !important;
+    cursor: grab;
+    touch-action: pan-x;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.gallery-track.marquee-js-active:active,
+.testimonial-track.marquee-js-active:active {
+    cursor: grabbing;
+}
+
+/* 每一组内间距；两组之间无 gap；无 JS 时位移由 --marquee-shift 或 50% 回退 */
 .gallery-loop {
     display: flex;
     flex-direction: row;
@@ -1264,7 +1270,11 @@ nav .container {
     align-items: stretch;
     gap: 0;
     width: max-content !important;
-    animation: scrollTestimonials 68s linear infinite;
+    --marquee-loop-seconds: 68;
+}
+
+.testimonial-track:not(.marquee-js-active) {
+    animation: scrollTestimonials calc(var(--marquee-loop-seconds) * 1s) linear infinite;
 }
 
 .testimonial-loop {
@@ -1275,7 +1285,7 @@ nav .container {
     flex-shrink: 0;
 }
 
-.testimonial-row:nth-child(even) .testimonial-track {
+.testimonial-row:nth-child(even) .testimonial-track:not(.marquee-js-active) {
     animation-direction: reverse;
 }
 
@@ -1293,18 +1303,16 @@ nav .container {
     margin-right: 0 !important;
 }
 
-/* 移动端：后期作品选集 / 客户评价 横滚 */
+/* 移动端：周期与 JS 共用 --marquee-loop-seconds */
 @media (max-width: 768px) {
     .gallery-track {
-        animation-duration: 34s !important;
-        animation-timing-function: linear !important;
+        --marquee-loop-seconds: 34;
     }
     .gallery-loop {
         gap: 20px !important;
     }
     .testimonial-track {
-        animation-duration: 42s !important;
-        animation-timing-function: linear !important;
+        --marquee-loop-seconds: 42;
     }
     .testimonial-loop {
         gap: 16px !important;
@@ -1313,13 +1321,13 @@ nav .container {
 
 @media (max-width: 480px) {
     .gallery-track {
-        animation-duration: 28s !important;
+        --marquee-loop-seconds: 28;
     }
     .gallery-loop {
         gap: 14px !important;
     }
     .testimonial-track {
-        animation-duration: 36s !important;
+        --marquee-loop-seconds: 36;
     }
     .testimonial-loop {
         gap: 12px !important;
