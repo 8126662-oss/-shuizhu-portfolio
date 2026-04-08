@@ -5,8 +5,8 @@
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo Build completed && type nul > out/.nojekyll",
-    "deploy": "echo 'GitHub Pages部署指南' && echo '1. 运行 git-init.bat 初始化Git仓库' && echo '2. 在GitHub创建仓库并复制远程仓库命令' && echo '3. 运行 git push -u origin main 推送代码' && echo '4. 在GitHub仓库Settings中启用Pages'",
+    "build": "node scripts/gh-pages-build.mjs",
+    "deploy": "node scripts/gh-pages-build.mjs",
     "git:init": "git-init.bat",
     "git:config": "echo '请运行：' && echo 'git config --global user.name \"你的GitHub用户名\"' && echo 'git config --global user.email \"你的GitHub邮箱\"'"
   },

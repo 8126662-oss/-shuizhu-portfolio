@@ -25,7 +25,10 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
-      - run: npm run deploy
+      - name: Build site (out/)
+        env:
+          NODE_ENV: production
+        run: npm run deploy
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

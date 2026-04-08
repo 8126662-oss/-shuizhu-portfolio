@@ -68,4 +68,6 @@ function rewritePublicShowcasePathsInHtml(fileName) {
 rewritePublicShowcasePathsInHtml('index.html');
 rewritePublicShowcasePathsInHtml('layer-demo.html');
 
+writeFileSync(join(outDir, '.nojekyll'), '');
+
 console.log('gh-pages-build: wrote', outDir);
