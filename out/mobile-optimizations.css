@@ -33,13 +33,10 @@
         margin: 8px !important;
     }
     
+    /* 横滚轨道：禁止左右 padding（会破坏 translate3d(-50%) 与半宽对齐）；间距由 style.css 的 .gallery-loop gap 控制 */
     .gallery-track {
         gap: 0 !important;
-        padding: 8px !important;
-    }
-    
-    .gallery-loop {
-        gap: 12px !important;
+        padding: 0 !important;
     }
     
     /* 4. 卡片优化 */
@@ -51,11 +48,7 @@
     
     .testimonial-track {
         gap: 0 !important;
-        padding: 8px !important;
-    }
-    
-    .testimonial-loop {
-        gap: 12px !important;
+        padding: 0 !important;
     }
     
     /* 5. 图片优化（排除对比滑块与图层栈内图片） */
@@ -171,15 +164,18 @@
 
 /* ===== 性能优先的CSS规则 ===== */
 
-/* 1. 减少重绘和重排 */
-.gallery-track,
-.testimonial-track,
+/* 1. 减少重绘；横滚轨道的 transform 仅由 @keyframes 控制，避免再写 translateZ 与周期错位 */
 .isometric-gallery,
 .testimonials-masonry {
     will-change: transform;
     transform: translateZ(0);
     backface-visibility: hidden;
-    perspective: 1000px;
+}
+
+.gallery-track,
+.testimonial-track {
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 /* 2. 优化图片渲染（排除图层/滑块，避免破坏 3D 合成） */

@@ -1103,26 +1103,35 @@ nav .container {
 .gallery-track {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
     gap: 0;
-    width: max-content;
-    animation: scroll 30s linear infinite;
+    width: max-content !important;
+    animation: scroll 52s linear infinite;
 }
 
 /* 每一组内间距；两组之间无 gap，保证 translateX(-50%) 正好对齐无缝循环 */
 .gallery-loop {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     gap: 32px;
     flex-shrink: 0;
 }
 
 @keyframes scroll {
     0% {
-        transform: translateX(0);
+        transform: translate3d(0, 0, 0);
     }
     100% {
-        transform: translateX(-50%);
+        transform: translate3d(-50%, 0, 0);
     }
+}
+
+/* 无缝横滚：两节宽度须一致；子项只用 loop 的 gap，不用横向 margin（否则 -50% 与半宽错位出现断层） */
+.isometric-gallery .gallery-track .gallery-loop .gallery-item {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 .gallery-item {
@@ -1238,14 +1247,17 @@ nav .container {
 .testimonial-track {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
     gap: 0;
-    width: max-content;
-    animation: scrollTestimonials 40s linear infinite;
+    width: max-content !important;
+    animation: scrollTestimonials 68s linear infinite;
 }
 
 .testimonial-loop {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     gap: 24px;
     flex-shrink: 0;
 }
@@ -1256,24 +1268,29 @@ nav .container {
 
 @keyframes scrollTestimonials {
     0% {
-        transform: translateX(0);
+        transform: translate3d(0, 0, 0);
     }
     100% {
-        transform: translateX(-50%);
+        transform: translate3d(-50%, 0, 0);
     }
 }
 
-/* 移动端：后期作品选集 / 客户评价 横滚（桌面保持原 30s / 40s） */
+.testimonials-masonry .testimonial-track .testimonial-loop .testimonial-card {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* 移动端：后期作品选集 / 客户评价 横滚 */
 @media (max-width: 768px) {
     .gallery-track {
-        animation-duration: 18s !important;
+        animation-duration: 34s !important;
         animation-timing-function: linear !important;
     }
     .gallery-loop {
         gap: 20px !important;
     }
     .testimonial-track {
-        animation-duration: 22s !important;
+        animation-duration: 42s !important;
         animation-timing-function: linear !important;
     }
     .testimonial-loop {
@@ -1283,13 +1300,13 @@ nav .container {
 
 @media (max-width: 480px) {
     .gallery-track {
-        animation-duration: 14s !important;
+        animation-duration: 28s !important;
     }
     .gallery-loop {
         gap: 14px !important;
     }
     .testimonial-track {
-        animation-duration: 18s !important;
+        animation-duration: 36s !important;
     }
     .testimonial-loop {
         gap: 12px !important;
