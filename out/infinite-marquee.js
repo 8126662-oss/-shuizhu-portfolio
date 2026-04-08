@@ -32,15 +32,35 @@
     return false;
   }
 
+  /**
+   * 单周期像素宽：评价区卡片高度不一，offsetLeft 的 offsetParent 有时不是 track，会量错。
+   * 优先用两节 loop 的 getBoundingClientRect 间距，并与 scrollWidth/2 交叉校验。
+   */
   function loopWidth(track) {
     var first = track.firstElementChild;
     if (!first) return 0;
     var second = track.children[1];
-    var w = 0;
-    if (second) w = second.offsetLeft - first.offsetLeft;
-    if (w < 1) w = first.offsetWidth;
-    if (w < 1) w = first.getBoundingClientRect().width;
-    return w;
+    if (!second) {
+      return Math.round(first.getBoundingClientRect().width);
+    }
+    var fr = first.getBoundingClientRect();
+    var sr = second.getBoundingClientRect();
+    var geom = Math.round(sr.left - fr.left);
+    if (geom < 1) {
+      geom = Math.round(second.offsetLeft - first.offsetLeft);
+    }
+    var sw = track.scrollWidth;
+    var half = sw > 2 ? Math.round(sw / 2) : 0;
+    if (half > 0 && geom > 0) {
+      var tol = Math.max(8, Math.round(geom * 0.06));
+      if (Math.abs(half - geom) <= tol) {
+        return geom;
+      }
+      return half;
+    }
+    if (half > 0) return half;
+    if (geom > 0) return geom;
+    return Math.round(first.offsetWidth || first.getBoundingClientRect().width);
   }
 
   function NativeMarquee(scrollport, track) {
@@ -99,12 +119,12 @@
     this.programmatic = true;
     if (this.rev > 0) {
       sp.scrollLeft += spd;
-      if (sp.scrollLeft >= this.loopW - 0.5) {
+      while (sp.scrollLeft >= this.loopW) {
         sp.scrollLeft -= this.loopW;
       }
     } else {
       sp.scrollLeft -= spd;
-      if (sp.scrollLeft <= 0.5) {
+      while (sp.scrollLeft <= 0) {
         sp.scrollLeft += this.loopW;
       }
     }
@@ -175,6 +195,12 @@
     });
 
     this.measure();
+    /* 评价卡片文字折行后宽可能下一帧才稳定，再量一次 */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        self.measure();
+      });
+    });
   };
 
   function globalTick(now) {
