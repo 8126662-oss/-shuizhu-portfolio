@@ -1266,14 +1266,14 @@ nav .container {
 /* 移动端：后期作品选集 / 客户评价 横滚（桌面保持原 30s / 40s） */
 @media (max-width: 768px) {
     .gallery-track {
-        animation-duration: 8s !important;
+        animation-duration: 11s !important;
         animation-timing-function: linear !important;
     }
     .gallery-loop {
         gap: 20px !important;
     }
     .testimonial-track {
-        animation-duration: 10s !important;
+        animation-duration: 13s !important;
         animation-timing-function: linear !important;
     }
     .testimonial-loop {
@@ -1283,13 +1283,13 @@ nav .container {
 
 @media (max-width: 480px) {
     .gallery-track {
-        animation-duration: 6s !important;
+        animation-duration: 9s !important;
     }
     .gallery-loop {
         gap: 14px !important;
     }
     .testimonial-track {
-        animation-duration: 8s !important;
+        animation-duration: 11s !important;
     }
     .testimonial-loop {
         gap: 12px !important;
