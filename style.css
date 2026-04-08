@@ -1110,7 +1110,20 @@ nav .container {
     animation: scroll 52s linear infinite;
 }
 
-/* 每一组内间距；两组之间无 gap，保证 translateX(-50%) 正好对齐无缝循环 */
+/* JS 写入 --marquee-shift 前暂停，避免未测量时用 50% 闪一下接缝 */
+@media (prefers-reduced-motion: no-preference) {
+    .gallery-track,
+    .testimonial-track {
+        animation-play-state: paused;
+    }
+
+    .gallery-track[data-marquee-ready="true"],
+    .testimonial-track[data-marquee-ready="true"] {
+        animation-play-state: running;
+    }
+}
+
+/* 每一组内间距；两组之间无 gap；位移由 --marquee-shift（首组像素宽）决定 */
 .gallery-loop {
     display: flex;
     flex-direction: row;
@@ -1124,7 +1137,7 @@ nav .container {
         transform: translate3d(0, 0, 0);
     }
     100% {
-        transform: translate3d(-50%, 0, 0);
+        transform: translate3d(calc(-1 * var(--marquee-shift, 50%)), 0, 0);
     }
 }
 
@@ -1271,7 +1284,7 @@ nav .container {
         transform: translate3d(0, 0, 0);
     }
     100% {
-        transform: translate3d(-50%, 0, 0);
+        transform: translate3d(calc(-1 * var(--marquee-shift, 50%)), 0, 0);
     }
 }
 
@@ -2701,11 +2714,6 @@ html, body {
     button, .btn-primary, .btn-secondary, .nav-link {
         min-height: 44px;
         min-width: 44px;
-    }
-    
-    /* ????????? */
-    .testimonial-track {
-        animation-play-state: running !important;
     }
     
     /* ????????? */
