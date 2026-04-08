@@ -99,12 +99,10 @@
     }
     
     /* 10. 横滚轨道：JS 接管后用 pan-x 便于横向拖拽；纯 CSS 模式保持 pan-y 减少与纵向滚动抢手势 */
-    .gallery-track.marquee-js-active,
-    .testimonial-track.marquee-js-active {
+    .marquee-scrollport {
         -webkit-overflow-scrolling: touch !important;
         overflow-scrolling: touch !important;
         scroll-behavior: auto !important;
-        touch-action: none !important;
     }
 
     .gallery-track:not(.marquee-js-active),

@@ -316,6 +316,7 @@
         
         // 为动画元素添加性能优化类
         document.querySelectorAll('.gallery-track, .testimonial-track').forEach(el => {
+            if (el.closest('.marquee-scrollport')) return;
             el.classList.add('performance-first');
         });
         

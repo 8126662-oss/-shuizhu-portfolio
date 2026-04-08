@@ -1100,6 +1100,34 @@ nav .container {
     margin-top: 80px;
 }
 
+/* 原生横向滚动视口：由浏览器处理 touch，脚本只读写 scrollLeft */
+.marquee-scrollport {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
+    will-change: scroll-position;
+}
+
+.marquee-scrollport::-webkit-scrollbar {
+    display: none;
+    height: 0;
+    width: 0;
+}
+
+/* 避免 mobile-image-fix 给 img 强写 touch-action:manipulation 与横向滚动抢手势 */
+.marquee-scrollport img,
+.marquee-scrollport .testimonial-card {
+    touch-action: inherit !important;
+    will-change: auto !important;
+    transform: none !important;
+}
+
 .gallery-track {
     display: flex;
     flex-direction: row;
@@ -1115,29 +1143,11 @@ nav .container {
     animation: scroll calc(var(--marquee-loop-seconds) * 1s) linear infinite;
 }
 
-.gallery-track.marquee-js-active,
-.testimonial-track.marquee-js-active {
+/* JS 启用原生滚动后：停 CSS 动画，不再对轨道做 transform（位移由 scrollLeft） */
+.marquee-native-active .gallery-track.marquee-js-active,
+.marquee-native-active .testimonial-track.marquee-js-active {
     animation: none !important;
-    cursor: grab;
-    /* 由脚本接管平移，避免与浏览器横向滚动/延迟手势对抗 */
-    touch-action: none;
-    -webkit-user-select: none;
-    user-select: none;
-    transition: none !important;
-    will-change: transform;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-
-.gallery-track.marquee-js-active:active,
-.testimonial-track.marquee-js-active:active {
-    cursor: grabbing;
-}
-
-/* 拖拽时禁止子项 transition，避免与轨道 translate3d 叠加持卡顿 */
-.gallery-track.marquee-js-active.marquee-interacting .gallery-item,
-.gallery-track.marquee-js-active.marquee-interacting .gallery-image,
-.testimonial-track.marquee-js-active.marquee-interacting .testimonial-card {
+    transform: none !important;
     transition: none !important;
 }
 
@@ -1163,6 +1173,12 @@ nav .container {
 .isometric-gallery .gallery-track .gallery-loop .gallery-item {
     margin-left: 0 !important;
     margin-right: 0 !important;
+}
+
+/* 跑马灯内卡片不做入场位移动画，避免量宽抖动导致无缝循环错位 */
+.isometric-gallery .gallery-item {
+    opacity: 1 !important;
+    transform: none !important;
 }
 
 .gallery-item {

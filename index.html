@@ -50,7 +50,7 @@
     
     <!-- 动态外边框比例匹配 -->
     <script src="dynamic-border-ratio.js" defer></script>
-    <script src="infinite-marquee.js?v=marquee-raf4" defer></script>
+    <script src="infinite-marquee.js?v=scroll-native1" defer></script>
     
     <!-- 移动端性能优化 -->
     <link rel="stylesheet" href="mobile-optimizations.css" media="print" onload="this.media='all'">
@@ -207,11 +207,7 @@
                 observer.observe(item);
             });
             
-            // 观察后期作品展示区域的项目
-            const galleryItems = document.querySelectorAll('.gallery-item');
-            galleryItems.forEach(item => {
-                observer.observe(item);
-            });
+            /* 跑马灯内 .gallery-item 不再做入场动画，避免量宽变化与无缝横滚冲突 */
 
             // 音乐控制功能
             const audio = document.getElementById('background-music');
@@ -927,6 +923,7 @@
             <h2 class="portfolio-title w-full">后期合成作品选集</h2>
             <p class="section-subtitle w-full">见证像素间的化学反应，<span class="highlight-text w-full">欢迎加入学习</span>。</p>
             <div class="isometric-gallery w-full">
+                <div class="marquee-scrollport marquee-scrollport--gallery w-full">
                 <div class="gallery-track w-full">
                     <div class="gallery-loop">
                         <div class="gallery-item w-full">
@@ -983,6 +980,7 @@
                         </div>
                     </div>
                 </div>
+                </div>
             </div>
         </div>
     </section>
@@ -994,6 +992,7 @@
             <p class="section-subtitle w-full">来自学员和客户的真实反馈，见证我们的专业实力。</p>
                         <div class="testimonials-masonry w-full">
                 <div class="testimonial-row w-full">
+                    <div class="marquee-scrollport marquee-scrollport--testimonials w-full">
                     <div class="testimonial-track w-full">
                         <div class="testimonial-loop">
                         <div class="testimonial-card w-full">
@@ -1143,6 +1142,7 @@
                             <p class="testimonial-content w-full">本来是废片，结果老师直接救活了，这种高级感真的值这个价，姐妹们冲就完了！</p>
                         </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>

@@ -298,3 +298,11 @@ body::after {
         display: none !important;
     }
 }
+
+/* 跑马灯：覆盖上文 img 的 touch-action:manipulation，保证原生横向滑动 */
+.marquee-scrollport img,
+.marquee-scrollport .testimonial-card {
+    touch-action: inherit !important;
+    will-change: auto !important;
+    transform: none !important;
+}
