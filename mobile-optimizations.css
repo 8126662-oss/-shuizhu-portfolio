@@ -97,12 +97,19 @@
         display: none !important;
     }
     
-    /* 10. 优化滚动性能 */
+    /* 10. 横滚轨道：触摸跟手（避免 smooth 带来的粘滞；周期由 style.css animation-duration 控制） */
     .gallery-track,
     .testimonial-track {
         -webkit-overflow-scrolling: touch !important;
         overflow-scrolling: touch !important;
-        scroll-behavior: smooth !important;
+        scroll-behavior: auto !important;
+        touch-action: pan-y;
+    }
+    
+    /* 作品选集 / 评价区外层：允许横向意图，减少误触延迟 */
+    .isometric-gallery,
+    .testimonial-row {
+        touch-action: manipulation;
     }
 }
 

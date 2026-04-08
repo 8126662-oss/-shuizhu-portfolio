@@ -36,8 +36,8 @@
       }
     })();
     </script>
-    <link rel="preload" as="image" href="/-shuizhu-portfolio/images/layers/layer-background.jpg" fetchpriority="high">
-    <link rel="preload" as="image" href="/-shuizhu-portfolio/images/layers/layer-top.jpg" fetchpriority="high">
+    <link rel="preload" as="image" href="/-shuizhu-portfolio/public/showcase/01.jpg" fetchpriority="high">
+    <link rel="preload" as="image" href="/-shuizhu-portfolio/public/showcase/05.jpg" fetchpriority="high">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>水煮｜后期合成全体系课程</title>
     <link rel="stylesheet" href="style.css">
@@ -585,9 +585,9 @@
             
             <div class="layer-showcase-wrapper w-full" style="clip-path: none; overflow: visible;">
                 <div class="layer-stack-container w-full" id="layerStackContainer" style="clip-path: none; overflow: visible;">
-                    <!-- 五层均为原生 img；首尾硬编码绝对路径（文件实为 JPEG，扩展名用 .jpg） -->
+                    <!-- 五层均为原生 img；统一 public/showcase，构建时自动加 basePath -->
                     <div class="layer-image layer-image-1 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
-                        <img src="/-shuizhu-portfolio/images/layers/layer-background.jpg" alt="背景层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-unoptimized="1">
+                        <img src="/-shuizhu-portfolio/public/showcase/01.jpg" alt="背景层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="01.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">背景层</div>
                     </div>
 
@@ -597,7 +597,7 @@
                     </div>
 
                     <div class="layer-image layer-image-3 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
-                        <img src="/-shuizhu-portfolio/public/showcase/03.jpg" alt="主体层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="03.jpg" data-unoptimized="1">
+                        <img src="/-shuizhu-portfolio/public/showcase/2-after.jpg" alt="主体层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="2-after.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">主体层</div>
                     </div>
 
@@ -607,7 +607,7 @@
                     </div>
 
                     <div class="layer-image layer-image-5 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
-                        <img src="/-shuizhu-portfolio/images/layers/layer-top.jpg" alt="调色层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-unoptimized="1">
+                        <img src="/-shuizhu-portfolio/public/showcase/05.jpg" alt="调色层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="05.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">调色层</div>
                     </div>
                 </div>
@@ -815,7 +815,7 @@
                     </ul>
                     <div class="price w-full">
                         <span class="original-price w-full">原价：¥999</span>
-                        <div class="current-price w-full">¥499 <span class="price-unit w-full">/ 限时</span></div>
+                        <div class="current-price w-full">¥599 <span class="price-unit w-full">/ 限时</span></div>
                     </div>
                     <a href="#contact" class="btn primary-btn w-full">立即报名</a>
                 </div>
@@ -827,12 +827,12 @@
                         <li>30+ 节 PS+AI+3D 全能深度课</li>
                         <li>独家：接单思路、报价经验与职业发展分享</li>
                         <li>进阶：尖端 AI 工具流与 3D 场景经验</li>
-                        <li>后续所有更新课程免费观看</li>
+                        <li>后续一年内更新课程免费观看</li>
                         <li>超值赠送：5 次 1对1 作业点评 (New!)</li>
                     </ul>
                     <div class="price w-full">
                         <span class="original-price w-full">原价：¥1599</span>
-                        <div class="current-price w-full">¥699 <span class="price-unit w-full">/ 限时</span></div>
+                        <div class="current-price w-full">¥899 <span class="price-unit w-full">/ 限时</span></div>
                     </div>
                     <a href="#contact" class="btn primary-btn w-full">立即报名</a>
                 </div>

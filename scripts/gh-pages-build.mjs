@@ -56,7 +56,9 @@ function rewritePublicShowcasePathsInHtml(fileName) {
   if (!existsSync(filePath)) return;
   const bp = basePath.startsWith('/') ? basePath : `/${basePath}`;
   let html = readFileSync(filePath, 'utf8');
-  const next = html.replace(/src="public\/showcase\//g, `src="${bp}/public/showcase/`);
+  const next = html
+    .replace(/src="public\/showcase\//g, `src="${bp}/public/showcase/`)
+    .replace(/href="public\/showcase\//g, `href="${bp}/public/showcase/`);
   if (next !== html) {
     writeFileSync(filePath, next);
     console.log('gh-pages-build: prefixed public/showcase in', fileName);

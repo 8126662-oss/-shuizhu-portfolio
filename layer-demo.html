@@ -2,35 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <script>
-    (function () {
-      try {
-        var host = location.hostname || '';
-        if (host === 'localhost' || host === '127.0.0.1') return;
-        if (!host.endsWith('github.io')) return;
-        var p = location.pathname || '/';
-        if (p.length > 1 && !p.endsWith('/')) {
-          var rest = p.slice(1);
-          if (rest.indexOf('/') === -1) {
-            location.replace(p + '/' + location.search + location.hash);
-            return;
-          }
-        }
-        var parts = p.split('/').filter(Boolean);
-        if (parts.length < 1) return;
-        var basePath = '/' + parts[0] + '/';
-        var b = document.createElement('base');
-        b.href = location.origin + basePath;
-        var charset = document.querySelector('meta[charset]');
-        if (charset && charset.nextSibling) {
-          document.head.insertBefore(b, charset.nextSibling);
-        } else {
-          document.head.appendChild(b);
-        }
-      } catch (e) {}
-    })();
-    </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>图层合成演示 - 水煮后期</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -493,48 +465,42 @@
     </section>
 
     <script>
-        (function () {
-            'use strict';
-            if (typeof window === 'undefined' || typeof document === 'undefined') return;
+        // 图层容器交互
+        const layersContainer = document.getElementById('layersContainer');
+        const hintText = document.getElementById('hintText');
+        const layerInfoPanel = document.getElementById('layerInfoPanel');
+        let isExploded = false;
 
-            var layersContainer = document.getElementById('layersContainer');
-            var hintText = document.getElementById('hintText');
-            var layerInfoPanel = document.getElementById('layerInfoPanel');
-            if (!layersContainer || !hintText || !layerInfoPanel) return;
+        layersContainer.addEventListener('click', function() {
+            isExploded = !isExploded;
 
-            var isExploded = false;
-
-            layersContainer.addEventListener('click', function() {
-                isExploded = !isExploded;
-
-                if (isExploded) {
-                    layersContainer.classList.add('exploded');
-                    hintText.textContent = '再次点击收起图层';
-                    layerInfoPanel.classList.add('visible');
-                } else {
-                    layersContainer.classList.remove('exploded');
-                    hintText.textContent = '点击图层展开 3D 分层视图';
-                    layerInfoPanel.classList.remove('visible');
-                }
-            });
-
-            if (typeof window.addEventListener === 'function' && window.innerWidth > 0) {
-                document.addEventListener('mousemove', function(e) {
-                    if (!isExploded) {
-                        var x = (e.clientX / window.innerWidth - 0.5) * 20;
-                        var y = (e.clientY / window.innerHeight - 0.5) * 20;
-                        layersContainer.style.transform = 'rotateY(' + (-15 + x * 0.3) + 'deg) rotateX(' + (10 + y * 0.3) + 'deg)';
-                    }
-                });
+            if (isExploded) {
+                layersContainer.classList.add('exploded');
+                hintText.textContent = '再次点击收起图层';
+                layerInfoPanel.classList.add('visible');
+            } else {
+                layersContainer.classList.remove('exploded');
+                hintText.textContent = '点击图层展开 3D 分层视图';
+                layerInfoPanel.classList.remove('visible');
             }
+        });
 
-            document.addEventListener('keydown', function(e) {
-                if (e.code === 'Space') {
-                    e.preventDefault();
-                    layersContainer.click();
-                }
-            });
-        })();
+        // 鼠标移动视差效果（仅在未展开时）
+        document.addEventListener('mousemove', function(e) {
+            if (!isExploded) {
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                layersContainer.style.transform = `rotateY(${-15 + x * 0.3}deg) rotateX(${10 + y * 0.3}deg)`;
+            }
+        });
+
+        // 键盘空格键快捷操作
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                layersContainer.click();
+            }
+        });
     </script>
 </body>
 </html>
