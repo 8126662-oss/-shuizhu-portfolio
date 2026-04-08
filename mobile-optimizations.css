@@ -104,7 +104,7 @@
         -webkit-overflow-scrolling: touch !important;
         overflow-scrolling: touch !important;
         scroll-behavior: auto !important;
-        touch-action: pan-x !important;
+        touch-action: none !important;
     }
 
     .gallery-track:not(.marquee-js-active),
@@ -115,10 +115,10 @@
         touch-action: pan-y;
     }
     
-    /* 作品选集 / 评价区外层：允许横向意图，减少误触延迟 */
+    /* 与轨道 touch-action:none 配合：允许纵向滚页面 + 横滑由脚本处理 */
     .isometric-gallery,
     .testimonial-row {
-        touch-action: manipulation;
+        touch-action: pan-x pan-y;
     }
 }
 

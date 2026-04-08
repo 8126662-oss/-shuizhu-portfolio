@@ -1,17 +1,24 @@
 /**
- * 作品选集 / 客户评价：无缝循环 + 拖拽 + 松手惯性 + 交互后暂停、延迟恢复自动播放。
- * （项目未使用 Swiper/Framer Motion；无 JS 时回退为 style.css 中的 CSS @keyframes。）
+ * 作品选集 / 客户评价 — 原生无缝横滚（非 Swiper）
+ * - 双列 DOM + 像素归位；跳转帧 transition: none
+ * - 仅 translate3d + 单例 rAF；交互时自动播放完全停止，松手/惯性结束后再延迟 3s 恢复
+ * - touchRatio≈1.5、coalesced pointer 事件、touch-action: none 减少与浏览器手势对抗
  */
 (function () {
   var SELECTOR = '.isometric-gallery .gallery-track, .testimonials-masonry .testimonial-track';
   var RESUME_MS = 3000;
-  var VEL_THRESHOLD = 100;
-  var VEL_STOP = 10;
-  var INERTIA_DECAY = 3.4;
+  var TOUCH_RATIO = 1.5;
+  var VEL_THRESHOLD = 80;
+  var VEL_STOP = 12;
+  var INERTIA_DECAY = 4.2;
 
   var reduced =
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var instances = [];
+  var rafId = 0;
+  var lastGlobalT = 0;
 
   function loopSeconds(track) {
     var raw = getComputedStyle(track).getPropertyValue('--marquee-loop-seconds').trim();
@@ -29,174 +36,318 @@
     return false;
   }
 
-  function bindTrack(track) {
-    if (track.getAttribute('data-infinite-marquee') === '1') return;
-    if (reduced) return;
+  function loopWidthFromTrack(track) {
+    var first = track.firstElementChild;
+    if (!first) return 0;
+    var second = track.children[1];
+    var w = 0;
+    if (second) {
+      w = second.offsetLeft - first.offsetLeft;
+    }
+    if (w < 1) {
+      w = first.offsetWidth;
+    }
+    if (w < 1) {
+      w = first.getBoundingClientRect().width;
+    }
+    return w;
+  }
 
-    track.setAttribute('data-infinite-marquee', '1');
-    track.classList.add('marquee-js-active');
-    track.style.animation = 'none';
+  function MarqueeController(track) {
+    this.track = track;
+    this.loopW = 0;
+    this.x = 0;
+    this.dragging = false;
+    this.inertia = false;
+    this.velocity = 0;
+    this.lastClientX = 0;
+    this.lastMoveT = 0;
+    this.activePointer = null;
+    this.autoplayOn = true;
+    this.resumeTimer = null;
+    this.hoverPause = false;
+    this.lastT = 0;
+  }
 
-    var loopW = 0;
-    var x = 0;
-    var autoplayOff = false;
-    var resumeTimer = null;
-    var rafId = 0;
-    var lastT = 0;
-    var dragging = false;
-    var inertia = false;
-    var velocity = 0;
-    var lastClientX = 0;
-    var lastMoveT = 0;
-    var activePointer = null;
+  MarqueeController.prototype.clearResume = function () {
+    if (this.resumeTimer) {
+      clearTimeout(this.resumeTimer);
+      this.resumeTimer = null;
+    }
+  };
 
-    function clearResume() {
-      if (resumeTimer) {
-        clearTimeout(resumeTimer);
-        resumeTimer = null;
+  MarqueeController.prototype.armResume = function () {
+    var self = this;
+    this.clearResume();
+    this.resumeTimer = setTimeout(function () {
+      self.resumeTimer = null;
+      if (!self.dragging && !self.inertia && !self.hoverPause) {
+        self.autoplayOn = true;
       }
+    }, RESUME_MS);
+  };
+
+  MarqueeController.prototype.stopAutoplayNow = function () {
+    this.autoplayOn = false;
+    this.clearResume();
+  };
+
+  MarqueeController.prototype.normalize = function () {
+    if (this.loopW <= 0) return false;
+    var wrapped = false;
+    while (this.x <= -this.loopW) {
+      this.x += this.loopW;
+      wrapped = true;
     }
-
-    function armResume() {
-      clearResume();
-      resumeTimer = setTimeout(function () {
-        resumeTimer = null;
-        autoplayOff = false;
-      }, RESUME_MS);
+    while (this.x > 0) {
+      this.x -= this.loopW;
+      wrapped = true;
     }
+    return wrapped;
+  };
 
-    function normalize() {
-      if (loopW <= 0) return;
-      while (x <= -loopW) x += loopW;
-      while (x > 0) x -= loopW;
+  MarqueeController.prototype.paint = function (noTransition) {
+    var t = this.track;
+    if (noTransition) {
+      t.style.transition = 'none';
     }
-
-    function paint() {
-      track.style.transform = 'translate3d(' + x + 'px,0,0)';
+    t.style.transform = 'translate3d(' + this.x + 'px,0,0)';
+    if (noTransition) {
+      void t.offsetHeight;
+      t.style.removeProperty('transition');
     }
+  };
 
-    function measure() {
-      var first = track.firstElementChild;
-      if (!first) return;
-      var w = first.getBoundingClientRect().width;
-      if (w < 1) return;
-      loopW = w;
-      normalize();
-      paint();
-    }
+  MarqueeController.prototype.measure = function () {
+    var w = loopWidthFromTrack(this.track);
+    if (w < 1) return;
+    this.loopW = w;
+    this.normalize();
+    this.paint(false);
+  };
 
-    function tick(now) {
-      if (!lastT) lastT = now;
-      var dt = Math.min((now - lastT) / 1000, 0.07);
-      lastT = now;
-      var rev = isReverseTrack(track) ? -1 : 1;
+  MarqueeController.prototype.step = function (dt) {
+    var rev = isReverseTrack(this.track) ? -1 : 1;
+    var canAutoplay =
+      this.autoplayOn &&
+      !this.dragging &&
+      !this.inertia &&
+      !this.hoverPause &&
+      this.loopW > 0;
 
-      if (!dragging && inertia) {
-        x += velocity * dt;
-        velocity *= Math.exp(-dt * INERTIA_DECAY);
-        if (Math.abs(velocity) < VEL_STOP) {
-          inertia = false;
-          velocity = 0;
-          armResume();
-        }
-      } else if (!dragging && !inertia && !autoplayOff && loopW > 0) {
-        var spd = loopW / loopSeconds(track);
-        x -= rev * spd * dt;
+    if (this.dragging) {
+      /* 位移仅在 pointermove 中更新 */
+    } else if (this.inertia) {
+      this.x += this.velocity * dt;
+      this.velocity *= Math.exp(-dt * INERTIA_DECAY);
+      if (Math.abs(this.velocity) < VEL_STOP) {
+        this.inertia = false;
+        this.velocity = 0;
+        this.track.classList.remove('marquee-interacting');
+        this.armResume();
       }
-
-      if (loopW > 0) normalize();
-      paint();
-      rafId = requestAnimationFrame(tick);
+    } else if (canAutoplay) {
+      var spd = this.loopW / loopSeconds(this.track);
+      this.x -= rev * spd * dt;
     }
+
+    if (this.loopW > 0 && !this.dragging) {
+      var wrapped = this.normalize();
+      this.paint(!!wrapped);
+    }
+  };
+
+  MarqueeController.prototype.bind = function () {
+    var self = this;
+    var track = this.track;
 
     function onDown(e) {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
-      dragging = true;
-      inertia = false;
-      velocity = 0;
-      autoplayOff = true;
-      clearResume();
-      lastClientX = e.clientX;
-      lastMoveT = typeof performance !== 'undefined' ? performance.now() : Date.now();
-      activePointer = e.pointerId;
+      self.stopAutoplayNow();
+      self.dragging = true;
+      self.inertia = false;
+      self.velocity = 0;
+      track.classList.add('marquee-interacting');
+      self.lastClientX = e.clientX;
+      self.lastMoveT =
+        typeof performance !== 'undefined' ? performance.now() : Date.now();
+      self.activePointer = e.pointerId;
       try {
         track.setPointerCapture(e.pointerId);
       } catch (err) {}
+      if (e.pointerType === 'touch') {
+        try {
+          e.preventDefault();
+        } catch (e2) {}
+      }
+    }
+
+    function applyMove(clientX, now, pointerType) {
+      var mult = pointerType === 'touch' ? TOUCH_RATIO : 1;
+      var dx = (clientX - self.lastClientX) * mult;
+      var dt = Math.max((now - self.lastMoveT) / 1000, 0.001);
+      self.x += dx;
+      self.lastClientX = clientX;
+      var rawV = dx / dt;
+      self.velocity = self.velocity * 0.15 + rawV * 0.85;
+      self.lastMoveT = now;
+      self.normalize();
+      self.paint(false);
     }
 
     function onMove(e) {
-      if (!dragging || e.pointerId !== activePointer) return;
-      var clientX = e.clientX;
-      var now = typeof performance !== 'undefined' ? performance.now() : Date.now();
-      var dx = clientX - lastClientX;
-      var dt = Math.max((now - lastMoveT) / 1000, 0.008);
-      x += dx;
-      var rawV = dx / dt;
-      velocity = velocity * 0.22 + rawV * 0.78;
-      lastClientX = clientX;
-      lastMoveT = now;
-      normalize();
-      paint();
+      if (!self.dragging || e.pointerId !== self.activePointer) return;
+      if (e.getCoalescedEvents && e.getCoalescedEvents().length > 0) {
+        var list = e.getCoalescedEvents();
+        for (var i = 0; i < list.length; i++) {
+          var ev = list[i];
+          var ts =
+            typeof ev.timeStamp === 'number'
+              ? ev.timeStamp
+              : typeof performance !== 'undefined'
+                ? performance.now()
+                : Date.now();
+          applyMove(ev.clientX, ts, e.pointerType);
+        }
+      } else {
+        var n =
+          typeof performance !== 'undefined' ? performance.now() : Date.now();
+        applyMove(e.clientX, n, e.pointerType);
+      }
+      if (e.pointerType === 'touch' && self.dragging) {
+        try {
+          e.preventDefault();
+        } catch (e3) {}
+      }
     }
 
     function onUp(e) {
-      if (!dragging || e.pointerId !== activePointer) return;
-      dragging = false;
-      activePointer = null;
+      if (!self.dragging || e.pointerId !== self.activePointer) return;
+      self.dragging = false;
+      self.activePointer = null;
       try {
         track.releasePointerCapture(e.pointerId);
       } catch (err2) {}
-      if (Math.abs(velocity) >= VEL_THRESHOLD) {
-        inertia = true;
+      if (Math.abs(self.velocity) >= VEL_THRESHOLD) {
+        self.inertia = true;
       } else {
-        velocity = 0;
-        armResume();
+        self.velocity = 0;
+        track.classList.remove('marquee-interacting');
+        self.armResume();
       }
     }
 
     function onCancel(e) {
-      onUp(e);
+      if (!self.dragging || e.pointerId !== self.activePointer) return;
+      self.dragging = false;
+      self.activePointer = null;
+      self.inertia = false;
+      self.velocity = 0;
+      track.classList.remove('marquee-interacting');
+      try {
+        track.releasePointerCapture(e.pointerId);
+      } catch (ce) {}
+      self.armResume();
     }
 
-    track.addEventListener('pointerdown', onDown);
-    track.addEventListener('pointermove', onMove);
+    function onLostCapture(e) {
+      if (self.dragging && e.pointerId === self.activePointer) {
+        self.dragging = false;
+        self.activePointer = null;
+        if (!self.inertia) {
+          track.classList.remove('marquee-interacting');
+          self.armResume();
+        }
+      }
+    }
+
+    function onEnter(e) {
+      if (e.pointerType === 'touch' || e.pointerType === 'pen') return;
+      self.hoverPause = true;
+      self.stopAutoplayNow();
+    }
+
+    function onLeave(e) {
+      if (e.pointerType === 'touch' || e.pointerType === 'pen') return;
+      self.hoverPause = false;
+      if (!self.dragging && !self.inertia) {
+        self.armResume();
+      }
+    }
+
+    track.addEventListener('pointerdown', onDown, { passive: false });
+    track.addEventListener('pointermove', onMove, { passive: false });
     track.addEventListener('pointerup', onUp);
     track.addEventListener('pointercancel', onCancel);
-    track.addEventListener('lostpointercapture', function (e) {
-      if (dragging && e.pointerId === activePointer) {
-        dragging = false;
-        activePointer = null;
-        if (!inertia) armResume();
-      }
-    });
+    track.addEventListener('lostpointercapture', onLostCapture);
+    track.addEventListener('pointerenter', onEnter);
+    track.addEventListener('pointerleave', onLeave);
 
     if (typeof ResizeObserver !== 'undefined') {
       var ro = new ResizeObserver(function () {
-        measure();
+        self.measure();
       });
       ro.observe(track);
-      var firstEl = track.firstElementChild;
-      if (firstEl) ro.observe(firstEl);
+      var fe = track.firstElementChild;
+      if (fe) ro.observe(fe);
+      var se = track.children[1];
+      if (se) ro.observe(se);
     }
 
-    window.addEventListener('resize', measure);
-    window.addEventListener('orientationchange', measure);
-    window.addEventListener('load', measure);
+    window.addEventListener('resize', function () {
+      self.measure();
+    });
+    window.addEventListener('orientationchange', function () {
+      self.measure();
+    });
+    window.addEventListener('load', function () {
+      self.measure();
+    });
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(measure);
+      document.fonts.ready.then(function () {
+        self.measure();
+      });
     }
     track.querySelectorAll('img').forEach(function (img) {
       if (!img.complete) {
-        img.addEventListener('load', measure, { once: true });
+        img.addEventListener(
+          'load',
+          function () {
+            self.measure();
+          },
+          { once: true }
+        );
       }
     });
 
-    measure();
-    rafId = requestAnimationFrame(tick);
+    this.measure();
+  };
+
+  function globalTick(now) {
+    if (!lastGlobalT) lastGlobalT = now;
+    var dt = Math.min((now - lastGlobalT) / 1000, 0.048);
+    lastGlobalT = now;
+    for (var i = 0; i < instances.length; i++) {
+      instances[i].step(dt);
+    }
+    rafId = requestAnimationFrame(globalTick);
   }
 
   function init() {
-    document.querySelectorAll(SELECTOR).forEach(bindTrack);
+    if (reduced) return;
+    document.querySelectorAll(SELECTOR).forEach(function (track) {
+      if (track.getAttribute('data-infinite-marquee') === '1') return;
+      track.setAttribute('data-infinite-marquee', '1');
+      track.classList.add('marquee-js-active');
+      track.style.animation = 'none';
+
+      var c = new MarqueeController(track);
+      c.bind();
+      instances.push(c);
+    });
+    if (instances.length && !rafId) {
+      rafId = requestAnimationFrame(globalTick);
+    }
   }
 
   if (document.readyState === 'loading') {

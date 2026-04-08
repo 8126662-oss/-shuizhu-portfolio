@@ -1119,14 +1119,26 @@ nav .container {
 .testimonial-track.marquee-js-active {
     animation: none !important;
     cursor: grab;
-    touch-action: pan-x;
+    /* 由脚本接管平移，避免与浏览器横向滚动/延迟手势对抗 */
+    touch-action: none;
     -webkit-user-select: none;
     user-select: none;
+    transition: none !important;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .gallery-track.marquee-js-active:active,
 .testimonial-track.marquee-js-active:active {
     cursor: grabbing;
+}
+
+/* 拖拽时禁止子项 transition，避免与轨道 translate3d 叠加持卡顿 */
+.gallery-track.marquee-js-active.marquee-interacting .gallery-item,
+.gallery-track.marquee-js-active.marquee-interacting .gallery-image,
+.testimonial-track.marquee-js-active.marquee-interacting .testimonial-card {
+    transition: none !important;
 }
 
 /* 每一组内间距；两组之间无 gap；无 JS 时位移由 --marquee-shift 或 50% 回退 */
