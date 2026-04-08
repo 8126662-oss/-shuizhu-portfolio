@@ -1102,8 +1102,18 @@ nav .container {
 
 .gallery-track {
     display: flex;
-    gap: 32px;
+    flex-direction: row;
+    gap: 0;
+    width: max-content;
     animation: scroll 30s linear infinite;
+}
+
+/* 每一组内间距；两组之间无 gap，保证 translateX(-50%) 正好对齐无缝循环 */
+.gallery-loop {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    flex-shrink: 0;
 }
 
 @keyframes scroll {
@@ -1111,7 +1121,7 @@ nav .container {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(calc(-50% - 16px));
+        transform: translateX(-50%);
     }
 }
 
@@ -1227,8 +1237,17 @@ nav .container {
 
 .testimonial-track {
     display: flex;
-    gap: 24px;
+    flex-direction: row;
+    gap: 0;
+    width: max-content;
     animation: scrollTestimonials 40s linear infinite;
+}
+
+.testimonial-loop {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    flex-shrink: 0;
 }
 
 .testimonial-row:nth-child(even) .testimonial-track {
@@ -1240,28 +1259,40 @@ nav .container {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(calc(-50% - 12px));
+        transform: translateX(-50%);
     }
 }
 
-/* 移动端：后期作品选集 / 客户评价 横滚加快速度（桌面保持原 30s / 40s） */
+/* 移动端：后期作品选集 / 客户评价 横滚（桌面保持原 30s / 40s） */
 @media (max-width: 768px) {
     .gallery-track {
-        animation-duration: 18s !important;
+        animation-duration: 8s !important;
         animation-timing-function: linear !important;
     }
+    .gallery-loop {
+        gap: 20px !important;
+    }
     .testimonial-track {
-        animation-duration: 22s !important;
+        animation-duration: 10s !important;
         animation-timing-function: linear !important;
+    }
+    .testimonial-loop {
+        gap: 16px !important;
     }
 }
 
 @media (max-width: 480px) {
     .gallery-track {
-        animation-duration: 15s !important;
+        animation-duration: 6s !important;
+    }
+    .gallery-loop {
+        gap: 14px !important;
     }
     .testimonial-track {
-        animation-duration: 18s !important;
+        animation-duration: 8s !important;
+    }
+    .testimonial-loop {
+        gap: 12px !important;
     }
 }
 

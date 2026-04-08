@@ -34,8 +34,12 @@
     }
     
     .gallery-track {
-        gap: 12px !important;
+        gap: 0 !important;
         padding: 8px !important;
+    }
+    
+    .gallery-loop {
+        gap: 12px !important;
     }
     
     /* 4. 卡片优化 */
@@ -46,8 +50,12 @@
     }
     
     .testimonial-track {
-        gap: 12px !important;
+        gap: 0 !important;
         padding: 8px !important;
+    }
+    
+    .testimonial-loop {
+        gap: 12px !important;
     }
     
     /* 5. 图片优化（排除对比滑块与图层栈内图片） */
