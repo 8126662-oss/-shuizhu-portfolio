@@ -36,8 +36,6 @@
       }
     })();
     </script>
-    <link rel="preload" as="image" href="public/showcase/01.jpg?v=004868b" fetchpriority="high">
-    <link rel="preload" as="image" href="public/showcase/05.jpg?v=004868b" fetchpriority="high">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>水煮｜后期合成全体系课程</title>
     <link rel="stylesheet" href="style.css?v=004868b">
@@ -152,7 +150,7 @@
         }
     </style>
     <!-- 音频元素 -->
-    <audio id="background-music" src="public/music/bgm.mp3" loop preload="auto">
+    <audio id="background-music" src="public/music/bgm.mp3" loop preload="none">
         Your browser does not support the audio element.
     </audio>
 
@@ -518,12 +516,12 @@
                             <!-- 底层：Before 图片（原始图）作为背景 -->
                             <div class="slider-before w-full">
                                 <div class="slider-label w-full">Before</div>
-                                <img src="public/showcase/2-before.jpg?v=004868b" alt="原始图" class="slider-image w-full" fetchpriority="high" loading="eager" decoding="async">
+                                <img src="public/showcase/2-before.jpg?v=004868b" alt="原始图" class="slider-image w-full" loading="lazy" decoding="async">
                             </div>
                             <!-- 顶层：After 图片（精修后）- 使用clip-path显示 -->
                             <div class="slider-after w-full">
                                 <div class="slider-label w-full">After</div>
-                                <img src="public/showcase/2-after.jpg?v=004868b" alt="精修后效果" class="slider-image w-full" fetchpriority="high" loading="eager" decoding="async">
+                                <img src="public/showcase/2-after.jpg?v=004868b" alt="精修后效果" class="slider-image w-full" loading="lazy" decoding="async">
                             </div>
                             <!-- 专业竖向分割线滑块 -->
                             <div class="slider-control w-full">
@@ -584,27 +582,27 @@
                 <div class="layer-stack-container w-full" id="layerStackContainer" style="clip-path: none; overflow: visible;">
                     <!-- 五层均为原生 img；统一 public/showcase，构建时自动加 basePath -->
                     <div class="layer-image layer-image-1 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
-                        <img src="public/showcase/01.jpg?v=004868b" alt="背景层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="01.jpg" data-unoptimized="1">
+                        <img src="public/showcase/01.jpg?v=004868b" alt="背景层" class="layer-img w-full h-full object-cover" loading="lazy" decoding="async" data-layer-file="01.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">背景层</div>
                     </div>
 
                     <div class="layer-image layer-image-2 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
-                        <img src="public/showcase/02.jpg?v=004868b" alt="光影层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="02.jpg" data-unoptimized="1">
+                        <img src="public/showcase/02.jpg?v=004868b" alt="光影层" class="layer-img w-full h-full object-cover" loading="lazy" decoding="async" data-layer-file="02.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">光影层</div>
                     </div>
 
                     <div class="layer-image layer-image-3 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
-                        <img src="public/showcase/2-after.jpg?v=004868b" alt="主体层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="2-after.jpg" data-unoptimized="1">
+                        <img src="public/showcase/2-after.jpg?v=004868b" alt="主体层" class="layer-img w-full h-full object-cover" loading="lazy" decoding="async" data-layer-file="2-after.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">主体层</div>
                     </div>
 
                     <div class="layer-image layer-image-4 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
-                        <img src="public/showcase/04.jpg?v=004868b" alt="特效层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="04.jpg" data-unoptimized="1">
+                        <img src="public/showcase/04.jpg?v=004868b" alt="特效层" class="layer-img w-full h-full object-cover" loading="lazy" decoding="async" data-layer-file="04.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">特效层</div>
                     </div>
 
                     <div class="layer-image layer-image-5 w-full" style="transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:1;">
-                        <img src="public/showcase/05.jpg?v=004868b" alt="调色层" class="layer-img w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync" data-layer-file="05.jpg" data-unoptimized="1">
+                        <img src="public/showcase/05.jpg?v=004868b" alt="调色层" class="layer-img w-full h-full object-cover" loading="lazy" decoding="async" data-layer-file="05.jpg" data-unoptimized="1">
                         <div class="layer-label w-full">调色层</div>
                     </div>
                 </div>
