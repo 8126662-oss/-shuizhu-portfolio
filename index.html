@@ -150,31 +150,12 @@
         }
     </style>
     <!-- 音频元素 -->
-    <audio id="background-music" src="public/music/bgm.mp3" loop preload="none">
-        Your browser does not support the audio element.
-    </audio>
-
     <!-- 一键回顶按钮 -->
     <div id="back-to-top" class="back-to-top w-full">
         <span class="rocket-icon w-full">🚀</span>
     </div>
 
     <!-- 音乐控制按钮 -->
-    <div id="music-control" class="music-control w-full">
-        <div class="music-icon w-full">
-            <div class="pause-icon w-full">
-                <span></span>
-                <span></span>
-            </div>
-            <div class="play-icon w-full">
-                <div class="wave w-full"></div>
-                <div class="wave w-full"></div>
-                <div class="wave w-full"></div>
-                <div class="wave w-full"></div>
-            </div>
-        </div>
-    </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // FAQ 交互功能
@@ -206,96 +187,6 @@
             });
             
             /* 跑马灯内 .gallery-item 不再做入场动画，避免量宽变化与无缝横滚冲突 */
-
-            // 音乐控制功能
-            const audio = document.getElementById('background-music');
-            const musicControl = document.getElementById('music-control');
-            const playIcon = musicControl.querySelector('.play-icon');
-            const pauseIcon = musicControl.querySelector('.pause-icon');
-            let isPlaying = false;
-
-            // 初始音量
-            audio.volume = 0.5;
-
-            // 更新图标状态
-            function updateMusicIcon(playing) {
-                if (playing) {
-                    playIcon.style.display = 'flex';
-                    pauseIcon.style.display = 'none';
-                } else {
-                    playIcon.style.display = 'none';
-                    pauseIcon.style.display = 'flex';
-                }
-            }
-
-            // 尝试自动播放
-            async function tryAutoplay() {
-                try {
-                    await audio.play();
-                    isPlaying = true;
-                    updateMusicIcon(true);
-                    console.log('音乐自动播放成功');
-                } catch (err) {
-                    // 自动播放被阻止，等待用户交互
-                    isPlaying = false;
-                    updateMusicIcon(false);
-                    console.log('自动播放被阻止，等待用户交互');
-                    
-                    // 添加一次性交互监听器来启动播放
-                    const startOnInteraction = async () => {
-                        if (!isPlaying) {
-                            try {
-                                await audio.play();
-                                isPlaying = true;
-                                updateMusicIcon(true);
-                                // 移除交互监听器
-                                document.removeEventListener('click', startOnInteraction);
-                                document.removeEventListener('scroll', startOnInteraction);
-                                document.removeEventListener('keydown', startOnInteraction);
-                            } catch (e) {
-                                console.log('播放失败:', e);
-                            }
-                        }
-                    };
-                    
-                    document.addEventListener('click', startOnInteraction, { once: true });
-                    document.addEventListener('scroll', startOnInteraction, { once: true });
-                    document.addEventListener('keydown', startOnInteraction, { once: true });
-                }
-            }
-
-            // 页面加载完成后尝试自动播放
-            if (document.readyState === 'complete') {
-                tryAutoplay();
-            } else {
-                window.addEventListener('load', tryAutoplay);
-            }
-
-            // 监听音频实际播放状态
-            audio.addEventListener('play', () => {
-                isPlaying = true;
-                updateMusicIcon(true);
-            });
-
-            audio.addEventListener('pause', () => {
-                isPlaying = false;
-                updateMusicIcon(false);
-            });
-
-            // 手动切换播放/暂停按钮
-            musicControl.addEventListener('click', async function(e) {
-                e.stopPropagation(); // 防止触发页面交互监听器
-                
-                if (!isPlaying) {
-                    try {
-                        await audio.play();
-                    } catch (err) {
-                        console.log('播放失败:', err);
-                    }
-                } else {
-                    audio.pause();
-                }
-            });
 
             // 一键回顶功能
             const backToTopButton = document.getElementById('back-to-top');
@@ -668,10 +559,7 @@
             var f = img.getAttribute('data-layer-file');
             if (!f) return;
             var cur = img.getAttribute('src') || '';
-            if (
-                cur.indexOf('http') === 0 ||
-                (cur.charAt(0) === '/' && cur.indexOf('/public/showcase/') !== -1)
-            ) {
+            if (cur.indexOf('http') === 0 || cur.indexOf('public/showcase/') !== -1) {
                 return;
             }
             img.src = resolveShowcaseSrc(f);
@@ -1268,16 +1156,29 @@
                 placeholder.appendChild(img);
                 
                 // 延迟加载
-                setTimeout(() => this.loadImage(img), index * 200);
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries, obs) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                this.loadImage(img);
+                                obs.unobserve(img);
+                            }
+                        });
+                    }, {
+                        rootMargin: '200px 0px',
+                        threshold: 0.01
+                    });
+                    observer.observe(img);
+                } else {
+                    this.loadImage(img);
+                }
             }
 
             loadImage(img) {
                 const src = img.getAttribute('data-src');
-                if (!src) return;
+                if (!src || img.getAttribute('src')) return;
 
-                const image = new Image();
-                image.onload = () => {
-                    img.src = src;
+                img.onload = () => {
                     img.classList.add('loaded');
                     img.classList.remove('lazy-image');
                     
@@ -1289,12 +1190,12 @@
                     }
                 };
                 
-                image.onerror = () => {
+                img.onerror = () => {
                     console.error(`❌ 图片加载失败: ${src}`);
                     img.classList.add('load-error');
                 };
                 
-                image.src = src;
+                img.src = src;
             }
 
             // 性能监控
