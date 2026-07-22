@@ -790,17 +790,27 @@ nav .container {
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 800;
     text-align: center;
-    margin-bottom: 80px;
+    margin-bottom: 64px;
     background: linear-gradient(135deg, #ffffff, #a5f3fc);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
+.section-kicker {
+    display: block;
+    margin-bottom: 14px;
+    color: #a5f3fc;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: 0.04em;
+}
+
 .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
     gap: 32px;
-    max-width: 1000px;
+    max-width: 1180px;
     margin: 0 auto;
 }
 
@@ -843,10 +853,11 @@ nav .container {
 }
 
 .pricing-card h3 {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     color: #ffffff;
+    line-height: 1.35;
 }
 
 .plan-description {
@@ -855,17 +866,46 @@ nav .container {
     font-size: 0.95rem;
 }
 
+.plan-highlight {
+    display: inline-block;
+    margin-bottom: 18px !important;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(165, 243, 252, 0.12);
+    color: #dffcff !important;
+    font-size: 0.95rem !important;
+    font-weight: 800;
+    line-height: 1.5;
+    text-shadow: none !important;
+}
+
+.plan-section,
+.upgrade-note,
+.learning-result {
+    margin-bottom: 24px;
+}
+
+.plan-section h4,
+.upgrade-note h4,
+.learning-result h4 {
+    margin-bottom: 12px;
+    color: #a5f3fc;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
 .features {
     list-style: none;
-    margin-bottom: 40px;
+    margin-bottom: 0;
 }
 
 .features li {
     color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 15px;
-    padding-left: 25px;
+    margin-bottom: 10px;
+    padding-left: 22px;
     position: relative;
     text-align: left;
+    line-height: 1.55;
 }
 
 .features li::before {
@@ -877,7 +917,7 @@ nav .container {
 }
 
 .price {
-    margin-bottom: 30px;
+    margin-bottom: 26px;
 }
 
 .original-price {
@@ -889,7 +929,7 @@ nav .container {
 }
 
 .current-price {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 800;
     color: #ffffff;
     margin-bottom: 5px;
@@ -905,6 +945,67 @@ nav .container {
     display: block;
     color: rgba(255, 255, 255, 0.7);
     font-size: 0.9rem;
+}
+
+.upgrade-note,
+.learning-result {
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.upgrade-note p,
+.learning-result p {
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    text-shadow: none;
+}
+
+.upgrade-note p:last-child,
+.learning-result p:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 1080px) {
+    .pricing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 760px;
+    }
+
+    .pricing-card.premium {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 520px;
+    }
+
+    .pricing-card.premium {
+        grid-column: auto;
+    }
+
+    .pricing-card h3 {
+        font-size: 1.25rem;
+    }
+
+    .current-price {
+        font-size: 2.5rem;
+    }
+
+    .plan-highlight {
+        font-size: 0.9rem !important;
+    }
+
+    .upgrade-note,
+    .learning-result {
+        padding: 14px;
+    }
 }
 
 /* ?????? */
