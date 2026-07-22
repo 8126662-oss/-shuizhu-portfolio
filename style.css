@@ -808,9 +808,9 @@ nav .container {
 .pricing-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: start;
+    align-items: stretch;
     gap: 32px;
-    max-width: 1180px;
+    max-width: 1240px;
     margin: 0 auto;
 }
 
@@ -819,9 +819,12 @@ nav .container {
     backdrop-filter: blur(25px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    padding: 40px;
+    padding: 34px;
     transition: all 0.3s ease;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .pricing-card:hover {
@@ -860,6 +863,10 @@ nav .container {
     line-height: 1.35;
 }
 
+.pricing-card > .btn {
+    margin-top: auto;
+}
+
 .plan-description {
     color: rgba(255, 255, 255, 0.7);
     margin-bottom: 30px;
@@ -882,7 +889,7 @@ nav .container {
 .plan-section,
 .upgrade-note,
 .learning-result {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .plan-section h4,
@@ -901,11 +908,11 @@ nav .container {
 
 .features li {
     color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     padding-left: 22px;
     position: relative;
     text-align: left;
-    line-height: 1.55;
+    line-height: 1.5;
 }
 
 .features li::before {
@@ -917,7 +924,7 @@ nav .container {
 }
 
 .price {
-    margin-bottom: 26px;
+    margin-bottom: 22px;
 }
 
 .original-price {
@@ -933,6 +940,14 @@ nav .container {
     font-weight: 800;
     color: #ffffff;
     margin-bottom: 5px;
+    line-height: 1;
+}
+
+.pricing-card .primary-btn {
+    min-height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .price-unit {
@@ -949,7 +964,7 @@ nav .container {
 
 .upgrade-note,
 .learning-result {
-    padding: 16px;
+    padding: 15px;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -957,10 +972,10 @@ nav .container {
 
 .upgrade-note p,
 .learning-result p {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     color: rgba(255, 255, 255, 0.78);
-    font-size: 0.92rem;
-    line-height: 1.65;
+    font-size: 0.9rem;
+    line-height: 1.58;
     text-shadow: none;
 }
 
@@ -973,10 +988,6 @@ nav .container {
     .pricing-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         max-width: 760px;
-    }
-
-    .pricing-card.premium {
-        grid-column: 1 / -1;
     }
 }
 
