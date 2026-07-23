@@ -205,16 +205,39 @@
         resizeTimeout = setTimeout(emergencyImageFix, 250);
     });
     
+    var mutationFixTimer = null;
     var domObserver = new MutationObserver(function (mutations) {
+        var shouldFix = false;
         mutations.forEach(function (mutation) {
             if (mutation.addedNodes.length) {
                 mutation.addedNodes.forEach(function (node) {
+                    if (!node || node.nodeType !== 1) return;
+                    if (
+                        node.closest && (
+                            node.closest('.student-works-section') ||
+                            node.closest('.instructor-works-section')
+                        )
+                    ) {
+                        return;
+                    }
+                    if (
+                        node.classList && (
+                            node.classList.contains('student-work-card') ||
+                            node.classList.contains('student-works-loop') ||
+                            node.classList.contains('instructor-work-card')
+                        )
+                    ) {
+                        return;
+                    }
                     if (node.tagName === 'IMG' || (node.querySelector && node.querySelector('img'))) {
-                        setTimeout(emergencyImageFix, 100);
+                        shouldFix = true;
                     }
                 });
             }
         });
+        if (!shouldFix) return;
+        clearTimeout(mutationFixTimer);
+        mutationFixTimer = setTimeout(emergencyImageFix, 180);
     });
 
     function attachBodyObserver() {

@@ -38,7 +38,8 @@
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>水煮｜后期合成全体系课程</title>
-    <link rel="stylesheet" href="style.css?v=studentworks1">
+    <link rel="preload" as="image" href="public/hero-bg.jpg?v=perf-lazy-20260723-1">
+    <link rel="stylesheet" href="style.css?v=perf-lazy-20260723-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -53,11 +54,11 @@
     <!-- 移动端性能优化 -->
     <link rel="stylesheet" href="mobile-optimizations.css?v=004868b" media="print" onload="this.media='all'">
     <!-- 手机端图片显示紧急修复 -->
-    <link rel="stylesheet" href="mobile-image-fix.css?v=studentworks1">
-    <link rel="stylesheet" href="final-theme.css?v=soda-lime1">
+    <link rel="stylesheet" href="mobile-image-fix.css?v=perf-lazy-20260723-1">
+    <link rel="stylesheet" href="final-theme.css?v=perf-lazy-20260723-1">
     <script src="mobile-performance-optimizer.js?v=004868b" defer></script>
     <!-- 图片显示紧急修复脚本 -->
-    <script src="mobile-image-emergency-fix.js?v=studentworks1" defer></script>
+    <script src="mobile-image-emergency-fix.js?v=perf-lazy-20260723-1" defer></script>
     
     <!-- 性能优化CSS -->
     <style>
@@ -476,10 +477,10 @@
             button.setAttribute('aria-label', `查看第${index + 1}张讲师作品`);
 
             const image = document.createElement('img');
-            image.src = cacheBust(work.image);
+            image.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 700 394%22%3E%3C/svg%3E';
+            image.dataset.deferSrc = cacheBust(work.image);
             image.alt = work.alt;
-            image.loading = index < 2 ? 'eager' : 'lazy';
-            if (index < 2) image.fetchPriority = 'high';
+            image.loading = 'lazy';
             image.decoding = 'async';
             image.draggable = false;
 
@@ -510,6 +511,13 @@
             gallery.appendChild(fragment);
         }
 
+        function loadDeferredImages() {
+            gallery.querySelectorAll('img[data-defer-src]').forEach((image) => {
+                image.src = image.dataset.deferSrc;
+                image.removeAttribute('data-defer-src');
+            });
+        }
+
         function openLightbox(index) {
             activeIndex = (index + instructorWorks.length) % instructorWorks.length;
             const work = instructorWorks[activeIndex];
@@ -533,9 +541,21 @@
 
         renderGallery();
 
+        if ('IntersectionObserver' in window) {
+            const galleryObserver = new IntersectionObserver((entries, observer) => {
+                if (!entries.some((entry) => entry.isIntersecting)) return;
+                loadDeferredImages();
+                observer.disconnect();
+            }, { rootMargin: '520px 0px' });
+            galleryObserver.observe(gallery);
+        } else {
+            loadDeferredImages();
+        }
+
         gallery.addEventListener('click', (event) => {
             const card = event.target.closest('.instructor-work-card');
             if (!card) return;
+            loadDeferredImages();
             openLightbox(Number(card.dataset.index));
         });
 
@@ -681,10 +701,10 @@
 
             const image = document.createElement('img');
             image.className = 'student-work-image';
-            image.src = cacheBust(work.image);
+            image.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 700 394%22%3E%3C/svg%3E';
+            image.dataset.deferSrc = cacheBust(work.image);
             image.alt = duplicate ? '' : work.alt;
-            image.loading = !duplicate && index < 4 ? 'eager' : 'lazy';
-            if (!duplicate && index < 4) image.fetchPriority = 'high';
+            image.loading = 'lazy';
             image.decoding = 'async';
             image.draggable = false;
 
@@ -711,6 +731,13 @@
 
         function measure() {
             track.style.animationDuration = window.innerWidth <= 768 ? '34s' : '38s';
+        }
+
+        function loadDeferredImages() {
+            track.querySelectorAll('img[data-defer-src]').forEach((image) => {
+                image.src = image.dataset.deferSrc;
+                image.removeAttribute('data-defer-src');
+            });
         }
 
         function pauseAuto() {
@@ -759,6 +786,17 @@
         window.addEventListener('resize', measure);
         window.addEventListener('load', measure);
 
+        if ('IntersectionObserver' in window) {
+            const worksObserver = new IntersectionObserver((entries, observer) => {
+                if (!entries.some((entry) => entry.isIntersecting)) return;
+                loadDeferredImages();
+                observer.disconnect();
+            }, { rootMargin: '620px 0px' });
+            worksObserver.observe(viewport);
+        } else {
+            loadDeferredImages();
+        }
+
         viewport.addEventListener('mouseenter', pauseAuto);
         viewport.addEventListener('mouseleave', resumeAutoSoon);
         viewport.addEventListener('touchstart', pauseAuto, { passive: true });
@@ -779,6 +817,7 @@
         track.addEventListener('click', (event) => {
             const button = event.target.closest('.student-work-image-button');
             if (!button || dragged) return;
+            loadDeferredImages();
             openLightbox(Number(button.dataset.index));
         });
 
