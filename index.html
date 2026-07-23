@@ -38,7 +38,7 @@
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>水煮｜后期合成全体系课程</title>
-    <link rel="stylesheet" href="style.css?v=004868b">
+    <link rel="stylesheet" href="style.css?v=studentworks1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -53,10 +53,11 @@
     <!-- 移动端性能优化 -->
     <link rel="stylesheet" href="mobile-optimizations.css?v=004868b" media="print" onload="this.media='all'">
     <!-- 手机端图片显示紧急修复 -->
-    <link rel="stylesheet" href="mobile-image-fix.css?v=004868b">
+    <link rel="stylesheet" href="mobile-image-fix.css?v=studentworks1">
+    <link rel="stylesheet" href="final-theme.css?v=soda-lime1">
     <script src="mobile-performance-optimizer.js?v=004868b" defer></script>
     <!-- 图片显示紧急修复脚本 -->
-    <script src="mobile-image-emergency-fix.js?v=004868b" defer></script>
+    <script src="mobile-image-emergency-fix.js?v=studentworks1" defer></script>
     
     <!-- 性能优化CSS -->
     <style>
@@ -361,6 +362,470 @@
             </div>
         </div>
     </section>
+
+    <!-- 讲师介绍 -->
+    <section id="instructor" class="instructor-section w-full">
+        <div class="container w-full">
+            <div class="instructor-layout w-full">
+                <div class="instructor-copy w-full">
+                    <h2>关于讲师</h2>
+                    <p class="instructor-name w-full">你好，我是水煮</p>
+                    <p class="instructor-lead w-full">我是一名长期专注于Cosplay人物后期、商业视觉合成和AIGC创作的视觉创作者兼coser，目前全平台拥有约5万粉丝。</p>
+                    <p>一路从自学PS、摸索人物精修和视觉合成，到接触AI工作流与3D辅助创作，我也经历过不知道怎么构图、找不到合适素材、人物和背景融合不自然的阶段。所以在课程里，我会让大家少走弯路，把复杂的知识拆开讲清楚，整理成系统方法论带你一步步理解每个操作背后的思路。</p>
+                    <p>我希望教给你的不只是几个软件技巧，我是真想教会你真正能够用在自己作品里的创作方法，帮助你少走弯路，逐渐具备独立完成高质量作品的能力。</p>
+
+                    <div class="instructor-facts w-full">
+                        <div class="instructor-fact w-full">全平台约5万粉cos博主</div>
+                        <div class="instructor-fact w-full">独立后期视觉设计工作室创作者</div>
+                        <div class="instructor-fact w-full">真实后期经验与上市公司AIGC项目负责人</div>
+                        <div class="instructor-fact w-full">PS＋AI＋3D综合创作流程</div>
+                    </div>
+                </div>
+
+                <div class="instructor-media w-full">
+                    <figure class="instructor-portrait w-full">
+                        <img src="public/showcase/instructor-photo.jpg?v=004868b" alt="水煮老师" loading="lazy" decoding="async">
+                    </figure>
+                    <figure class="instructor-social w-full">
+                        <img src="public/showcase/instructor-social.jpg?v=004868b" alt="水煮自媒体账号截图" loading="lazy" decoding="async">
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 讲师作品 -->
+    <section id="instructor-works" class="instructor-works-section w-full">
+        <div class="container w-full">
+            <p class="section-kicker w-full">INSTRUCTOR WORKS</p>
+            <h2>讲师作品</h2>
+            <div class="instructor-works-gallery w-full" id="instructorWorksGallery"></div>
+            <div class="instructor-works-note w-full">
+                <p>课程会将这些作品背后的构图、精修、素材处理、光影塑造与合成思路逐步拆解，而不是只展示最终效果。</p>
+                <a href="#curriculum" class="btn secondary-btn w-full">查看课程学习路线</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="instructor-lightbox" id="instructorLightbox" aria-hidden="true">
+        <button class="instructor-lightbox-close" type="button" aria-label="关闭讲师作品预览">×</button>
+        <button class="instructor-lightbox-nav instructor-lightbox-prev" type="button" aria-label="上一张讲师作品">‹</button>
+        <figure class="instructor-lightbox-frame">
+            <img src="" alt="" id="instructorLightboxImage">
+            <figcaption id="instructorLightboxMeta"></figcaption>
+        </figure>
+        <button class="instructor-lightbox-nav instructor-lightbox-next" type="button" aria-label="下一张讲师作品">›</button>
+    </div>
+
+    <script>
+    const instructorWorks = [
+        {
+            image: "public/showcase/instructor-works/instructor-work-01.jpg",
+            title: "",
+            tags: [],
+            alt: "水煮老师Cos后期合成作品"
+        },
+        {
+            image: "public/showcase/instructor-works/instructor-work-03.jpg",
+            title: "",
+            tags: [],
+            alt: "水煮老师商业视觉合成作品"
+        },
+        {
+            image: "public/showcase/instructor-works/instructor-work-02.jpg",
+            title: "",
+            tags: [],
+            alt: "水煮老师AIGC视觉创作作品"
+        },
+        {
+            image: "public/showcase/instructor-works/instructor-work-04.jpg",
+            title: "",
+            tags: [],
+            alt: "水煮老师Cos后期视觉合成作品"
+        },
+        {
+            image: "public/showcase/instructor-works/instructor-work-05.jpg",
+            title: "",
+            tags: [],
+            alt: "水煮老师代表性后期合成作品"
+        }
+    ];
+
+    (function () {
+        const gallery = document.getElementById('instructorWorksGallery');
+        const lightbox = document.getElementById('instructorLightbox');
+        const lightboxImage = document.getElementById('instructorLightboxImage');
+        const lightboxMeta = document.getElementById('instructorLightboxMeta');
+        const closeButton = lightbox.querySelector('.instructor-lightbox-close');
+        const prevButton = lightbox.querySelector('.instructor-lightbox-prev');
+        const nextButton = lightbox.querySelector('.instructor-lightbox-next');
+        let activeIndex = 0;
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        function cacheBust(path) {
+            const version = window.__ASSET_VERSION__;
+            return version && path.indexOf('?v=') === -1 ? `${path}?v=${version}` : path;
+        }
+
+        function createWorkCard(work, index) {
+            const button = document.createElement('button');
+            button.className = index < 2 ? 'instructor-work-card instructor-work-card-featured' : 'instructor-work-card';
+            button.type = 'button';
+            button.dataset.index = String(index);
+            button.setAttribute('aria-label', `查看第${index + 1}张讲师作品`);
+
+            const image = document.createElement('img');
+            image.src = cacheBust(work.image);
+            image.alt = work.alt;
+            image.loading = index < 2 ? 'eager' : 'lazy';
+            if (index < 2) image.fetchPriority = 'high';
+            image.decoding = 'async';
+            image.draggable = false;
+
+            button.appendChild(image);
+
+            if (work.title || (work.tags && work.tags.length)) {
+                const overlay = document.createElement('span');
+                overlay.className = 'instructor-work-overlay';
+                if (work.title) {
+                    const title = document.createElement('strong');
+                    title.textContent = work.title;
+                    overlay.appendChild(title);
+                }
+                if (work.tags && work.tags.length) {
+                    const tags = document.createElement('em');
+                    tags.textContent = work.tags.join('｜');
+                    overlay.appendChild(tags);
+                }
+                button.appendChild(overlay);
+            }
+
+            return button;
+        }
+
+        function renderGallery() {
+            const fragment = document.createDocumentFragment();
+            instructorWorks.forEach((work, index) => fragment.appendChild(createWorkCard(work, index)));
+            gallery.appendChild(fragment);
+        }
+
+        function openLightbox(index) {
+            activeIndex = (index + instructorWorks.length) % instructorWorks.length;
+            const work = instructorWorks[activeIndex];
+            lightboxImage.src = cacheBust(work.image);
+            lightboxImage.alt = work.alt;
+            lightboxMeta.textContent = `${activeIndex + 1} / ${instructorWorks.length}`;
+            lightbox.classList.add('active');
+            lightbox.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('lightbox-open');
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            lightbox.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('lightbox-open');
+        }
+
+        function moveLightbox(step) {
+            openLightbox(activeIndex + step);
+        }
+
+        renderGallery();
+
+        gallery.addEventListener('click', (event) => {
+            const card = event.target.closest('.instructor-work-card');
+            if (!card) return;
+            openLightbox(Number(card.dataset.index));
+        });
+
+        closeButton.addEventListener('click', closeLightbox);
+        prevButton.addEventListener('click', () => moveLightbox(-1));
+        nextButton.addEventListener('click', () => moveLightbox(1));
+        lightbox.addEventListener('click', (event) => {
+            if (event.target === lightbox) closeLightbox();
+        });
+        lightbox.addEventListener('touchstart', (event) => {
+            const touch = event.changedTouches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        }, { passive: true });
+        lightbox.addEventListener('touchend', (event) => {
+            const touch = event.changedTouches[0];
+            const dx = touch.clientX - touchStartX;
+            const dy = touch.clientY - touchStartY;
+            if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+                moveLightbox(dx > 0 ? -1 : 1);
+            }
+        }, { passive: true });
+        document.addEventListener('keydown', (event) => {
+            if (!lightbox.classList.contains('active')) return;
+            if (event.key === 'Escape') closeLightbox();
+            if (event.key === 'ArrowLeft') moveLightbox(-1);
+            if (event.key === 'ArrowRight') moveLightbox(1);
+        });
+    })();
+    </script>
+
+    <!-- 学员作品展示 -->
+    <section id="student-works" class="student-works-section w-full">
+        <div class="container w-full">
+            <h2>学员作品展示</h2>
+            <p class="section-subtitle w-full">赞赞！都是很努力刻苦的孩子们！。</p>
+
+            <div class="student-works-shell w-full">
+                <div class="student-works-viewport w-full" aria-label="学员作品横向展示">
+                    <div class="student-works-track w-full" id="studentWorksTrack"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="student-lightbox" id="studentLightbox" aria-hidden="true">
+        <button class="student-lightbox-close" type="button" aria-label="关闭大图预览">×</button>
+        <button class="student-lightbox-nav student-lightbox-prev" type="button" aria-label="上一张作品">‹</button>
+        <figure class="student-lightbox-frame">
+            <img src="" alt="" id="studentLightboxImage">
+            <figcaption id="studentLightboxName"></figcaption>
+        </figure>
+        <button class="student-lightbox-nav student-lightbox-next" type="button" aria-label="下一张作品">›</button>
+    </div>
+
+    <script>
+    const studentWorks = [
+        {
+            image: "public/showcase/student-works/student-work-01.jpg",
+            name: "后期：淀粉肠",
+            alt: "学员淀粉肠的Cos后期作品"
+        },
+        {
+            image: "public/showcase/student-works/student-work-02.jpg",
+            name: "后期：麦麦",
+            alt: "学员麦麦的Cos后期作品"
+        },
+        {
+            image: "public/showcase/student-works/student-work-03.jpg",
+            name: "后期：小伊",
+            alt: "学员小伊的Cos后期作品"
+        },
+        {
+            image: "public/showcase/student-works/student-work-04.jpg",
+            name: "后期：丸子",
+            alt: "学员丸子的Cos后期作品"
+        },
+        {
+            image: "public/showcase/student-works/student-work-05.jpg",
+            name: "后期：明天",
+            alt: "学员明天的Cos后期作品"
+        },
+        {
+            image: "public/showcase/student-works/student-work-06.jpg",
+            name: "后期：垂耳玉兔",
+            alt: "学员垂耳玉兔的Cos后期作品"
+        },
+        {
+            image: "public/showcase/student-works/student-work-07.jpg",
+            name: "后期：小晴",
+            alt: "学员小晴的Cos后期作品"
+        },
+        {
+            image: "public/showcase/student-works/student-work-08-lihenyan.jpg",
+            name: "后期：喵喵星人",
+            alt: "学员喵喵星人的Cos后期作品"
+        },
+        {
+            image: "public/showcase/student-works/student-work-09.jpg",
+            name: "后期：木子",
+            alt: "学员木子的Cos后期作品"
+        },
+        {
+            image: "public/showcase/student-works/student-work-10.jpg",
+            name: "后期：安静",
+            alt: "学员安静的Cos后期作品"
+        }
+    ];
+
+    (function () {
+        const viewport = document.querySelector('.student-works-viewport');
+        const track = document.getElementById('studentWorksTrack');
+        const lightbox = document.getElementById('studentLightbox');
+        const lightboxImage = document.getElementById('studentLightboxImage');
+        const lightboxName = document.getElementById('studentLightboxName');
+        const closeButton = lightbox.querySelector('.student-lightbox-close');
+        const prevButton = lightbox.querySelector('.student-lightbox-prev');
+        const nextButton = lightbox.querySelector('.student-lightbox-next');
+        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const resumeDelay = 2800;
+        let activeIndex = 0;
+        let loopWidth = 0;
+        let lastTime = 0;
+        let rafId = 0;
+        let autoRun = !reduceMotion;
+        let resumeTimer = null;
+        let scrollEndTimer = null;
+        let programmaticScroll = false;
+        let pointerDownX = 0;
+        let dragged = false;
+
+        function cacheBust(path) {
+            const version = window.__ASSET_VERSION__;
+            return version && path.indexOf('?v=') === -1 ? `${path}?v=${version}` : path;
+        }
+
+        function createCard(work, index, duplicate) {
+            const card = document.createElement('article');
+            card.className = 'student-work-card';
+            if (duplicate) card.setAttribute('aria-hidden', 'true');
+
+            const button = document.createElement('button');
+            button.className = 'student-work-image-button';
+            button.type = 'button';
+            button.dataset.index = String(index);
+            button.setAttribute('aria-label', `查看${work.name}作品大图`);
+
+            const image = document.createElement('img');
+            image.className = 'student-work-image';
+            image.src = cacheBust(work.image);
+            image.alt = duplicate ? '' : work.alt;
+            image.loading = !duplicate && index < 4 ? 'eager' : 'lazy';
+            if (!duplicate && index < 4) image.fetchPriority = 'high';
+            image.decoding = 'async';
+            image.draggable = false;
+
+            const name = document.createElement('p');
+            name.className = 'student-work-name';
+            name.textContent = work.name;
+
+            button.appendChild(image);
+            card.appendChild(button);
+            card.appendChild(name);
+            return card;
+        }
+
+        function renderWorks() {
+            const fragment = document.createDocumentFragment();
+            [false, true].forEach((duplicate) => {
+                const loop = document.createElement('div');
+                loop.className = 'student-works-loop';
+                studentWorks.forEach((work, index) => loop.appendChild(createCard(work, index, duplicate)));
+                fragment.appendChild(loop);
+            });
+            track.appendChild(fragment);
+        }
+
+        function measure() {
+            const firstLoop = track.querySelector('.student-works-loop');
+            if (!firstLoop) return;
+            loopWidth = Math.round(firstLoop.getBoundingClientRect().width);
+        }
+
+        function pauseAuto() {
+            autoRun = false;
+            if (resumeTimer) {
+                clearTimeout(resumeTimer);
+                resumeTimer = null;
+            }
+        }
+
+        function resumeAutoSoon() {
+            if (reduceMotion) return;
+            if (resumeTimer) clearTimeout(resumeTimer);
+            resumeTimer = setTimeout(() => {
+                autoRun = true;
+            }, resumeDelay);
+        }
+
+        function tick(now) {
+            if (!lastTime) lastTime = now;
+            const dt = Math.min((now - lastTime) / 1000, 0.05);
+            lastTime = now;
+            if (autoRun && loopWidth > 0) {
+                programmaticScroll = true;
+                viewport.scrollLeft += (loopWidth / 38) * dt;
+                while (viewport.scrollLeft >= loopWidth) {
+                    viewport.scrollLeft -= loopWidth;
+                }
+                requestAnimationFrame(() => {
+                    programmaticScroll = false;
+                });
+            }
+            rafId = requestAnimationFrame(tick);
+        }
+
+        function openLightbox(index) {
+            activeIndex = (index + studentWorks.length) % studentWorks.length;
+            const work = studentWorks[activeIndex];
+            lightboxImage.className = 'student-lightbox-image';
+            lightboxImage.src = cacheBust(work.image);
+            lightboxImage.alt = work.alt;
+            lightboxName.textContent = work.name;
+            lightbox.classList.add('active');
+            lightbox.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('lightbox-open');
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            lightbox.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('lightbox-open');
+        }
+
+        function moveLightbox(step) {
+            openLightbox(activeIndex + step);
+        }
+
+        renderWorks();
+        measure();
+        requestAnimationFrame(measure);
+        window.addEventListener('resize', measure);
+        window.addEventListener('load', measure);
+
+        viewport.addEventListener('mouseenter', pauseAuto);
+        viewport.addEventListener('mouseleave', resumeAutoSoon);
+        viewport.addEventListener('touchstart', pauseAuto, { passive: true });
+        viewport.addEventListener('touchend', resumeAutoSoon, { passive: true });
+        viewport.addEventListener('pointerdown', (event) => {
+            pointerDownX = event.clientX;
+            dragged = false;
+        });
+        viewport.addEventListener('pointermove', (event) => {
+            if (Math.abs(event.clientX - pointerDownX) > 8) dragged = true;
+        });
+        viewport.addEventListener('scroll', () => {
+            if (programmaticScroll) return;
+            pauseAuto();
+            if (loopWidth > 0) {
+                if (viewport.scrollLeft >= loopWidth) viewport.scrollLeft -= loopWidth;
+                if (viewport.scrollLeft < 0) viewport.scrollLeft += loopWidth;
+            }
+            if (scrollEndTimer) clearTimeout(scrollEndTimer);
+            scrollEndTimer = setTimeout(resumeAutoSoon, 180);
+        }, { passive: true });
+
+        track.addEventListener('click', (event) => {
+            const button = event.target.closest('.student-work-image-button');
+            if (!button || dragged) return;
+            openLightbox(Number(button.dataset.index));
+        });
+
+        closeButton.addEventListener('click', closeLightbox);
+        prevButton.addEventListener('click', () => moveLightbox(-1));
+        nextButton.addEventListener('click', () => moveLightbox(1));
+        lightbox.addEventListener('click', (event) => {
+            if (event.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', (event) => {
+            if (!lightbox.classList.contains('active')) return;
+            if (event.key === 'Escape') closeLightbox();
+            if (event.key === 'ArrowLeft') moveLightbox(-1);
+            if (event.key === 'ArrowRight') moveLightbox(1);
+        });
+
+        if (!reduceMotion) {
+            rafId = requestAnimationFrame(tick);
+        }
+    })();
+    </script>
 
     <!-- 痛点共鸣 -->
     <section id="pain-points" class="pain-points w-full">
@@ -686,6 +1151,7 @@
             <div class="pricing-grid w-full">
                 <div class="pricing-card w-full">
                     <h3>方案一｜3节合成体验课</h3>
+                    <p class="plan-highlight w-full">3节｜低门槛体验系统合成课</p>
                     <div class="price w-full">
                         <div class="current-price w-full">¥199</div>
                     </div>
@@ -719,6 +1185,7 @@
                     </div>
 
                     <a href="#contact" class="btn primary-btn w-full">咨询体验课</a>
+                    <p class="pricing-benefit-hint w-full">199元体验后可补差价升级，599元及899元系统课程最高可享100元报名优惠，折合仅需再补300元和600。</p>
                 </div>
 
                 <div class="pricing-card featured w-full">
@@ -760,6 +1227,7 @@
                     </div>
 
                     <a href="#contact" class="btn primary-btn w-full">咨询系统班</a>
+                    <p class="pricing-benefit-hint w-full">199元体验后可补差价升级，599元及899元系统课程最高可享100元报名优惠，折合仅需再补300元和600。</p>
                 </div>
 
                 <div class="pricing-card premium w-full">
@@ -805,7 +1273,48 @@
                     </div>
 
                     <a href="#contact" class="btn primary-btn w-full">咨询全能班</a>
+                    <p class="pricing-benefit-hint w-full">199元体验后可补差价升级，599元及899元系统课程最高可享100元报名优惠，折合仅需再补300元和600。</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 报名福利与升级权益 -->
+    <section id="benefits" class="benefits-section w-full">
+        <div class="container w-full">
+            <span class="section-kicker w-full">COURSE BENEFITS</span>
+            <h2>报名福利与升级权益</h2>
+            <p class="section-subtitle w-full">先体验、结伴学习或推荐朋友报名，都可以获得对应的课程优惠。</p>
+
+            <div class="benefits-grid w-full">
+                <article class="benefit-card w-full">
+                    <span class="benefit-index w-full">01</span>
+                    <h3>体验课升级抵扣</h3>
+                    <p>购买199元3节体验课后，在30天期限内升级系统课程，已支付的199元可全额抵扣。升级599元PS＋AI系统合成班再补400元；升级899元PS＋AI＋3D全体系班再补700元。</p>
+                </article>
+
+                <article class="benefit-card w-full">
+                    <span class="benefit-index w-full">02</span>
+                    <h3>朋友圈学习分享礼</h3>
+                    <p>发布指定课程海报或真实学习内容至朋友圈，集齐10赞，报名599元或899元课程可立减50元。报名时需提供朋友圈截图进行确认。</p>
+                </article>
+
+                <article class="benefit-card w-full">
+                    <span class="benefit-index w-full">03</span>
+                    <h3>双人同行</h3>
+                    <p>两位新学员同时报名599元或899元课程，两人均可立减50元。需两人同时确认课程方案并完成报名。</p>
+                </article>
+
+                <article class="benefit-card w-full">
+                    <span class="benefit-index w-full">04</span>
+                    <h3>老学员推荐</h3>
+                    <p>老学员成功推荐一位新学员报名599元或899元课程，新学员立减50元，老学员可获得50元现金红包。</p>
+                </article>
+            </div>
+
+            <div class="benefit-rules w-full">
+                <h3>优惠规则</h3>
+                <p>朋友圈学习分享礼可以与双人同行或老学员推荐叠加；双人同行与老学员推荐不可同时使用；每位新学员最高优惠100元；199元体验课不参与其他优惠；体验课升级时，先计算系统课程优惠，再抵扣已支付的199元；优惠不可折现、不可转让；老学员推荐奖励在新学员确认收课后发放。具体优惠以报名时确认结果为准。</p>
             </div>
         </div>
     </section>
@@ -843,11 +1352,45 @@
             <div class="faq-container w-full">
                 <div class="faq-item w-full">
                     <div class="faq-question w-full">
-                        <span>完全零基础可以学吗？</span>
+                        <span>我零基础，应该选哪个课程？</span>
                         <span class="faq-icon w-full">+</span>
                     </div>
                     <div class="faq-answer w-full">
-                        <p>完全可以。课程就是从基础软件安装开始教起的，我会带你从 0 到 1 掌握核心技能。目前许多学员也都是从零开始的，不用担心跟不上，而且第一节课就会手把手带你做出一张精美的小合成案例。</p>
+                        <p>可以学的，我们课程第一阶段就是从PS基础、人物精修、抠图和基础合成开始讲，不要求你一开始就会复杂操作。</p>
+                        <p>主要看你现在的预算和目标：</p>
+                        <p>如果你还不确定自己的学习状态，想先体验一下我的讲课方式，可以先选199元的3节体验课，后面认可课程可以补差价升级。</p>
+                        <p>如果你想系统学习人物精修、商业合成和AI辅助，599元的PS＋AI系统班就足够，也是大多数同学比较适合的方案。</p>
+                        <p>如果你后面还想学习3D场景、空间、透视和完整的PS＋AI＋3D工作流，可以直接选择899元全体系班。</p>
+                        <p>你也可以把自己目前做过的作品发我一两张，我可以根据你的基础直接帮你判断。</p>
+                    </div>
+                </div>
+                <div class="faq-item w-full">
+                    <div class="faq-question w-full">
+                        <span>599元和899元具体有什么区别？</span>
+                        <span class="faq-icon w-full">+</span>
+                    </div>
+                    <div class="faq-answer w-full">
+                        <p>599元包含前两个阶段：PS商业合成＋AI辅助创作，总共20＋节课程。</p>
+                        <p>主要学习人物精修、背景合成、光影统一、AI生图、AI素材生成以及PS和AI结合的完整工作流。</p>
+                        <p>899元是在599元课程的基础上，再增加完整的3D阶段，总共30＋节课程。</p>
+                        <p>会进一步学习3D场景搭建、镜头透视、灯光、渲染，以及PS＋AI＋3D的综合合成流程。</p>
+                        <p>简单来说：只想把PS和AI学扎实，选599元；想一次把PS、AI和3D完整学完，或者以后想做更复杂的商业合成，选899元。</p>
+                        <p>如果你先购买599元，后续确认需要3D课程，也可以按照当时的升级规则补差价升级。</p>
+                    </div>
+                </div>
+                <div class="faq-item w-full">
+                    <div class="faq-question w-full">
+                        <span>199元体验课学完可以升级吗？优惠怎么计算？</span>
+                        <span class="faq-icon w-full">+</span>
+                    </div>
+                    <div class="faq-answer w-full">
+                        <p>可以的。</p>
+                        <p>199元体验课主要是让你先体验课程内容和讲课方式，学完以后觉得适合自己，可以在规定期限内补差价升级。</p>
+                        <p>升级599元系统班，正常再补400元。</p>
+                        <p>升级899元全体系班，正常再补700元。</p>
+                        <p>如果升级时符合朋友圈分享、双人同行或者老学员推荐活动，会先按照最终套餐计算优惠，再抵扣已经支付的199元。</p>
+                        <p>举例：你要升级599元课程，同时符合50元优惠，最终课程价格是549元，再减去已经支付的199元，只需要补350元。</p>
+                        <p>具体报名时我也会帮你重新核对一遍，不会让你重复支付。</p>
                     </div>
                 </div>
                 <div class="faq-item w-full">
@@ -857,6 +1400,39 @@
                     </div>
                     <div class="faq-answer w-full">
                         <p>购买课程后截图联系老师微信，老师将会邀请您加入课程专属班级群。</p>
+                    </div>
+                </div>
+                <div class="faq-item w-full">
+                    <div class="faq-question w-full">
+                        <span>课程是录播课还是直播课？</span>
+                        <span class="faq-icon w-full">+</span>
+                    </div>
+                    <div class="faq-answer w-full">
+                        <p>课程采用录播形式。</p>
+                        <p>我自己平时也更喜欢通过录播课学习，因为可以根据自己的进度暂停、回看和反复练习。每次录课前，我都会提前整理课程脚本和教学流程，尽量删掉重复、无效的内容，让大家听到的每一部分都尽可能是知识点和实际操作。</p>
+                        <p>课程不会一次性全部丢给大家，而是按照固定节奏持续更新，帮助大家跟着课程逐步学习和练习，避免一次收到大量内容后放进收藏夹，却一直没有真正开始。</p>
+                    </div>
+                </div>
+                <div class="faq-item w-full">
+                    <div class="faq-question w-full">
+                        <span>课程多久更新一次？</span>
+                        <span class="faq-icon w-full">+</span>
+                    </div>
+                    <div class="faq-answer w-full">
+                        <p>课程每月更新3节，分别在每月10日、20日和30日的下午3点，通过私信发送最新课程链接。</p>
+                        <p>每节课程时长约20～40分钟，具体时长会根据当节内容和案例难度有所不同。我不会为了凑时长刻意拉长课程，重点是把当节需要掌握的知识和操作讲清楚。</p>
+                        <p>每节课都会附带对应的原图、素材和练习文件，统一打包发送。大家可以拿到资料后直接跟着课程练习，不需要把学习热情浪费在到处寻找素材上。</p>
+                    </div>
+                </div>
+                <div class="faq-item w-full">
+                    <div class="faq-question w-full">
+                        <span>学习课程需要什么电脑配置？</span>
+                        <span class="faq-icon w-full">+</span>
+                    </div>
+                    <div class="faq-answer w-full">
+                        <p>PS人物精修和大部分基础合成课程，使用正常运行Photoshop的笔记本电脑就可以学习。</p>
+                        <p>如果准备学习3D场景搭建和高阶合成，建议使用性能更好的台式电脑，并配备独立显卡。推荐显卡达到16GB显存，以保证建模、材质、灯光和渲染过程能够更加稳定流畅。</p>
+                        <p>数位板等其他辅助工具并不是所有课程都必须使用。如果某节课程需要额外的软件或设备，我会提前在课程说明中通知大家，并提供相应的准备建议。</p>
                     </div>
                 </div>
                 <div class="faq-item w-full">
@@ -890,238 +1466,6 @@
         </div>
     </section>
 
-    <!-- 后期作品选集 -->
-    <section id="portfolio" class="portfolio-section w-full">
-        <div class="container w-full">
-            <h2 class="portfolio-title w-full">后期合成作品选集</h2>
-            <p class="section-subtitle w-full">见证像素间的化学反应，<span class="highlight-text w-full">欢迎加入学习</span>。</p>
-            <div class="isometric-gallery w-full">
-                <div class="marquee-scrollport marquee-scrollport--gallery w-full">
-                <div class="gallery-track w-full">
-                    <div class="gallery-loop">
-                        <div class="gallery-item w-full">
-                            <div class="gallery-image w-full">
-                                <img src="public/showcase/portfolio-1.jpg?v=004868b" alt="赛博朋克风格合成" class="portfolio-image w-full" loading="lazy">
-                            </div>
-                        </div>
-                        <div class="gallery-item w-full">
-                            <div class="gallery-image w-full">
-                                <img src="public/showcase/portfolio-2.jpg?v=004868b" alt="古风人像合成" class="portfolio-image w-full" loading="lazy">
-                            </div>
-                        </div>
-                        <div class="gallery-item w-full">
-                            <div class="gallery-image w-full">
-                                <img src="public/showcase/portfolio-3.jpg?v=004868b" alt="科幻场景构建" class="portfolio-image w-full" loading="lazy">
-                            </div>
-                        </div>
-                        <div class="gallery-item w-full">
-                            <div class="gallery-image w-full">
-                                <img src="public/showcase/portfolio-4.jpg?v=004868b" alt="奇幻世界合成" class="portfolio-image w-full" loading="lazy">
-                            </div>
-                        </div>
-                        <div class="gallery-item w-full">
-                            <div class="gallery-image w-full">
-                                <img src="public/showcase/portfolio-5.jpg?v=004868b" alt="未来主义风格" class="portfolio-image w-full" loading="lazy">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-loop" aria-hidden="true">
-                        <div class="gallery-item w-full">
-                            <div class="gallery-image w-full">
-                                <img src="public/showcase/portfolio-1.jpg?v=004868b" alt="" class="portfolio-image w-full" loading="lazy">
-                            </div>
-                        </div>
-                        <div class="gallery-item w-full">
-                            <div class="gallery-image w-full">
-                                <img src="public/showcase/portfolio-2.jpg?v=004868b" alt="" class="portfolio-image w-full" loading="lazy">
-                            </div>
-                        </div>
-                        <div class="gallery-item w-full">
-                            <div class="gallery-image w-full">
-                                <img src="public/showcase/portfolio-3.jpg?v=004868b" alt="" class="portfolio-image w-full" loading="lazy">
-                            </div>
-                        </div>
-                        <div class="gallery-item w-full">
-                            <div class="gallery-image w-full">
-                                <img src="public/showcase/portfolio-4.jpg?v=004868b" alt="" class="portfolio-image w-full" loading="lazy">
-                            </div>
-                        </div>
-                        <div class="gallery-item w-full">
-                            <div class="gallery-image w-full">
-                                <img src="public/showcase/portfolio-5.jpg?v=004868b" alt="" class="portfolio-image w-full" loading="lazy">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 客户评价 -->
-    <section id="testimonials" class="testimonials-section w-full">
-        <div class="container w-full">
-            <h2>客户评价</h2>
-            <p class="section-subtitle w-full">来自学员和客户的真实反馈，见证我们的专业实力。</p>
-                        <div class="testimonials-masonry w-full">
-                <div class="testimonial-row w-full">
-                    <div class="marquee-scrollport marquee-scrollport--testimonials w-full">
-                    <div class="testimonial-track w-full">
-                        <div class="testimonial-loop">
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>磕</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">磕盐*选手</h4>
-                                    <p class="testimonial-tag w-full">课程学员</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">之前在网上看教程云里雾里的，水煮老师的课全是干货，不画饼。特别是那个 AI 焚诀篇，直接打开了新世界大门。</p>
-                        </div>
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>喵</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">喵*呜呜</h4>
-                                    <p class="testimonial-tag w-full">课程学员</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">报了老师的入门篇，从零基础开始带。老师讲课很细，作业点评也特别扎实，现在已经能自己修简单的合成图了！</p>
-                        </div>
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>极</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">极地*光</h4>
-                                    <p class="testimonial-tag w-full">课程学员</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">市面上很多后期课都太老了，水煮老师的真的领先版本。老师很有耐心，不是那种收钱就不管人的类型，超级推荐。</p>
-                        </div>
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>是</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">是一只*酱</h4>
-                                    <p class="testimonial-tag w-full">约稿客户</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">水煮老师真的是神仙后期！修图没那种假面感，皮肤纹理留得特别好，特效合成更是氛围感拉满了，返图快得离谱，下次出片还要约！</p>
-                        </div>
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>咕</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">咕咕*子</h4>
-                                    <p class="testimonial-tag w-full">约稿客户</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">终于找到能听懂人话的后期了...之前找过几个都修得像伪人，水煮老师把我那个简陋的背景直接修成了大片，太神了。</p>
-                        </div>
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>橙</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">橙*橙</h4>
-                                    <p class="testimonial-tag w-full">约稿客户</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">本来是废片，结果老师直接救活了，这种高级感真的值这个价，姐妹们冲就完了！</p>
-                        </div>
-                        </div>
-                        <div class="testimonial-loop" aria-hidden="true">
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>磕</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">磕盐*选手</h4>
-                                    <p class="testimonial-tag w-full">课程学员</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">之前在网上看教程云里雾里的，水煮老师的课全是干货，不画饼。特别是那个 AI 焚诀篇，直接打开了新世界大门。</p>
-                        </div>
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>喵</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">喵*呜呜</h4>
-                                    <p class="testimonial-tag w-full">课程学员</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">报了老师的入门篇，从零基础开始带。老师讲课很细，作业点评也特别扎实，现在已经能自己修简单的合成图了！</p>
-                        </div>
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>极</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">极地*光</h4>
-                                    <p class="testimonial-tag w-full">课程学员</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">市面上很多后期课都太老了，水煮老师的真的领先版本。老师很有耐心，不是那种收钱就不管人的类型，超级推荐。</p>
-                        </div>
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>是</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">是一只*酱</h4>
-                                    <p class="testimonial-tag w-full">约稿客户</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">水煮老师真的是神仙后期！修图没那种假面感，皮肤纹理留得特别好，特效合成更是氛围感拉满了，返图快得离谱，下次出片还要约！</p>
-                        </div>
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>咕</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">咕咕*子</h4>
-                                    <p class="testimonial-tag w-full">约稿客户</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">终于找到能听懂人话的后期了...之前找过几个都修得像伪人，水煮老师把我那个简陋的背景直接修成了大片，太神了。</p>
-                        </div>
-                        <div class="testimonial-card w-full">
-                            <div class="testimonial-header w-full">
-                                <div class="testimonial-avatar w-full">
-                                    <span>橙</span>
-                                </div>
-                                <div class="testimonial-info w-full">
-                                    <h4 class="testimonial-author w-full">橙*橙</h4>
-                                    <p class="testimonial-tag w-full">约稿客户</p>
-                                </div>
-                            </div>
-                            <p class="testimonial-content w-full">本来是废片，结果老师直接救活了，这种高级感真的值这个价，姐妹们冲就完了！</p>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- 页脚/转化 -->
     <footer id="contact">
         <div class="container w-full">
@@ -1134,12 +1478,6 @@
                                 <img src="public/showcase/wechat-qr.jpg?v=004868b" alt="微信二维码" class="qr-image w-full" loading="lazy">
                             </div>
                             <p class="qr-label w-full">微信咨询二维码</p>
-                        </div>
-                        <div class="qr-container w-full">
-                            <div class="qr-code w-full">
-                                <img src="public/showcase/social-qr.jpg?v=004868b" alt="支付宝二维码" class="qr-image w-full" loading="lazy">
-                            </div>
-                            <p class="qr-label w-full">支付宝二维码</p>
                         </div>
                     </div>
                 </div>
@@ -1352,5 +1690,6 @@
     </script>
 </body>
 </html>
+
 
 

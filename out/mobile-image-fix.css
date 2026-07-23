@@ -306,3 +306,59 @@ body::after {
     will-change: auto !important;
     transform: none !important;
 }
+
+/* 学员作品轮播：固定比例铺满卡片，不使用全站普通图片的 height:auto 兜底 */
+.student-work-image-button img.student-work-image {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    content-visibility: visible !important;
+    z-index: auto !important;
+    touch-action: inherit !important;
+}
+
+.student-lightbox-frame img.student-lightbox-image {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: calc(88vh - 48px) !important;
+    object-fit: contain !important;
+    content-visibility: visible !important;
+}
+
+.instructor-work-card img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: contain !important;
+    content-visibility: visible !important;
+    z-index: auto !important;
+}
+
+.instructor-lightbox-frame img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: calc(88vh - 48px) !important;
+    object-fit: contain !important;
+    content-visibility: visible !important;
+}

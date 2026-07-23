@@ -30,15 +30,32 @@
 
             var inLayerStack = img.classList.contains('layer-img') || img.closest('#layerStackContainer');
             var inImageSlider = img.classList.contains('slider-image') || img.closest('.image-slider');
-            if (inLayerStack || inImageSlider) {
+            var inStudentWorks = img.closest('.student-work-image-button') || img.closest('.student-lightbox-frame');
+            var inInstructorWorks = img.closest('.instructor-work-card') || img.closest('.instructor-lightbox-frame');
+            if (inLayerStack || inImageSlider || inStudentWorks || inInstructorWorks) {
                 img.style.removeProperty('max-width');
                 img.style.removeProperty('height');
                 img.style.width = '100%';
                 img.style.height = '100%';
                 img.style.maxWidth = 'none';
-                img.style.objectFit = 'cover';
-                img.style.position = 'absolute';
-                img.style.inset = '0';
+                img.style.objectFit =
+                    (inStudentWorks && img.closest('.student-lightbox-frame')) ||
+                    (inInstructorWorks && img.closest('.instructor-lightbox-frame'))
+                        ? 'contain'
+                        : 'cover';
+                if (
+                    (inStudentWorks && img.closest('.student-lightbox-frame')) ||
+                    (inInstructorWorks && img.closest('.instructor-lightbox-frame'))
+                ) {
+                    img.style.position = 'static';
+                    img.style.inset = '';
+                    img.style.height = 'auto';
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = 'calc(88vh - 48px)';
+                } else {
+                    img.style.position = 'absolute';
+                    img.style.inset = '0';
+                }
             } else {
                 img.style.maxWidth = '100%';
                 img.style.height = 'auto';
@@ -121,15 +138,8 @@
             });
         }
         
-        // 5. 调试信息（仅 body 已存在时；避免阻塞首屏）
+        // 5. 调试信息已关闭，避免影响正式页面视觉。
         var debugInfo = null;
-        try {
-            debugInfo = document.createElement('div');
-            debugInfo.style.cssText =
-                'position:fixed;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#0f0;padding:6px 10px;border-radius:6px;font-size:11px;z-index:9998;pointer-events:none;opacity:0.85;';
-            debugInfo.textContent = '🖼️ 图片: ' + allImages.length + ' 张';
-            document.body.appendChild(debugInfo);
-        } catch (e) { /* ignore */ }
         
         // 6. 监控图片加载状态
         setTimeout(() => {

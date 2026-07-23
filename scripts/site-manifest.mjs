@@ -13,6 +13,7 @@ export const optionalRootFiles = [
   'infinite-marquee.js',
   'mobile-optimizations.css',
   'mobile-image-fix.css',
+  'final-theme.css',
   'mobile-performance-optimizer.js',
   'mobile-image-emergency-fix.js',
 ];
