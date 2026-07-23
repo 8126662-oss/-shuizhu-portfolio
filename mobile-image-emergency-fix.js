@@ -96,6 +96,16 @@
         imageContainers.forEach(container => {
             if (container.tagName === 'IMG') return;
             if (container.closest('#layerStackContainer') || container.closest('.image-slider')) return;
+            if (
+                container.closest('.student-works-section') ||
+                container.closest('.instructor-works-section') ||
+                container.classList.contains('student-works-viewport') ||
+                container.classList.contains('student-works-track') ||
+                container.classList.contains('student-works-loop') ||
+                container.classList.contains('student-work-card') ||
+                container.classList.contains('student-work-image-button') ||
+                container.classList.contains('instructor-work-card')
+            ) return;
             container.style.display = 'block';
             container.style.visibility = 'visible';
             container.style.overflow = 'hidden';

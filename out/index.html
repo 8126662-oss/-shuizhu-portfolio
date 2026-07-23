@@ -657,13 +657,9 @@
         const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const resumeDelay = 2800;
         let activeIndex = 0;
-        let loopWidth = 0;
-        let lastTime = 0;
-        let rafId = 0;
         let autoRun = !reduceMotion;
         let resumeTimer = null;
         let scrollEndTimer = null;
-        let programmaticScroll = false;
         let pointerDownX = 0;
         let dragged = false;
 
@@ -714,13 +710,12 @@
         }
 
         function measure() {
-            const firstLoop = track.querySelector('.student-works-loop');
-            if (!firstLoop) return;
-            loopWidth = Math.round(firstLoop.getBoundingClientRect().width);
+            track.style.animationDuration = window.innerWidth <= 768 ? '34s' : '38s';
         }
 
         function pauseAuto() {
             autoRun = false;
+            viewport.classList.add('is-paused');
             if (resumeTimer) {
                 clearTimeout(resumeTimer);
                 resumeTimer = null;
@@ -732,24 +727,8 @@
             if (resumeTimer) clearTimeout(resumeTimer);
             resumeTimer = setTimeout(() => {
                 autoRun = true;
+                viewport.classList.remove('is-paused');
             }, resumeDelay);
-        }
-
-        function tick(now) {
-            if (!lastTime) lastTime = now;
-            const dt = Math.min((now - lastTime) / 1000, 0.05);
-            lastTime = now;
-            if (autoRun && loopWidth > 0) {
-                programmaticScroll = true;
-                viewport.scrollLeft += (loopWidth / 38) * dt;
-                while (viewport.scrollLeft >= loopWidth) {
-                    viewport.scrollLeft -= loopWidth;
-                }
-                requestAnimationFrame(() => {
-                    programmaticScroll = false;
-                });
-            }
-            rafId = requestAnimationFrame(tick);
         }
 
         function openLightbox(index) {
@@ -792,12 +771,7 @@
             if (Math.abs(event.clientX - pointerDownX) > 8) dragged = true;
         });
         viewport.addEventListener('scroll', () => {
-            if (programmaticScroll) return;
             pauseAuto();
-            if (loopWidth > 0) {
-                if (viewport.scrollLeft >= loopWidth) viewport.scrollLeft -= loopWidth;
-                if (viewport.scrollLeft < 0) viewport.scrollLeft += loopWidth;
-            }
             if (scrollEndTimer) clearTimeout(scrollEndTimer);
             scrollEndTimer = setTimeout(resumeAutoSoon, 180);
         }, { passive: true });
@@ -820,10 +794,7 @@
             if (event.key === 'ArrowLeft') moveLightbox(-1);
             if (event.key === 'ArrowRight') moveLightbox(1);
         });
-
-        if (!reduceMotion) {
-            rafId = requestAnimationFrame(tick);
-        }
+        if (reduceMotion) track.style.animation = 'none';
     })();
     </script>
 

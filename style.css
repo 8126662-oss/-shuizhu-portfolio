@@ -2082,6 +2082,11 @@ nav .container {
     cursor: grab;
 }
 
+.student-works-viewport:hover .student-works-track,
+.student-works-viewport.is-paused .student-works-track {
+    animation-play-state: paused;
+}
+
 .student-works-viewport:active {
     cursor: grabbing;
 }
@@ -2095,22 +2100,35 @@ nav .container {
 .student-works-track {
     display: flex;
     width: max-content !important;
+    animation: studentWorksMarquee 38s linear infinite;
+    will-change: transform;
 }
 
 .student-works-loop {
     display: flex;
     flex-wrap: nowrap;
     gap: 24px;
-    padding: 4px 0 12px;
+    padding: 4px 24px 12px 0;
     flex-shrink: 0;
 }
 
 .student-works-loop + .student-works-loop {
-    padding-left: 24px;
+    padding-left: 0;
+}
+
+@keyframes studentWorksMarquee {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
 }
 
 .student-work-card {
     flex: 0 0 clamp(330px, 30vw, 420px);
+    width: clamp(330px, 30vw, 420px);
+    min-width: clamp(330px, 30vw, 420px);
     overflow: hidden;
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.035);
@@ -2245,6 +2263,11 @@ body.lightbox-open {
     .student-works-viewport {
         scroll-behavior: auto;
     }
+
+    .student-works-track {
+        animation: none !important;
+        transform: none !important;
+    }
 }
 
 @media (max-width: 768px) {
@@ -2263,14 +2286,17 @@ body.lightbox-open {
 
     .student-works-loop {
         gap: 16px;
+        padding-right: 16px;
     }
 
     .student-works-loop + .student-works-loop {
-        padding-left: 16px;
+        padding-left: 0;
     }
 
     .student-work-card {
         flex-basis: 82vw;
+        width: 82vw;
+        min-width: 82vw;
         border-radius: 14px;
     }
 

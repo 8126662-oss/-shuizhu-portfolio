@@ -766,8 +766,73 @@ footer .footer-bottom {
         padding: 120px 0 76px;
     }
 
+    .hero::before {
+        background-size: contain !important;
+        background-position: top center !important;
+        background-color: var(--color-bg) !important;
+    }
+
+    .hero::after {
+        background:
+            linear-gradient(180deg, rgba(10, 11, 9, 0.20) 0%, rgba(10, 11, 9, 0.64) 42%, rgba(10, 11, 9, 0.92) 100%),
+            linear-gradient(90deg, rgba(10, 11, 9, 0.72) 0%, rgba(10, 11, 9, 0.24) 100%) !important;
+    }
+
     .hero-buttons .btn {
         width: 100% !important;
+    }
+
+    .student-works-viewport {
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-inline: 0 !important;
+    }
+
+    .student-works-track.w-full,
+    .student-works-track {
+        display: flex !important;
+        align-items: stretch !important;
+        width: max-content !important;
+        max-width: none !important;
+        min-width: max-content !important;
+    }
+
+    .student-works-loop {
+        display: flex !important;
+        flex: 0 0 auto !important;
+        width: max-content !important;
+        max-width: none !important;
+        gap: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    .student-work-card.w-full,
+    .student-work-card {
+        flex: 0 0 82vw !important;
+        width: 82vw !important;
+        min-width: 82vw !important;
+        max-width: 82vw !important;
+    }
+
+    .student-work-image-button,
+    .student-work-image-button[class*="image"] {
+        position: relative !important;
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 10 !important;
+        overflow: hidden !important;
+    }
+
+    .student-work-image-button img.student-work-image {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        object-fit: cover !important;
     }
 
     .instructor-layout {
