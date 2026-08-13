@@ -57,6 +57,11 @@ if (existsSync(siteImages)) {
   cpSync(siteImages, join(outDir, 'images'), { recursive: true });
 }
 
+const glint = join(root, 'glint');
+if (existsSync(glint)) {
+  cpSync(glint, join(outDir, 'glint'), { recursive: true });
+}
+
 /** 生产子路径：把 public/showcase/* 写成 /{basePath}/public/...，避免 <base> 未生效时手机黑块 */
 function rewritePublicShowcasePathsInHtml(fileName) {
   if (!basePath) return;
