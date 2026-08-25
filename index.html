@@ -376,11 +376,12 @@
             justify-content: space-between;
             gap: 12px;
             align-items: flex-start;
-            padding: 22px 22px 18px;
+            padding: 28px 22px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .xzai-kicker {
+            display: none;
             font-size: 12px;
             color: #c6b893;
             margin-bottom: 4px;
@@ -393,6 +394,7 @@
         }
 
         .xzai-subtitle {
+            display: none;
             margin-top: 5px;
             font-size: 12px;
             color: #b7b0a0;
@@ -411,8 +413,8 @@
         }
 
         .xzai-suggestions {
+            display: none;
             padding: 12px 16px 0;
-            display: flex;
             flex-wrap: wrap;
             gap: 8px;
         }
@@ -433,19 +435,78 @@
         .xzai-messages {
             flex: 1;
             overflow: auto;
-            padding: 12px 16px 0;
+            padding: 28px 36px 0;
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
         .xzai-empty {
-            border: 1px dashed rgba(255, 255, 255, 0.14);
-            border-radius: 16px;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.03);
+            margin: auto 0;
+            border: 0;
+            border-radius: 0;
+            padding: 0;
+            background: transparent;
             color: #d7cfbf;
             line-height: 1.55;
+            display: grid;
+            gap: 14px;
+        }
+
+        .xzai-sparkle {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            color: #ffb064;
+            font-size: 34px;
+            line-height: 1;
+        }
+
+        .xzai-empty h3 {
+            margin: 0;
+            color: #fff;
+            font-size: 42px;
+            line-height: 1.1;
+            font-weight: 800;
+        }
+
+        .xzai-empty strong {
+            color: #fff;
+            display: block;
+            font-size: 24px;
+            line-height: 1.25;
+            font-weight: 800;
+        }
+
+        .xzai-empty p {
+            margin: 26px 0 0;
+            color: #777;
+            font-size: 15px;
+        }
+
+        .xzai-prompt-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 2px;
+        }
+
+        .xzai-prompt-list button {
+            width: 100%;
+            border: 1px solid rgba(130, 112, 255, 0.28);
+            border-radius: 12px;
+            background: rgba(24, 22, 30, 0.85);
+            color: #f7f2e8;
+            padding: 13px 16px;
+            text-align: left;
+            font-size: 15px;
+            line-height: 1.55;
+            cursor: pointer;
+        }
+
+        .xzai-prompt-list button:hover {
+            border-color: rgba(234, 208, 154, 0.42);
+            background: rgba(34, 31, 38, 0.95);
         }
 
         .xzai-message { display: flex; }
@@ -620,6 +681,10 @@
             line-height: 1.5;
         }
 
+        .xzai-textarea::placeholder {
+            color: #9a9a9a;
+        }
+
         .xzai-textarea:focus {
             outline: 2px solid rgba(234, 208, 154, 0.35);
             outline-offset: 1px;
@@ -664,6 +729,18 @@
                 width: 100vw;
                 height: 100dvh;
                 border-radius: 0;
+            }
+
+            .xzai-messages {
+                padding: 24px 36px 0;
+            }
+
+            .xzai-empty h3 {
+                font-size: 40px;
+            }
+
+            .xzai-empty strong {
+                font-size: 23px;
             }
         }
     </style>
@@ -2057,30 +2134,38 @@
 
     <script>
         (function () {
-            const answerUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/api/rag/answer';
-            const feedbackUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/api/feedback';
-            const stableAssistantUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/ai-assistant';
+            const defaultApiBase = 'https://shuizhu-ai-deploy-copy.vercel.app';
+            const configuredApiBases = Array.isArray(window.XIAOZHU_AI_API_BASES)
+                ? window.XIAOZHU_AI_API_BASES
+                : [window.XIAOZHU_AI_API_BASE || defaultApiBase];
+            const apiBases = configuredApiBases
+                .filter(Boolean)
+                .map((base) => String(base).replace(/\/$/, ''));
+            if (apiBases.length === 0) {
+                apiBases.push(defaultApiBase);
+            }
+            const primaryApiBase = apiBases[0] || defaultApiBase;
+            const stableAssistantUrl = `${primaryApiBase}/ai-assistant`;
             const requestTimeoutMs = 45000;
             const suggestedQuestions = [
-                '调色在哪节课？',
-                '人物和背景怎么融合？',
-                '蒙版是哪一课？',
-                '怎么处理头发边缘？',
-                '辉光效果在哪里讲？'
+                '总结蒙版、混合方式和融图的复习重点',
+                '人物和背景融合总像贴上去怎么办？',
+                '给我出一套蒙版和融图练习题，先不要给答案',
+                '课程内容没听懂，帮我用简单的话讲一遍'
             ];
             let messages = [];
             let loading = false;
 
             const root = document.createElement('div');
-            root.className = 'xzai-root';
+            root.className = 'xzai-root is-open';
             root.innerHTML = `
-                <button type="button" class="xzai-launcher" id="xzai-launcher" aria-haspopup="dialog" aria-expanded="false">小煮AI</button>
-                <section class="xzai-panel" id="xzai-panel" hidden aria-label="小煮AI 聊天窗口">
+                <button type="button" class="xzai-launcher" id="xzai-launcher" aria-haspopup="dialog" aria-expanded="true">小煮AI</button>
+                <section class="xzai-panel" id="xzai-panel" aria-label="小煮AI 聊天窗口">
                     <div class="xzai-header">
                         <div>
-                            <div class="xzai-kicker">课程知识助手</div>
+                            <div class="xzai-kicker">PS 商业后期学习助手</div>
                             <div class="xzai-title">小煮AI</div>
-                            <div class="xzai-subtitle">打开后直接进入在线聊天。</div>
+                            <div class="xzai-subtitle">围绕水煮后期课答疑、复习和定位课程。</div>
                         </div>
                         <button type="button" class="xzai-icon-button" id="xzai-close" aria-label="关闭">×</button>
                     </div>
@@ -2090,7 +2175,7 @@
                     <div class="xzai-messages" id="xzai-messages" aria-live="polite"></div>
                     <div class="xzai-error" id="xzai-error" hidden></div>
                     <form class="xzai-composer" id="xzai-form">
-                        <textarea class="xzai-textarea" id="xzai-input" rows="2" placeholder="问小煮AI课程问题..."></textarea>
+                        <textarea class="xzai-textarea" id="xzai-input" rows="2" placeholder="问小煮 PS 后期或课程问题..."></textarea>
                         <button type="submit" class="xzai-send" id="xzai-send" disabled>发送</button>
                     </form>
                 </section>
@@ -2183,12 +2268,22 @@
 
             function renderMessages() {
                 const empty = messages.length === 0 && !loading
-                    ? '<div class="xzai-empty">先问一个课程定位问题，例如“融图在哪里讲？”或“怎么处理头发边缘？”</div>'
+                    ? `
+                        <div class="xzai-empty">
+                            <div class="xzai-sparkle">✦</div>
+                            <h3>你好，</h3>
+                            <strong>欢迎使用小煮AI！</strong>
+                            <p>我可以帮你：</p>
+                            <div class="xzai-prompt-list">
+                                ${suggestedQuestions.map((question) => `<button type="button" data-question="${escapeAttr(question)}">${escapeHtml(question)}</button>`).join('')}
+                            </div>
+                        </div>
+                    `
                     : '';
 
                 const rows = messages.map((message) => {
                     const notice = message.response && message.response.status === 'NO_RELEVANT_CONTEXT'
-                        ? '<div class="xzai-notice">目前知识库还没有足够信息。后续补充真实字幕和讲义后，我可以继续定位。</div>'
+                        ? '<div class="xzai-notice">目前课程知识库还没有足够信息支持这个回答。你可以换成蒙版、混合方式、融图、课程复习相关的问题继续问我。</div>'
                         : '';
 
                     return `
@@ -2216,7 +2311,7 @@
                 sendButton.disabled = loading || input.value.trim().length === 0;
             }
 
-            function requestAnswer(question) {
+            function requestAnswerFromBase(question, apiBase) {
                 return new Promise((resolve, reject) => {
                     const callbackName = `xzaiCallback${Date.now()}${Math.random().toString(16).slice(2)}`;
                     const script = document.createElement('script');
@@ -2239,7 +2334,7 @@
                         resolve(payload);
                     };
 
-                    script.src = `${answerUrl}?question=${encodeURIComponent(question)}&topK=5&callback=${encodeURIComponent(callbackName)}`;
+                    script.src = `${apiBase}/api/rag/answer?question=${encodeURIComponent(question)}&topK=5&callback=${encodeURIComponent(callbackName)}`;
                     script.async = true;
                     script.onerror = () => {
                         cleanup();
@@ -2247,6 +2342,18 @@
                     };
                     document.head.appendChild(script);
                 });
+            }
+
+            async function requestAnswer(question) {
+                let lastError = null;
+                for (const apiBase of apiBases) {
+                    try {
+                        return await requestAnswerFromBase(question, apiBase);
+                    } catch (error) {
+                        lastError = error;
+                    }
+                }
+                throw lastError || new Error('小煮AI 暂时无法回答，请稍后再试。');
             }
 
             async function askQuestion(question) {
@@ -2298,7 +2405,7 @@
                     }))
                     : [];
 
-                fetch(feedbackUrl, {
+                fetch(`${primaryApiBase}/api/feedback`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -2358,6 +2465,9 @@
             });
 
             renderMessages();
+            if (window.matchMedia('(min-width: 760px)').matches) {
+                input.focus();
+            }
         })();
     </script>
 </body>
