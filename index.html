@@ -2050,6 +2050,7 @@
         (function () {
             const answerUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/api/rag/answer';
             const feedbackUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/api/feedback';
+            const requestTimeoutMs = 45000;
             const suggestedQuestions = [
                 '调色在哪节课？',
                 '人物和背景怎么融合？',
@@ -2219,11 +2220,15 @@
                 renderMessages();
 
                 try {
+                    const controller = new AbortController();
+                    const timeoutId = window.setTimeout(() => controller.abort(), requestTimeoutMs);
                     const response = await fetch(answerUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ question: trimmed, topK: 5 })
+                        body: JSON.stringify({ question: trimmed, topK: 5 }),
+                        signal: controller.signal
                     });
+                    window.clearTimeout(timeoutId);
 
                     if (!response.ok) {
                         throw new Error('小煮AI 暂时无法回答，请稍后再试。');
@@ -2237,7 +2242,10 @@
                         response: payload
                     });
                 } catch (error) {
-                    setError(error instanceof Error ? error.message : '小煮AI 暂时无法回答，请稍后再试。');
+                    const message = error instanceof DOMException && error.name === 'AbortError'
+                        ? '这次回答等待太久了，请稍后再发一次。'
+                        : error instanceof Error ? error.message : '小煮AI 暂时无法回答，请稍后再试。';
+                    setError(message);
                 } finally {
                     loading = false;
                     updateSubmitState();
