@@ -2048,7 +2048,18 @@
 
     <script>
         (function () {
-            const assistantUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/ai-assistant?embed=1';
+            const answerUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/api/rag/answer';
+            const feedbackUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/api/feedback';
+            const suggestedQuestions = [
+                '调色在哪节课？',
+                '人物和背景怎么融合？',
+                '蒙版是哪一课？',
+                '怎么处理头发边缘？',
+                '辉光效果在哪里讲？'
+            ];
+            let messages = [];
+            let loading = false;
+
             const root = document.createElement('div');
             root.className = 'xzai-root';
             root.innerHTML = `
@@ -2062,13 +2073,15 @@
                         </div>
                         <button type="button" class="xzai-icon-button" id="xzai-close" aria-label="关闭">×</button>
                     </div>
-                    <iframe
-                        title="小煮AI"
-                        src="${assistantUrl}"
-                        style="width:100%;flex:1;border:0;background:#111;"
-                        loading="eager"
-                        referrerpolicy="no-referrer"
-                    ></iframe>
+                    <div class="xzai-suggestions" id="xzai-suggestions">
+                        ${suggestedQuestions.map((question) => `<button type="button" class="xzai-chip" data-question="${escapeAttr(question)}">${escapeHtml(question)}</button>`).join('')}
+                    </div>
+                    <div class="xzai-messages" id="xzai-messages" aria-live="polite"></div>
+                    <div class="xzai-error" id="xzai-error" hidden></div>
+                    <form class="xzai-composer" id="xzai-form">
+                        <textarea class="xzai-textarea" id="xzai-input" rows="2" placeholder="问小煮AI课程问题..."></textarea>
+                        <button type="submit" class="xzai-send" id="xzai-send" disabled>发送</button>
+                    </form>
                 </section>
             `;
             document.body.appendChild(root);
@@ -2076,12 +2089,203 @@
             const launcher = root.querySelector('#xzai-launcher');
             const panel = root.querySelector('#xzai-panel');
             const closeButton = root.querySelector('#xzai-close');
+            const messagesEl = root.querySelector('#xzai-messages');
+            const errorEl = root.querySelector('#xzai-error');
+            const form = root.querySelector('#xzai-form');
+            const input = root.querySelector('#xzai-input');
+            const sendButton = root.querySelector('#xzai-send');
+
+            function escapeHtml(value) {
+                return String(value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function escapeAttr(value) {
+                return escapeHtml(value).replace(/`/g, '&#096;');
+            }
+
+            function createId() {
+                return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+            }
+
+            function citationTime(citation) {
+                if (citation.timestamp_start == null || citation.timestamp_end == null) {
+                    return '时间戳待补充';
+                }
+                return `${citation.timestamp_start}-${citation.timestamp_end}`;
+            }
+
+            function setError(message) {
+                if (!message) {
+                    errorEl.hidden = true;
+                    errorEl.textContent = '';
+                    return;
+                }
+                errorEl.hidden = false;
+                errorEl.textContent = message;
+            }
+
+            function renderCitations(response) {
+                if (!response || !Array.isArray(response.citations) || response.citations.length === 0) {
+                    return '';
+                }
+
+                const cards = response.citations.map((citation) => `
+                    <div class="xzai-citation-card">
+                        <div class="xzai-citation-head">
+                            <div>
+                                <strong>Lesson ${escapeHtml(citation.lesson_id)}</strong>
+                                <span>${escapeHtml(citation.lesson_title)}</span>
+                            </div>
+                        </div>
+                        <div class="xzai-citation-meta">
+                            <span>${escapeHtml(citation.source_type)}</span>
+                            <span>${escapeHtml(citationTime(citation))}</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="xzai-citation-group">
+                        <div class="xzai-citation-title">相关课程</div>
+                        ${cards}
+                    </div>
+                `;
+            }
+
+            function renderFeedback(message) {
+                if (message.role !== 'assistant' || !message.response) {
+                    return '';
+                }
+
+                return `
+                    <div class="xzai-feedback" data-message-id="${escapeAttr(message.id)}">
+                        <button type="button" data-feedback="like" class="${message.feedback === 'like' ? 'is-active' : ''}">👍 有帮助</button>
+                        <button type="button" data-feedback="dislike" class="${message.feedback === 'dislike' ? 'is-active' : ''}">👎 没解决</button>
+                    </div>
+                `;
+            }
+
+            function renderMessages() {
+                const empty = messages.length === 0 && !loading
+                    ? '<div class="xzai-empty">先问一个课程定位问题，例如“融图在哪里讲？”或“怎么处理头发边缘？”</div>'
+                    : '';
+
+                const rows = messages.map((message) => {
+                    const notice = message.response && message.response.status === 'NO_RELEVANT_CONTEXT'
+                        ? '<div class="xzai-notice">目前知识库还没有足够信息。后续补充真实字幕和讲义后，我可以继续定位。</div>'
+                        : '';
+
+                    return `
+                        <article class="xzai-message ${message.role}">
+                            <div class="xzai-bubble">
+                                <div class="xzai-role">${message.role === 'user' ? '你' : '小煮AI'}</div>
+                                <p class="xzai-text">${escapeHtml(message.content)}</p>
+                                ${notice}
+                                ${renderCitations(message.response)}
+                                ${renderFeedback(message)}
+                            </div>
+                        </article>
+                    `;
+                }).join('');
+
+                const loader = loading
+                    ? '<article class="xzai-message assistant"><div class="xzai-bubble xzai-loading"><span class="xzai-dot"></span><span>正在检索课程知识库并生成回答...</span></div></article>'
+                    : '';
+
+                messagesEl.innerHTML = `${empty}${rows}${loader}`;
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+
+            function updateSubmitState() {
+                sendButton.disabled = loading || input.value.trim().length === 0;
+            }
+
+            async function askQuestion(question) {
+                const trimmed = question.trim();
+                if (!trimmed || loading) {
+                    return;
+                }
+
+                loading = true;
+                setError('');
+                messages.push({ id: createId(), role: 'user', content: trimmed });
+                input.value = '';
+                updateSubmitState();
+                renderMessages();
+
+                try {
+                    const response = await fetch(answerUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ question: trimmed, topK: 5 })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('小煮AI 暂时无法回答，请稍后再试。');
+                    }
+
+                    const payload = await response.json();
+                    messages.push({
+                        id: createId(),
+                        role: 'assistant',
+                        content: payload.answer || '目前没有足够课程内容支持回答。',
+                        response: payload
+                    });
+                } catch (error) {
+                    setError(error instanceof Error ? error.message : '小煮AI 暂时无法回答，请稍后再试。');
+                } finally {
+                    loading = false;
+                    updateSubmitState();
+                    renderMessages();
+                }
+            }
+
+            async function sendFeedback(messageId, feedback) {
+                const target = messages.find((message) => message.id === messageId);
+                if (!target || !target.response) {
+                    return;
+                }
+
+                target.feedback = feedback;
+                renderMessages();
+
+                const retrievedChunks = target.response.retrieval && Array.isArray(target.response.retrieval.results)
+                    ? target.response.retrieval.results.map((chunk) => ({
+                        chunk_id: chunk.chunk_id,
+                        lesson_id: chunk.lesson_id,
+                        lesson_title: chunk.lesson_title,
+                        score: chunk.score
+                    }))
+                    : [];
+
+                fetch(feedbackUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        question: target.response.question,
+                        answer: target.response.answer,
+                        retrieved_chunks: retrievedChunks,
+                        feedback
+                    })
+                }).catch(() => {
+                    setError('反馈记录失败，但不影响本次回答。');
+                });
+            }
 
             launcher.addEventListener('click', () => {
                 const isOpen = panel.hidden;
                 panel.hidden = !isOpen;
                 launcher.setAttribute('aria-expanded', String(isOpen));
                 root.classList.toggle('is-open', isOpen);
+                if (isOpen) {
+                    input.focus();
+                    renderMessages();
+                }
             });
 
             closeButton.addEventListener('click', () => {
@@ -2089,6 +2293,36 @@
                 launcher.setAttribute('aria-expanded', 'false');
                 root.classList.remove('is-open');
             });
+
+            input.addEventListener('input', updateSubmitState);
+
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    askQuestion(input.value);
+                }
+            });
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                askQuestion(input.value);
+            });
+
+            root.addEventListener('click', (event) => {
+                const suggestionButton = event.target.closest('[data-question]');
+                if (suggestionButton) {
+                    askQuestion(suggestionButton.getAttribute('data-question') || '');
+                    return;
+                }
+
+                const feedbackButton = event.target.closest('[data-feedback]');
+                if (feedbackButton) {
+                    const feedbackRow = feedbackButton.closest('[data-message-id]');
+                    sendFeedback(feedbackRow.getAttribute('data-message-id'), feedbackButton.getAttribute('data-feedback'));
+                }
+            });
+
+            renderMessages();
         })();
     </script>
 </body>
