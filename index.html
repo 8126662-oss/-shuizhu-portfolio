@@ -590,6 +590,15 @@
             font-size: 13px;
         }
 
+        .xzai-error a {
+            display: inline-flex;
+            margin-left: 8px;
+            color: #ffe4ad;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
         .xzai-composer {
             display: flex;
             gap: 10px;
@@ -2050,6 +2059,7 @@
         (function () {
             const answerUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/api/rag/answer';
             const feedbackUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/api/feedback';
+            const stableAssistantUrl = 'https://shuizhu-ai-deploy-copy.vercel.app/ai-assistant';
             const requestTimeoutMs = 45000;
             const suggestedQuestions = [
                 '调色在哪节课？',
@@ -2123,11 +2133,11 @@
             function setError(message) {
                 if (!message) {
                     errorEl.hidden = true;
-                    errorEl.textContent = '';
+                    errorEl.innerHTML = '';
                     return;
                 }
                 errorEl.hidden = false;
-                errorEl.textContent = message;
+                errorEl.innerHTML = `${escapeHtml(message)} <a href="${stableAssistantUrl}" target="_blank" rel="noopener noreferrer">打开稳定版</a>`;
             }
 
             function renderCitations(response) {
